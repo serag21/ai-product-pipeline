@@ -16,8 +16,7 @@ from comfy.client import ComfyUIClient, ComfyUIError
 EXPECTED = {
     "6": ("CLIPTextEncode", "text"),
     "25": ("RandomNoise", "noise_seed"),
-    "50": ("PrimitiveNode", "value"),
-    "51": ("PrimitiveNode", "value"),
+    "47": ("EmptyFlux2LatentImage", "width"),
     "48": ("Flux2Scheduler", "steps"),
     "26": ("FluxGuidance", "guidance"),
     "16": ("KSamplerSelect", "sampler_name"),
@@ -87,7 +86,7 @@ def main() -> int:
         missing = [node_id for node_id in EXPECTED if node_id not in workflow]
         if missing:
             raise ComfyUIError(
-                f"Expected node IDs are missing from the API workflow: {missing}"
+                f"Expected execution nodes are missing from the API workflow: {missing}"
             )
 
         for node_id, (class_type, input_name) in EXPECTED.items():
@@ -101,6 +100,8 @@ def main() -> int:
                     f"Node {node_id}: expected input {input_name!r} was not found."
                 )
 
+        # PrimitiveNode 50/51 are frontend-only virtual nodes and are not part
+        # of the API workflow. Their values are resolved into nodes 47 and 48.
         seed = args.seed if args.seed is not None else client.random_seed()
 
         workflow = client.patch_workflow(
@@ -108,8 +109,7 @@ def main() -> int:
             {
                 "6": {"text": args.prompt},
                 "25": {"noise_seed": seed},
-                "50": {"value": args.width},
-                "51": {"value": args.height},
+                "47": {"width": args.width, "height": args.height},
                 "48": {
                     "steps": args.steps,
                     "width": args.width,
