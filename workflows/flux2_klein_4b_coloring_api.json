@@ -2,14 +2,14 @@
   "2": {
     "class_type": "UNETLoader",
     "inputs": {
-      "unet_name": "flux-2-klein-base-4b.safetensors",
+      "unet_name": "flux-2-klein-base-4b-fp8.safetensors",
       "weight_dtype": "default"
     }
   },
   "3": {
     "class_type": "CLIPLoader",
     "inputs": {
-      "clip_name": "qwen_3_4b.safetensors",
+      "clip_name": "qwen_3_4b_fp4_flux2.safetensors",
       "type": "flux2",
       "device": "default"
     }
