@@ -38,11 +38,11 @@ http://127.0.0.1:8188
 
 The project targets the **FLUX.2 [klein] 4B Base** workflow:
 
-- diffusion model: `flux-2-klein-base-4b.safetensors`
-- text encoder: `qwen_3_4b.safetensors`
-- VAE: `flux2-vae.safetensors`
+- diffusion model: `flux-2-klein-base-4b-fp8.safetensors` (~4.09 GB)
+- text encoder: `qwen_3_4b_fp4_flux2.safetensors` (~3.85 GB)
+- VAE: `flux2-vae.safetensors` (already used by the existing Flux2 setup)
 
-ComfyUI's official workflow template is the source of truth for the model graph. The Comfy-Org repackaged model files place these assets under `models/diffusion_models`, `models/text_encoders`, and `models/vae`.
+ComfyUI's official workflow template is the source of truth for the model graph. The diffusion checkpoint is the official BFL FP8 Base release; the FP4 Qwen encoder is the Comfy-Org repackaged Flux Klein encoder. Both are Apache-2.0 model paths. Store them under `models/diffusion_models` and `models/text_encoders`; the existing VAE can be reused.
 
 Official references:
 
