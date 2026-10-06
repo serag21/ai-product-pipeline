@@ -6,11 +6,11 @@ The project now targets the **FLUX.2 [klein] 4B Base** workflow for the image-ge
 
 Required model files:
 
-- `flux-2-klein-base-4b.safetensors` in `ComfyUI/models/diffusion_models/`
-- `qwen_3_4b.safetensors` in `ComfyUI/models/text_encoders/`
+- `flux-2-klein-base-4b-fp8.safetensors` in `ComfyUI/models/diffusion_models/`
+- `qwen_3_4b_fp4_flux2.safetensors` in `ComfyUI/models/text_encoders/`
 - `flux2-vae.safetensors` in `ComfyUI/models/vae/`
 
-The official ComfyUI text-to-image template is:
+The official ComfyUI text-to-image template is. The template can be used directly in the UI; our API file is the same graph reduced to executable API nodes:
 
 https://github.com/Comfy-Org/workflow_templates/blob/main/templates/image_flux2_klein_text_to_image.json
 
