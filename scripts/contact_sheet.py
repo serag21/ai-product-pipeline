@@ -3,14 +3,13 @@
 
 from __future__ import annotations
 
+import argparse
 import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ROOT / "products" / "construction-vehicles-toddler-30" / "pages"
-OUT = ROOT / "products" / "construction-vehicles-toddler-30" / "qa" / "contact_sheet.jpg"
 
 THUMB_W = 320
 THUMB_H = 413
@@ -19,10 +18,30 @@ LABEL_H = 36
 COLS = 3
 
 
+def resolve_product_root(value: str) -> Path:
+    path = Path(value)
+    if not path.is_absolute():
+        path = ROOT / path
+    return path.resolve()
+
+
 def main() -> None:
-    files = sorted(PAGES.glob("page_*.png"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--product",
+        default="products/construction-vehicles-toddler-30",
+        help="Product directory containing the generated pages.",
+    )
+    args = parser.parse_args()
+
+    product_root = resolve_product_root(args.product)
+    pages = product_root / "pages"
+    out = product_root / "qa" / "contact_sheet.jpg"
+
+    files = sorted(pages.glob("page_*.png"))
     if not files:
-        raise SystemExit(f"No pages found under {PAGES}")
+        raise SystemExit(f"No pages found under {pages}")
+
     rows = math.ceil(len(files) / COLS)
     sheet = Image.new(
         "RGB",
@@ -44,9 +63,9 @@ def main() -> None:
         sheet.paste(image, (x, y))
         draw.text((x, y + THUMB_H + 8), path.stem, fill="black")
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    sheet.save(OUT, quality=94, subsampling=0)
-    print(OUT)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(out, quality=94, subsampling=0)
+    print(out)
 
 
 if __name__ == "__main__":
