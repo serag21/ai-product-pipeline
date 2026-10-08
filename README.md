@@ -6,20 +6,21 @@ Local-first automation for AI-assisted digital products, starting with printable
 
 Prove this end-to-end:
 
-ComfyUI -> local API -> Python worker -> PNG
+**ComfyUI -> local API -> deterministic Python product worker -> validated PNG pages -> printable product**
 
-The first smoke test patches the prompt, seed, resolution, scheduler steps, guidance, and output prefix, waits for ComfyUI to finish, and downloads the result.
+The repository already contains the proven FLUX.2 Dev API workflow at `workflows/flux2_coloring_api.json` plus the multi-reference workflow.
 
 ## Local setup
 
-Clone:
+Clone once:
 
 ```powershell
+cd C:\Users\serag\source\repos
 git clone https://github.com/serag21/ai-product-pipeline.git
 cd ai-product-pipeline
 ```
 
-Run the setup script:
+Run setup:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
@@ -32,21 +33,51 @@ Start the existing ComfyUI installation separately. The pipeline expects:
 http://127.0.0.1:8188
 ```
 
-Then, in ComfyUI, open the Flux.2 workflow and use:
+The proven FLUX.2 Dev API workflow is already committed as:
 
-**File -> Export Workflow (API)**
-
-Save the API-format JSON as:
-
-`workflows/flux2_coloring_api.json`
-
-Finally run:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\test_comfy.py
+```text
+workflows/flux2_coloring_api.json
 ```
 
-The first test generates one image at 1536x1984 by default. This is intentionally a test resolution with the final 8.5x11 / 300-DPI packaging step kept separate.
+## First production product
+
+Product manifest:
+
+```text
+products/construction-vehicles-toddler-30/prompts.json
+```
+
+The production generator deliberately overrides the workflow's UI canvas to portrait printable dimensions (1536x1984), while keeping the proven model, sampler, 20 steps, and guidance 4 settings.
+
+Run a five-page QA batch:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\generate_product.py --count 5
+```
+
+Create the visual QA sheet:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\contact_sheet.py
+```
+
+Generated pages are written under:
+
+```text
+products/construction-vehicles-toddler-30/pages/
+```
+
+and QA artifacts under:
+
+```text
+products/construction-vehicles-toddler-30/qa/
+```
+
+After the five-page visual gate passes, the same generator can produce the full 30-page product:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\generate_product.py --count 30
+```
 
 ## Design principles
 
@@ -54,7 +85,7 @@ The first test generates one image at 1536x1984 by default. This is intentionall
 - Keep LLMs out of the long-running GPU generation loop.
 - Use deterministic local Python orchestration for production jobs.
 - Keep marketplace publishing human-controlled.
-- Add research, prompt planning, visual QA, packaging, and listing automation only after the generation foundation is proven.
+- Add research, visual QA, packaging, and listing automation only after the generation foundation is proven.
 
 ## License
 
