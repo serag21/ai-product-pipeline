@@ -1,0 +1,141 @@
+{
+  "product_id": "little-worlds-cozy-corners-5-prototype",
+  "title": "Little Worlds: Cozy Corners Coloring Book",
+  "audience": "ages 7-99",
+  "page_count": 5,
+  "prompt_format": "json",
+  "visual_bible": {
+    "style": "original cozy storybook coloring-book illustration with clean hand-drawn black ink contours, confident rounded linework, friendly simplified forms, medium visual detail, recurring architectural and decorative motifs, charming illustrated-world feeling, consistent visual language across every page",
+    "color_palette": [
+      "#000000",
+      "#FFFFFF"
+    ],
+    "lighting": "warm, gentle natural light expressed through clean line-art shapes and simple window or lamp motifs",
+    "mood": "peaceful, welcoming, curious, comforting",
+    "rendering": "monochrome printable line art on white paper, black contour lines with open white interior areas designed for coloring, crisp edges and clear separation between objects",
+    "page_design": "portrait printable page, scene fills most of the page while leaving a comfortable clean margin, large recognizable forms balanced with small discoverable details, clear foreground middle ground and background, visually rich without becoming crowded"
+  },
+  "pages": [
+    {
+      "page": 1,
+      "scene": "A tiny neighborhood bookstore tucked into a cozy corner, with a welcoming reading nook and a sense of a little world that could be explored.",
+      "subjects": [
+        {
+          "description": "small rounded wooden bookshelf filled with varied blank book shapes and a rolling library ladder",
+          "position": "left and rear of the scene",
+          "action": "standing neatly against the wall"
+        },
+        {
+          "description": "plush oversized armchair beside a tiny round side table holding a simple teacup and a small potted plant",
+          "position": "center foreground",
+          "action": "creating a comfortable reading nook"
+        },
+        {
+          "description": "arched window with simple curtains and a small stack of books beneath it",
+          "position": "upper rear center",
+          "action": "framing a calm outside view with simple leafy shapes"
+        }
+      ],
+      "background": "cozy bookstore interior with rounded shelves, a small rug, a few hanging plants, simple framed wall art represented by blank shapes, and carefully spaced decorative objects",
+      "composition": "eye-level three-quarter interior view, medium-wide framing, reading chair as the visual anchor, shelves receding gently behind it, balanced layers from foreground rug to rear window"
+    },
+    {
+      "page": 2,
+      "scene": "A charming attic craft room beneath a sloped roof, arranged like a tiny creative world full of inviting objects.",
+      "subjects": [
+        {
+          "description": "small wooden craft table with jars of brushes, folded fabric, scissors, thread spools, and a simple desk lamp",
+          "position": "center foreground",
+          "action": "serving as the main creative workspace"
+        },
+        {
+          "description": "cozy cushioned stool and a woven basket holding neatly rolled craft materials",
+          "position": "lower right foreground",
+          "action": "resting beside the craft table"
+        },
+        {
+          "description": "round attic window and a row of simple hanging storage cubbies under the roof",
+          "position": "rear center",
+          "action": "organizing the upper part of the room"
+        }
+      ],
+      "background": "sloped attic ceiling, exposed rounded wooden beams, small storage shelves, simple paper stars, a soft floor rug, and a few handcrafted objects arranged with generous spacing",
+      "composition": "eye-level slightly angled interior view, table as the visual anchor, diagonal roofline guiding the eye toward the round attic window, layered foreground workspace and background storage"
+    },
+    {
+      "page": 3,
+      "scene": "A little greenhouse potting corner filled with friendly garden shapes, designed as a peaceful indoor garden world.",
+      "subjects": [
+        {
+          "description": "wooden potting bench with a watering can, hand trowel, small pots, seed trays, and neatly arranged gardening tools",
+          "position": "center foreground",
+          "action": "forming the main gardening workspace"
+        },
+        {
+          "description": "arched greenhouse window panels with simple leafy vines climbing around the frame",
+          "position": "rear center",
+          "action": "opening the scene toward a bright garden view"
+        },
+        {
+          "description": "cluster of varied potted plants with large simple leaves, rounded blossoms, and one small hanging planter",
+          "position": "left and right middle ground",
+          "action": "surrounding the potting bench and creating a lush frame"
+        }
+      ],
+      "background": "small greenhouse structure with curved framing, wooden shelves, baskets, a few stepping stones, and calm garden silhouettes beyond the glass",
+      "composition": "eye-level three-quarter view, potting bench centered as the anchor, plants framing both sides, greenhouse arch creating a strong rounded silhouette around the scene"
+    },
+    {
+      "page": 4,
+      "scene": "A warm seaside cottage kitchen with a tiny breakfast nook, arranged like an inviting little coastal world.",
+      "subjects": [
+        {
+          "description": "compact wooden kitchen counter with a kettle, mixing bowl, stacked plates, hanging mugs, and simple jars",
+          "position": "left and center middle ground",
+          "action": "forming the heart of the cottage kitchen"
+        },
+        {
+          "description": "small round breakfast table with two simple chairs, a teapot, and a plate of baked treats",
+          "position": "right foreground",
+          "action": "creating a welcoming place to sit"
+        },
+        {
+          "description": "wide window with simple curtains and a distant lighthouse and rolling wave shapes",
+          "position": "rear center",
+          "action": "opening the kitchen toward the sea"
+        }
+      ],
+      "background": "cozy cottage cabinetry, open shelves, hanging utensils, a braided rug, a few seashell decorations, and simple coastal wall shapes",
+      "composition": "eye-level three-quarter interior view, breakfast table anchoring the foreground, kitchen counter leading toward the window, strong depth created by foreground table, middle-ground counter, and distant sea view"
+    },
+    {
+      "page": 5,
+      "scene": "A tiny neighborhood cafe corner with a cozy reading table, warm shelves, plants, and a welcoming sense of everyday life.",
+      "subjects": [
+        {
+          "description": "small round cafe table with a steaming mug, open blank notebook, spoon, and simple pastry plate",
+          "position": "center foreground",
+          "action": "creating the main cozy seating spot"
+        },
+        {
+          "description": "curved cushioned bench with two small pillows and a low side table",
+          "position": "left middle ground",
+          "action": "forming a second inviting place to sit"
+        },
+        {
+          "description": "wooden pastry and drink counter with rounded shelves, simple jars, mugs, and a hanging plant",
+          "position": "rear right",
+          "action": "organizing the cafe service area"
+        }
+      ],
+      "background": "friendly cafe interior with large rounded window, simple pendant lights, potted plants, small framed decorative shapes, and a soft patterned floor",
+      "composition": "eye-level three-quarter interior view, round foreground table as the main anchor, seating and service counter layered behind it, rounded window balancing the upper frame"
+    }
+  ],
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4.0
+  }
+}
