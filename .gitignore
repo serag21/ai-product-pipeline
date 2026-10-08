@@ -16,3 +16,6 @@ products/*/previews/
 # Local test outputs
 output/
 *.log
+
+# IDE
+.vs/
