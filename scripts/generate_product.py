@@ -44,14 +44,21 @@ def load_product(product_root: Path) -> dict:
 
 def generation_settings(product: dict) -> tuple[int, int, int, float]:
     settings = product.get("generation", {})
-    width = int(settings.get("width", 1536))
-    height = int(settings.get("height", 1984))
-    steps = int(settings.get("steps", 20))
-    guidance = float(settings.get("guidance", 4.0))
-    return width, height, steps, guidance
+    return (
+        int(settings.get("width", 1536)),
+        int(settings.get("height", 1984)),
+        int(settings.get("steps", 20)),
+        float(settings.get("guidance", 4.0)),
+    )
 
 
 def build_prompt(product: dict, item: dict) -> str:
+    if "prompt" in item:
+        prompt = item["prompt"]
+        if isinstance(prompt, str):
+            return prompt
+        return json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
+
     if product.get("prompt_format") == "json":
         bible = product.get("visual_bible", {})
         payload = {
@@ -101,11 +108,7 @@ def quality_check(path: Path) -> dict:
     gray = image.convert("L")
     stat = ImageStat.Stat(gray)
     return {
-        "pass": (
-            width >= 1200
-            and height >= 1600
-            and stat.stddev[0] >= 8.0
-        ),
+        "pass": width >= 1200 and height >= 1600 and stat.stddev[0] >= 8.0,
         "width": width,
         "height": height,
         "grayscale_stddev": round(stat.stddev[0], 3),
@@ -114,11 +117,7 @@ def quality_check(path: Path) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--product",
-        default="products/construction-vehicles-toddler-30",
-        help="Product directory containing prompts.json.",
-    )
+    parser.add_argument("--product", default="products/construction-vehicles-toddler-30")
     parser.add_argument("--count", type=int, default=5)
     parser.add_argument("--start", type=int, default=1)
     parser.add_argument("--server", default="http://127.0.0.1:8188")
@@ -150,7 +149,7 @@ def main() -> int:
     print(f"Workflow: {WORKFLOW_PATH}")
     print(
         f"Canvas: {width}x{height} | steps={steps} | "
-        f"guidance={guidance} | prompt_format={product.get('prompt_format', 'text')}"
+        f"guidance={guidance} | items={len(selected)}"
     )
 
     manifest = {
@@ -159,7 +158,6 @@ def main() -> int:
         "canvas": {"width": width, "height": height},
         "steps": steps,
         "guidance": guidance,
-        "prompt_format": product.get("prompt_format", "text"),
         "pages": [],
     }
 
@@ -180,7 +178,10 @@ def main() -> int:
             f"coloring_{product['product_id']}_page_{page_no:03d}"
         )
 
-        print(f"Generating page {page_no:02d} | seed={seed}")
+        print(
+            f"Generating page {page_no:02d} | "
+            f"variant={item.get('variant_id', page_no)} | seed={seed}"
+        )
         try:
             prompt_id = client.submit(wf)
             history = client.wait(prompt_id, timeout=args.timeout)
@@ -195,6 +196,10 @@ def main() -> int:
             qa = quality_check(destination)
             record = {
                 "page": page_no,
+                "variant_id": item.get("variant_id"),
+                "family": item.get("family"),
+                "label": item.get("label"),
+                "prompt_format": item.get("prompt_format"),
                 "seed": seed,
                 "prompt_id": prompt_id,
                 "file": str(destination.relative_to(PROJECT_ROOT)),
@@ -208,14 +213,16 @@ def main() -> int:
             if not qa["pass"]:
                 raise RuntimeError(f"Basic QA failed for page {page_no}: {qa}")
         except Exception as exc:
-            manifest["pages"].append(
-                {
-                    "page": page_no,
-                    "seed": seed,
-                    "status": "failed",
-                    "error": str(exc),
-                }
-            )
+            manifest["pages"].append({
+                "page": page_no,
+                "variant_id": item.get("variant_id"),
+                "family": item.get("family"),
+                "label": item.get("label"),
+                "prompt_format": item.get("prompt_format"),
+                "seed": seed,
+                "status": "failed",
+                "error": str(exc),
+            })
             print(f"FAIL page {page_no:02d}: {exc}", file=sys.stderr)
 
         (qa_root / "generation_manifest.partial.json").write_text(
