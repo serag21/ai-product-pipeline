@@ -7,7 +7,6 @@ import argparse
 import copy
 import json
 import sys
-import time
 from pathlib import Path
 
 from PIL import Image, ImageStat
@@ -19,9 +18,6 @@ from comfy.client import ComfyUIClient, ComfyUIError
 
 
 WORKFLOW_PATH = PROJECT_ROOT / "workflows" / "flux2_coloring_api.json"
-OUTPUT_ROOT = PROJECT_ROOT / "products" / "construction-vehicles-toddler-30"
-PAGES_ROOT = OUTPUT_ROOT / "pages"
-QA_ROOT = OUTPUT_ROOT / "qa"
 
 PROMPT_NODE = "6"
 SEED_NODE = "25"
@@ -30,16 +26,49 @@ SCHEDULER_NODE = "48"
 GUIDANCE_NODE = "26"
 OUTPUT_NODE = "9"
 
-WIDTH = 1536
-HEIGHT = 1984
-STEPS = 20
-GUIDANCE = 4.0
+
+def resolve_product_root(value: str) -> Path:
+    path = Path(value)
+    if not path.is_absolute():
+        path = PROJECT_ROOT / path
+    return path.resolve()
 
 
-def load_product() -> dict:
-    path = OUTPUT_ROOT / "prompts.json"
+def load_product(product_root: Path) -> dict:
+    path = product_root / "prompts.json"
+    if not path.is_file():
+        raise RuntimeError(f"Product manifest not found: {path}")
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def generation_settings(product: dict) -> tuple[int, int, int, float]:
+    settings = product.get("generation", {})
+    width = int(settings.get("width", 1536))
+    height = int(settings.get("height", 1984))
+    steps = int(settings.get("steps", 20))
+    guidance = float(settings.get("guidance", 4.0))
+    return width, height, steps, guidance
+
+
+def build_prompt(product: dict, item: dict) -> str:
+    if product.get("prompt_format") == "json":
+        bible = product.get("visual_bible", {})
+        payload = {
+            "scene": item["scene"],
+            "subjects": item["subjects"],
+            "style": bible["style"],
+            "color_palette": bible["color_palette"],
+            "lighting": item.get("lighting", bible["lighting"]),
+            "mood": item.get("mood", bible["mood"]),
+            "background": item["background"],
+            "composition": item["composition"],
+            "rendering": bible["rendering"],
+            "page_design": bible["page_design"],
+        }
+        return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+    return f'{item["subject"]}. {product["global_prompt"]}'
 
 
 def validate_workflow(workflow: dict) -> None:
@@ -85,54 +114,71 @@ def quality_check(path: Path) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--product",
+        default="products/construction-vehicles-toddler-30",
+        help="Product directory containing prompts.json.",
+    )
     parser.add_argument("--count", type=int, default=5)
     parser.add_argument("--start", type=int, default=1)
     parser.add_argument("--server", default="http://127.0.0.1:8188")
     parser.add_argument("--timeout", type=int, default=1800)
     args = parser.parse_args()
 
-    product = load_product()
+    product_root = resolve_product_root(args.product)
+    product = load_product(product_root)
     pages = product["pages"]
     selected = pages[args.start - 1 : args.start - 1 + args.count]
     if not selected:
         raise RuntimeError("No product pages selected.")
 
+    width, height, steps, guidance = generation_settings(product)
+    pages_root = product_root / "pages"
+    qa_root = product_root / "qa"
+
     workflow = ComfyUIClient.load_workflow(WORKFLOW_PATH)
     validate_workflow(workflow)
 
-    PAGES_ROOT.mkdir(parents=True, exist_ok=True)
-    QA_ROOT.mkdir(parents=True, exist_ok=True)
+    pages_root.mkdir(parents=True, exist_ok=True)
+    qa_root.mkdir(parents=True, exist_ok=True)
 
     client = ComfyUIClient(args.server)
     health = client.health()
+    print(f"Product: {product['product_id']}")
     print(f"ComfyUI: {args.server}")
     print(f"GPU devices reported: {health.get('devices', [])}")
     print(f"Workflow: {WORKFLOW_PATH}")
-    print(f"Canvas: {WIDTH}x{HEIGHT} | steps={STEPS} | guidance={GUIDANCE}")
+    print(
+        f"Canvas: {width}x{height} | steps={steps} | "
+        f"guidance={guidance} | prompt_format={product.get('prompt_format', 'text')}"
+    )
 
     manifest = {
         "product_id": product["product_id"],
         "workflow": str(WORKFLOW_PATH.relative_to(PROJECT_ROOT)),
-        "canvas": {"width": WIDTH, "height": HEIGHT},
-        "steps": STEPS,
-        "guidance": GUIDANCE,
+        "canvas": {"width": width, "height": height},
+        "steps": steps,
+        "guidance": guidance,
+        "prompt_format": product.get("prompt_format", "text"),
         "pages": [],
     }
 
     for item in selected:
-        page_no = item["page"]
-        prompt = f'{item["subject"]}. {product["global_prompt"]}'
+        page_no = int(item["page"])
+        prompt = build_prompt(product, item)
         seed = 120000 + page_no * 7919
         wf = copy.deepcopy(workflow)
         wf[PROMPT_NODE]["inputs"]["text"] = prompt
         wf[SEED_NODE]["inputs"]["noise_seed"] = seed
-        wf[LATENT_NODE]["inputs"]["width"] = WIDTH
-        wf[LATENT_NODE]["inputs"]["height"] = HEIGHT
-        wf[SCHEDULER_NODE]["inputs"]["width"] = WIDTH
-        wf[SCHEDULER_NODE]["inputs"]["height"] = HEIGHT
-        wf[SCHEDULER_NODE]["inputs"]["steps"] = STEPS
-        wf[GUIDANCE_NODE]["inputs"]["guidance"] = GUIDANCE
-        wf[OUTPUT_NODE]["inputs"]["filename_prefix"] = f"coloring_{product['product_id']}_page_{page_no:03d}"
+        wf[LATENT_NODE]["inputs"]["width"] = width
+        wf[LATENT_NODE]["inputs"]["height"] = height
+        wf[SCHEDULER_NODE]["inputs"]["width"] = width
+        wf[SCHEDULER_NODE]["inputs"]["height"] = height
+        wf[SCHEDULER_NODE]["inputs"]["steps"] = steps
+        wf[GUIDANCE_NODE]["inputs"]["guidance"] = guidance
+        wf[OUTPUT_NODE]["inputs"]["filename_prefix"] = (
+            f"coloring_{product['product_id']}_page_{page_no:03d}"
+        )
 
         print(f"Generating page {page_no:02d} | seed={seed}")
         try:
@@ -144,7 +190,7 @@ def main() -> int:
                     f"No images returned from output node {OUTPUT_NODE}.",
                     prompt_id,
                 )
-            destination = PAGES_ROOT / f"page_{page_no:03d}.png"
+            destination = pages_root / f"page_{page_no:03d}.png"
             client.download_image(images[-1], destination)
             qa = quality_check(destination)
             record = {
@@ -163,19 +209,28 @@ def main() -> int:
                 raise RuntimeError(f"Basic QA failed for page {page_no}: {qa}")
         except Exception as exc:
             manifest["pages"].append(
-                {"page": page_no, "seed": seed, "status": "failed", "error": str(exc)}
+                {
+                    "page": page_no,
+                    "seed": seed,
+                    "status": "failed",
+                    "error": str(exc),
+                }
             )
             print(f"FAIL page {page_no:02d}: {exc}", file=sys.stderr)
 
-        (QA_ROOT / "generation_manifest.partial.json").write_text(
+        (qa_root / "generation_manifest.partial.json").write_text(
             json.dumps(manifest, indent=2),
             encoding="utf-8",
         )
 
     passed = sum(1 for p in manifest["pages"] if p.get("qa", {}).get("pass"))
     failed = len(manifest["pages"]) - passed
-    manifest["summary"] = {"requested": len(selected), "passed": passed, "failed": failed}
-    (QA_ROOT / "generation_manifest.json").write_text(
+    manifest["summary"] = {
+        "requested": len(selected),
+        "passed": passed,
+        "failed": failed,
+    }
+    (qa_root / "generation_manifest.json").write_text(
         json.dumps(manifest, indent=2),
         encoding="utf-8",
     )
