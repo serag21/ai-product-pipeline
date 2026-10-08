@@ -1,0 +1,1145 @@
+{
+  "product_id": "little-worlds-prompt-lab-36",
+  "title": "Little Worlds: Cozy Reading Nook — FLUX.2 Prompt Laboratory",
+  "purpose": "Controlled prompt experiment before locking the production visual bible. Every variant depicts the same core reading-nook concept so differences are attributable mainly to prompt structure, length, emphasis, and detail controls.",
+  "audience": "ages 7-99",
+  "core_scene": "Cozy neighborhood bookstore reading nook with a large armchair, arched window, one bookshelf, small round table with one cup, one potted plant, and one round rug.",
+  "success_criteria": [
+    "Large shapes are enjoyable to color by hand.",
+    "Every secondary object has a clear purpose.",
+    "Micro-details are limited and large enough for print scale.",
+    "Linework is clean and printable with obvious object boundaries.",
+    "The visual identity remains coherent across prompt formulations.",
+    "One strongest prompt family emerges before scaling to a full book."
+  ],
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "A1",
+      "family": "short-text",
+      "hypothesis": "Test short natural-language prompts with strong early priority ordering; target a simple low-detail composition.",
+      "label": "A1 · baseline-short",
+      "prompt_format": "text",
+      "prompt": "Cozy reading nook in a small neighborhood bookstore: one plush armchair, one arched window, one tall bookshelf, one round side table, one potted plant, and a simple round rug. Charming storybook black-ink coloring illustration with thick rounded outlines, large open shapes, medium-large details, white paper."
+    },
+    {
+      "page": 2,
+      "variant_id": "A2",
+      "family": "short-text",
+      "hypothesis": "Test short natural-language prompts with strong early priority ordering; target a simple low-detail composition.",
+      "label": "A2 · subject-first",
+      "prompt_format": "text",
+      "prompt": "A cozy bookstore reading nook with one plush armchair as the main subject, an arched window behind it, one tall bookshelf, one small round table, one potted plant, and one simple rug. Friendly hand-drawn black ink coloring-book line art, thick confident contours, large easy-to-color areas."
+    },
+    {
+      "page": 3,
+      "variant_id": "A3",
+      "family": "short-text",
+      "hypothesis": "Test short natural-language prompts with strong early priority ordering; target a simple low-detail composition.",
+      "label": "A3 · composition-first",
+      "prompt_format": "text",
+      "prompt": "A centered cozy reading nook: large plush armchair in the foreground, arched window behind it, tall bookshelf to one side, tiny round table with a single cup, one potted plant, and a simple rug. Clean storybook coloring-page line art with bold rounded outlines and generous open spaces."
+    },
+    {
+      "page": 4,
+      "variant_id": "A4",
+      "family": "short-text",
+      "hypothesis": "Test short natural-language prompts with strong early priority ordering; target a simple low-detail composition.",
+      "label": "A4 · style-first",
+      "prompt_format": "text",
+      "prompt": "Charming cozy storybook coloring page, clean black ink line art, thick rounded contours, simple friendly furniture, large open white areas. Show a small bookstore reading nook with a plush armchair, arched window, one bookshelf, one round table, one plant, and one rug."
+    },
+    {
+      "page": 5,
+      "variant_id": "A5",
+      "family": "short-text",
+      "hypothesis": "Test short natural-language prompts with strong early priority ordering; target a simple low-detail composition.",
+      "label": "A5 · open-shapes",
+      "prompt_format": "text",
+      "prompt": "A charming little bookstore reading corner with six clear large elements: armchair, arched window, bookshelf, round table, potted plant, and rug. Thick smooth black outlines, simple rounded forms, spacious coloring regions, restrained decoration, balanced storybook composition."
+    },
+    {
+      "page": 6,
+      "variant_id": "A6",
+      "family": "short-text",
+      "hypothesis": "Test short natural-language prompts with strong early priority ordering; target a simple low-detail composition.",
+      "label": "A6 · warm-world",
+      "prompt_format": "text",
+      "prompt": "A tiny welcoming bookstore reading corner that feels like a little world: soft armchair, sunny arched window, simple bookshelf, round side table, leafy plant, and round rug. Warm storybook feeling translated into crisp black ink line art with clear large shapes."
+    },
+    {
+      "page": 7,
+      "variant_id": "B1",
+      "family": "medium-text",
+      "hypothesis": "Test 30-80 word natural-language prompts, which BFL identifies as usually ideal for most projects.",
+      "label": "B1 · balanced-medium",
+      "prompt_format": "text",
+      "prompt": "Illustrate a cozy little reading nook inside a neighborhood bookstore. The armchair is the clear foreground anchor, with an arched window directly behind it. Add one tall rounded bookshelf, a small round side table holding a simple cup, one potted plant, and a plain circular rug. Use charming hand-drawn black ink coloring-book line art, thick rounded contours, medium-large details, generous white coloring areas, and a calm eye-level three-quarter view."
+    },
+    {
+      "page": 8,
+      "variant_id": "B2",
+      "family": "medium-text",
+      "hypothesis": "Test 30-80 word natural-language prompts, which BFL identifies as usually ideal for most projects.",
+      "label": "B2 · chair-anchor",
+      "prompt_format": "text",
+      "prompt": "Create a peaceful bookstore reading nook designed for coloring. Make the plush armchair the largest object and the clear visual anchor. Behind it, place an arched window with simple curtains; beside it, one tall bookshelf, one small side table, one potted plant, and one circular rug. Use clean storybook ink drawing, bold outer contours, simpler inner lines, large recognizable forms, and carefully spaced details."
+    },
+    {
+      "page": 9,
+      "variant_id": "B3",
+      "family": "medium-text",
+      "hypothesis": "Test 30-80 word natural-language prompts, which BFL identifies as usually ideal for most projects.",
+      "label": "B3 · window-anchor",
+      "prompt_format": "text",
+      "prompt": "Show a charming little bookstore corner with the arched window as the main background feature and a large comfortable armchair in front of it. Include one bookshelf, one round side table with a single mug, one potted plant, and a simple rug. The illustration is an original cozy storybook coloring page in crisp black ink, with smooth rounded linework, medium detail, clear object separation, and large open regions for coloring."
+    },
+    {
+      "page": 10,
+      "variant_id": "B4",
+      "family": "medium-text",
+      "hypothesis": "Test 30-80 word natural-language prompts, which BFL identifies as usually ideal for most projects.",
+      "label": "B4 · simple-interior",
+      "prompt_format": "text",
+      "prompt": "Design a cozy small bookstore interior focused on one reading nook rather than a busy room. Use a large upholstered armchair, an arched window, one bookshelf with broad book shapes, a tiny round table, one leafy plant, and one rug. Keep the furniture rounded and friendly. Render it as polished black-and-white coloring-book line art with thick confident contours, restrained decoration, and enough open space to color comfortably."
+    },
+    {
+      "page": 11,
+      "variant_id": "B5",
+      "family": "medium-text",
+      "hypothesis": "Test 30-80 word natural-language prompts, which BFL identifies as usually ideal for most projects.",
+      "label": "B5 · purposeful-details",
+      "prompt_format": "text",
+      "prompt": "Create a warm bookstore reading corner as an inviting little world. Include a large armchair, one arched window, one bookshelf, one round side table with a cup, one potted plant, and one rug. Every visible detail should support the scene: books belong on the shelf, the cup belongs on the table, and the plant belongs beside the chair. Use clean hand-drawn black ink outlines, large coloring areas, and a balanced three-quarter composition."
+    },
+    {
+      "page": 12,
+      "variant_id": "B6",
+      "family": "medium-text",
+      "hypothesis": "Test 30-80 word natural-language prompts, which BFL identifies as usually ideal for most projects.",
+      "label": "B6 · adult-kids",
+      "prompt_format": "text",
+      "prompt": "Create a cozy reading nook enjoyable for both children and adults to color. Show one big armchair, an arched window, one rounded bookshelf with large book blocks, a small circular table, one friendly potted plant, and one soft rug. Use approachable storybook line art, thick smooth black contours, medium-large shapes, moderate detail, clear depth, and a relaxed eye-level composition with plenty of breathing room."
+    },
+    {
+      "page": 13,
+      "variant_id": "C1",
+      "family": "long-text",
+      "hypothesis": "Test 80+ word natural-language prompts to see whether extra specification improves control or instead causes clutter.",
+      "label": "C1 · long-structured-prose",
+      "prompt_format": "text",
+      "prompt": "Create an original cozy storybook coloring illustration of a tiny neighborhood bookstore reading nook. The primary focus is one large plush armchair positioned in the foreground. Behind it is a single tall arched window with simple curtains. To one side is one rounded wooden bookshelf containing large, clearly separated book shapes. Beside the chair is one small round side table with one simple cup, plus one potted plant and one circular rug. The room should feel complete but intentionally simple. Use crisp black ink on white paper, bold rounded outer contours, lighter but still clean interior lines, medium-large forms, clear separation between objects, and generous uninterrupted areas for coloring. Use an eye-level three-quarter viewpoint and a calm, welcoming composition."
+    },
+    {
+      "page": 14,
+      "variant_id": "C2",
+      "family": "long-text",
+      "hypothesis": "Test 80+ word natural-language prompts to see whether extra specification improves control or instead causes clutter.",
+      "label": "C2 · long-minimal",
+      "prompt_format": "text",
+      "prompt": "Draw a charming little-world bookstore reading corner with a strong sense of simplicity. The scene contains a comfortable armchair, a single arched window, one bookshelf, one small round side table, one potted plant, and one rug. Give each object enough visual space to be easy to recognize and color. Make the armchair and window the strongest shapes, with the shelf and table supporting them. Render original hand-drawn black line art with rounded forms, smooth confident contours, medium-weight interior details, and large white coloring regions. The final page should feel rich because of composition and silhouette, not because it contains many tiny objects. Use a calm three-quarter interior view."
+    },
+    {
+      "page": 15,
+      "variant_id": "C3",
+      "family": "long-text",
+      "hypothesis": "Test 80+ word natural-language prompts to see whether extra specification improves control or instead causes clutter.",
+      "label": "C3 · long-purpose",
+      "prompt_format": "text",
+      "prompt": "Create an inviting bookstore reading nook that feels thoughtfully illustrated rather than densely decorated. Place a large rounded armchair slightly forward of center, an arched window behind it, a single tall bookshelf on the left, one tiny round side table on the right, one leafy potted plant near the window, and a simple circular rug beneath the chair. Give the bookshelf a few large book blocks and the table one recognizable cup so every small detail has a clear purpose. Use clean black ink line art, thick friendly contours, rounded storybook geometry, moderate interior detail, large open coloring shapes, and visible foreground, middle ground, and background separation."
+    },
+    {
+      "page": 16,
+      "variant_id": "C4",
+      "family": "long-text",
+      "hypothesis": "Test 80+ word natural-language prompts to see whether extra specification improves control or instead causes clutter.",
+      "label": "C4 · long-room",
+      "prompt_format": "text",
+      "prompt": "Illustrate a small bookstore room where the reading nook is the only important area. The composition should contain one hero armchair, one arched window, one bookshelf, one side table, one potted plant, and one rug, with simple wall and floor architecture supporting them. Give the chair and window the largest silhouettes and keep everything else secondary. Use original cozy storybook coloring-book aesthetics, black ink contours, clean white interiors, bold smooth outer lines, simpler inner construction lines, and medium-large detail scale. The scene should look polished at full page size and remain comfortable to color by hand."
+    },
+    {
+      "page": 17,
+      "variant_id": "C5",
+      "family": "long-text",
+      "hypothesis": "Test 80+ word natural-language prompts to see whether extra specification improves control or instead causes clutter.",
+      "label": "C5 · long-expressive",
+      "prompt_format": "text",
+      "prompt": "Create a peaceful bookstore reading corner that communicates warmth through shape and composition. A large rounded armchair sits as the hero object, facing slightly toward the viewer. An arched window frames simple leafy shapes outside. A tall bookshelf sits nearby with a small set of broad book shapes, while a round table holds a single cup. One potted plant and one circular rug complete the scene. Use elegant hand-drawn black ink linework, rounded furniture, strong readable silhouettes, medium-large details, and carefully spaced secondary lines. Make the illustration feel like one coherent world designed by a single illustrator."
+    },
+    {
+      "page": 18,
+      "variant_id": "C6",
+      "family": "long-text",
+      "hypothesis": "Test 80+ word natural-language prompts to see whether extra specification improves control or instead causes clutter.",
+      "label": "C6 · long-density-test",
+      "prompt_format": "text",
+      "prompt": "Create a cozy bookstore reading nook with the same six purposeful elements: a large armchair, an arched window, one bookshelf, one round side table, one potted plant, and one rug. Explore a moderately detailed coloring-book treatment, but keep the smallest decorative features large enough to remain satisfying at printed page size. Give the bookshelf a handful of large book forms, the table one cup, and the window one simple view beyond it. Use black ink storybook line art, thick rounded outlines, clear object boundaries, restrained decorative motifs, and a balanced three-quarter interior composition."
+    },
+    {
+      "page": 19,
+      "variant_id": "D1",
+      "family": "minimal-json",
+      "hypothesis": "Test compact structured JSON while changing only a few high-value fields.",
+      "label": "D1 · compact-balance",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "Cozy reading nook inside a small neighborhood bookstore.",
+        "subjects": [
+          {
+            "description": "large plush armchair",
+            "position": "center foreground",
+            "action": "serves as the visual anchor"
+          },
+          {
+            "description": "arched window",
+            "position": "behind chair",
+            "action": "frames simple leafy shapes"
+          },
+          {
+            "description": "single tall bookshelf with broad book shapes",
+            "position": "left middle ground",
+            "action": "supports the reading nook"
+          },
+          {
+            "description": "small round side table with one cup",
+            "position": "right foreground",
+            "action": "sits beside the armchair"
+          },
+          {
+            "description": "single potted plant",
+            "position": "near window",
+            "action": "adds one organic shape"
+          },
+          {
+            "description": "simple circular rug",
+            "position": "under chair",
+            "action": "grounds the scene"
+          }
+        ],
+        "style": "original cozy storybook black-ink coloring illustration, thick rounded outlines, large open coloring areas",
+        "composition": "eye-level three-quarter interior view with clear foreground, middle ground, and background"
+      }
+    },
+    {
+      "page": 20,
+      "variant_id": "D2",
+      "family": "minimal-json",
+      "hypothesis": "Test compact structured JSON while changing only a few high-value fields.",
+      "label": "D2 · compact-center",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A simple cozy bookstore reading corner.",
+        "subjects": [
+          {
+            "description": "hero armchair",
+            "position": "center foreground",
+            "action": "anchors the page"
+          },
+          {
+            "description": "arched window",
+            "position": "center background",
+            "action": "creates a strong rounded frame"
+          },
+          {
+            "description": "one bookshelf",
+            "position": "left",
+            "action": "holds broad book shapes"
+          },
+          {
+            "description": "one round table with one cup",
+            "position": "right",
+            "action": "supports the chair"
+          },
+          {
+            "description": "one potted plant",
+            "position": "near window",
+            "action": "balances the composition"
+          },
+          {
+            "description": "round rug",
+            "position": "floor center",
+            "action": "grounds the chair"
+          }
+        ],
+        "style": "friendly hand-drawn black ink line art, bold smooth contours, medium-large details, spacious coloring shapes",
+        "composition": "centered symmetrical composition with one dominant foreground chair"
+      }
+    },
+    {
+      "page": 21,
+      "variant_id": "D3",
+      "family": "minimal-json",
+      "hypothesis": "Test compact structured JSON while changing only a few high-value fields.",
+      "label": "D3 · compact-window",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "Charming bookstore reading nook with a beautiful arched window.",
+        "subjects": [
+          {
+            "description": "arched window",
+            "position": "upper center background",
+            "action": "is the main architectural feature"
+          },
+          {
+            "description": "large armchair",
+            "position": "center foreground",
+            "action": "creates the main seating area"
+          },
+          {
+            "description": "single bookshelf",
+            "position": "left middle ground",
+            "action": "adds a clear vertical form"
+          },
+          {
+            "description": "small round table with cup",
+            "position": "right foreground",
+            "action": "adds a simple functional object"
+          },
+          {
+            "description": "potted plant",
+            "position": "left of window",
+            "action": "adds one leafy silhouette"
+          },
+          {
+            "description": "plain circular rug",
+            "position": "beneath chair",
+            "action": "frames the seating area"
+          }
+        ],
+        "style": "clean storybook coloring-page ink, thick rounded contours, simple friendly geometry",
+        "composition": "window-centered three-quarter view with large open white regions"
+      }
+    },
+    {
+      "page": 22,
+      "variant_id": "D4",
+      "family": "minimal-json",
+      "hypothesis": "Test compact structured JSON while changing only a few high-value fields.",
+      "label": "D4 · compact-chair",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "Peaceful little bookstore reading nook.",
+        "subjects": [
+          {
+            "description": "oversized rounded armchair",
+            "position": "center foreground",
+            "action": "dominates the scene"
+          },
+          {
+            "description": "arched window",
+            "position": "behind chair",
+            "action": "provides the main background shape"
+          },
+          {
+            "description": "single bookshelf",
+            "position": "far left",
+            "action": "contains a few large book forms"
+          },
+          {
+            "description": "small round table and one cup",
+            "position": "right of chair",
+            "action": "provides a simple useful detail"
+          },
+          {
+            "description": "one leafy plant",
+            "position": "far right",
+            "action": "adds balance"
+          },
+          {
+            "description": "simple round rug",
+            "position": "beneath chair",
+            "action": "completes the seating area"
+          }
+        ],
+        "style": "bold friendly black ink line art, thick outer contours, restrained interior detail",
+        "composition": "slightly angled eye-level view with strong foreground chair silhouette"
+      }
+    },
+    {
+      "page": 23,
+      "variant_id": "D5",
+      "family": "minimal-json",
+      "hypothesis": "Test compact structured JSON while changing only a few high-value fields.",
+      "label": "D5 · compact-open",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "Small cozy bookstore reading corner designed for comfortable coloring.",
+        "subjects": [
+          {
+            "description": "large armchair",
+            "position": "center foreground",
+            "action": "anchors the page"
+          },
+          {
+            "description": "arched window",
+            "position": "upper background",
+            "action": "frames a simple outdoor view"
+          },
+          {
+            "description": "single bookshelf",
+            "position": "left middle ground",
+            "action": "adds one useful storage form"
+          },
+          {
+            "description": "round side table with one cup",
+            "position": "right middle ground",
+            "action": "adds one functional detail"
+          },
+          {
+            "description": "single potted plant",
+            "position": "rear right",
+            "action": "adds one organic accent"
+          },
+          {
+            "description": "open circular rug",
+            "position": "floor foreground",
+            "action": "creates a simple grounding shape"
+          }
+        ],
+        "style": "crisp black ink coloring illustration, rounded storybook forms, generous empty coloring regions, medium-large details",
+        "composition": "wide comfortable framing with clear object separation and strong white space"
+      }
+    },
+    {
+      "page": 24,
+      "variant_id": "D6",
+      "family": "minimal-json",
+      "hypothesis": "Test compact structured JSON while changing only a few high-value fields.",
+      "label": "D6 · compact-storybook",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A tiny welcoming reading world inside a neighborhood bookstore.",
+        "subjects": [
+          {
+            "description": "plush reading chair",
+            "position": "center foreground",
+            "action": "invites the viewer into the scene"
+          },
+          {
+            "description": "arched window",
+            "position": "center background",
+            "action": "brings gentle light into the nook"
+          },
+          {
+            "description": "rounded bookshelf",
+            "position": "left",
+            "action": "stores a few broad book shapes"
+          },
+          {
+            "description": "small round table with cup",
+            "position": "right",
+            "action": "supports the reading chair"
+          },
+          {
+            "description": "one potted leafy plant",
+            "position": "beside window",
+            "action": "adds a friendly natural silhouette"
+          },
+          {
+            "description": "simple round rug",
+            "position": "floor center",
+            "action": "ties the nook together"
+          }
+        ],
+        "style": "charming original storybook black-ink coloring page, thick smooth rounded contours, clear large shapes",
+        "composition": "balanced three-quarter view with a strong readable silhouette for every object"
+      }
+    },
+    {
+      "page": 25,
+      "variant_id": "E1",
+      "family": "detailed-json",
+      "hypothesis": "Test full BFL-style structured prompts with independent scene fields, composition, camera, mood, and rendering.",
+      "label": "E1 · full-balanced",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A tiny neighborhood bookstore reading nook designed as a calm little world.",
+        "subjects": [
+          {
+            "type": "hero furniture",
+            "description": "large rounded upholstered armchair with simple curved arms and broad cushion shapes",
+            "position": "center foreground",
+            "action": "anchors the entire composition"
+          },
+          {
+            "type": "architecture",
+            "description": "single tall arched window with simple curtains and a broad sill",
+            "position": "center rear",
+            "action": "frames a quiet leafy view"
+          },
+          {
+            "type": "storage",
+            "description": "one rounded wooden bookshelf with six broad blank book shapes",
+            "position": "left middle ground",
+            "action": "supports the reading theme"
+          },
+          {
+            "type": "functional object",
+            "description": "small round side table with a single simple ceramic cup",
+            "position": "right foreground",
+            "action": "sits naturally beside the chair"
+          },
+          {
+            "type": "plant",
+            "description": "one medium potted plant with large simple leaves",
+            "position": "near window",
+            "action": "adds one organic vertical accent"
+          },
+          {
+            "type": "grounding",
+            "description": "plain circular rug with a simple border",
+            "position": "beneath chair",
+            "action": "defines the reading nook"
+          }
+        ],
+        "style": "original cozy storybook coloring-book illustration, black ink on white paper, thick rounded outer contours, clean medium-weight interior lines, friendly simplified geometry",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft daylight entering through the arched window, expressed with simple clean shapes",
+        "mood": "peaceful, welcoming, curious",
+        "background": "simple bookstore wall and floor architecture with minimal supporting lines",
+        "composition": "hero chair in foreground, window centered behind it, bookshelf left, table right, plant near window, clear visual hierarchy",
+        "camera": {
+          "angle": "eye level three-quarter interior view",
+          "distance": "medium-wide",
+          "focus": "all major forms clearly readable"
+        }
+      }
+    },
+    {
+      "page": 26,
+      "variant_id": "E2",
+      "family": "detailed-json",
+      "hypothesis": "Test full BFL-style structured prompts with independent scene fields, composition, camera, mood, and rendering.",
+      "label": "E2 · full-low-detail",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "Cozy bookstore reading nook with deliberately simple visual architecture.",
+        "subjects": [
+          {
+            "type": "chair",
+            "description": "large plush armchair with broad simple cushions",
+            "position": "center foreground",
+            "action": "dominates the page"
+          },
+          {
+            "type": "window",
+            "description": "single rounded arched window with minimal curtain shapes",
+            "position": "center background",
+            "action": "creates the main frame"
+          },
+          {
+            "type": "shelf",
+            "description": "one tall bookshelf with a small number of broad book blocks",
+            "position": "left background",
+            "action": "adds one vertical storage form"
+          },
+          {
+            "type": "table",
+            "description": "small round side table with one cup",
+            "position": "right foreground",
+            "action": "adds one functional detail"
+          },
+          {
+            "type": "plant",
+            "description": "single potted plant with large leaves",
+            "position": "right background",
+            "action": "balances the page"
+          },
+          {
+            "type": "rug",
+            "description": "plain circular rug",
+            "position": "under chair",
+            "action": "grounds the seating area"
+          }
+        ],
+        "style": "clean minimal storybook ink coloring page, thick smooth black outlines, large open white regions, large recognizable shapes, sparse interior detail",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft simple daylight",
+        "mood": "quiet and comforting",
+        "background": "simple room walls and floor with only essential architectural lines",
+        "composition": "generous breathing room around six major elements, strong chair silhouette, uncluttered layers",
+        "camera": {
+          "angle": "straight eye level",
+          "distance": "medium-wide",
+          "focus": "major silhouettes and object boundaries"
+        }
+      }
+    },
+    {
+      "page": 27,
+      "variant_id": "E3",
+      "family": "detailed-json",
+      "hypothesis": "Test full BFL-style structured prompts with independent scene fields, composition, camera, mood, and rendering.",
+      "label": "E3 · full-bold-ink",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A warm little bookstore reading corner rendered as highly readable coloring-book line art.",
+        "subjects": [
+          {
+            "type": "armchair",
+            "description": "rounded upholstered armchair with broad cushion panels",
+            "position": "center foreground",
+            "action": "provides the largest dark contour"
+          },
+          {
+            "type": "window",
+            "description": "single arched window with simple curtain panels",
+            "position": "upper center",
+            "action": "creates the second largest shape"
+          },
+          {
+            "type": "bookshelf",
+            "description": "one narrow rounded bookshelf with large separated books",
+            "position": "left middle ground",
+            "action": "adds controlled vertical rhythm"
+          },
+          {
+            "type": "table",
+            "description": "small round wooden table with one mug",
+            "position": "right foreground",
+            "action": "adds a functional small accent"
+          },
+          {
+            "type": "plant",
+            "description": "one broad-leaf houseplant in a simple pot",
+            "position": "right middle ground",
+            "action": "adds one organic silhouette"
+          },
+          {
+            "type": "rug",
+            "description": "simple circular rug",
+            "position": "lower center",
+            "action": "frames the chair"
+          }
+        ],
+        "style": "storybook black ink illustration with bold outer contours, clear medium inner lines, rounded shapes, polished printable coloring-book finish",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "gentle window light",
+        "mood": "warm and inviting",
+        "background": "simple bookstore interior with quiet walls and floor",
+        "composition": "bold contour hierarchy with the armchair and window first, secondary objects clearly subordinate",
+        "camera": {
+          "angle": "three-quarter eye level",
+          "distance": "medium",
+          "focus": "all six major elements"
+        }
+      }
+    },
+    {
+      "page": 28,
+      "variant_id": "E4",
+      "family": "detailed-json",
+      "hypothesis": "Test full BFL-style structured prompts with independent scene fields, composition, camera, mood, and rendering.",
+      "label": "E4 · full-geometric",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "Small cozy bookstore nook built from clear rounded geometric forms.",
+        "subjects": [
+          {
+            "type": "seat",
+            "description": "large rounded armchair built from simple curved blocks",
+            "position": "center foreground",
+            "action": "anchors the scene"
+          },
+          {
+            "type": "window",
+            "description": "large arched window with simple rectangular panes",
+            "position": "background center",
+            "action": "adds a strong architectural rhythm"
+          },
+          {
+            "type": "bookshelf",
+            "description": "single rounded rectangular bookshelf with broad book silhouettes",
+            "position": "left",
+            "action": "provides vertical balance"
+          },
+          {
+            "type": "table",
+            "description": "small circular table with a single mug",
+            "position": "right foreground",
+            "action": "adds a clean circular accent"
+          },
+          {
+            "type": "plant",
+            "description": "one simple broad-leaf plant",
+            "position": "right middle ground",
+            "action": "adds organic contrast"
+          },
+          {
+            "type": "rug",
+            "description": "large plain circular rug",
+            "position": "lower center",
+            "action": "connects the main furniture"
+          }
+        ],
+        "style": "friendly geometric storybook line art, smooth black contours, simple rounded construction, medium-large coloring areas",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "simple daylight",
+        "mood": "cheerful, calm, welcoming",
+        "background": "minimal bookstore architecture using clear rounded lines",
+        "composition": "balanced mix of circular, arched, and rectangular forms with strong spacing",
+        "camera": {
+          "angle": "front three-quarter",
+          "distance": "medium-wide",
+          "focus": "silhouettes and shape relationships"
+        }
+      }
+    },
+    {
+      "page": 29,
+      "variant_id": "E5",
+      "family": "detailed-json",
+      "hypothesis": "Test full BFL-style structured prompts with independent scene fields, composition, camera, mood, and rendering.",
+      "label": "E5 · full-handdrawn",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A charming hand-drawn bookstore reading nook that feels like a page from an original cozy storybook.",
+        "subjects": [
+          {
+            "type": "armchair",
+            "description": "soft rounded armchair with simple seams and broad cushion shapes",
+            "position": "center foreground",
+            "action": "invites the viewer to sit"
+          },
+          {
+            "type": "window",
+            "description": "arched window with plain curtains and a few large leafy shapes outside",
+            "position": "center background",
+            "action": "creates a gentle focal frame"
+          },
+          {
+            "type": "bookshelf",
+            "description": "one wooden bookshelf with a modest row of broad book shapes",
+            "position": "left",
+            "action": "supports the bookstore setting"
+          },
+          {
+            "type": "side table",
+            "description": "small round table with one cup",
+            "position": "right of chair",
+            "action": "adds a useful everyday detail"
+          },
+          {
+            "type": "plant",
+            "description": "one friendly potted plant with broad leaves",
+            "position": "near window",
+            "action": "softens the architecture"
+          },
+          {
+            "type": "rug",
+            "description": "simple round rug with a single border",
+            "position": "under chair",
+            "action": "anchors the nook"
+          }
+        ],
+        "style": "original hand-drawn storybook ink, organic but controlled linework, rounded forms, thick confident contours, medium-large details",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft natural window light",
+        "mood": "cozy, personal, comforting",
+        "background": "quiet bookstore wall and floor with minimal supporting marks",
+        "composition": "slightly asymmetrical but balanced, chair as anchor and window as secondary focal shape",
+        "camera": {
+          "angle": "eye-level three-quarter view",
+          "distance": "medium-wide",
+          "focus": "all major shapes crisp and readable"
+        }
+      }
+    },
+    {
+      "page": 30,
+      "variant_id": "E6",
+      "family": "detailed-json",
+      "hypothesis": "Test full BFL-style structured prompts with independent scene fields, composition, camera, mood, and rendering.",
+      "label": "E6 · full-balanced-space",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A peaceful little bookstore reading nook with carefully controlled detail density.",
+        "subjects": [
+          {
+            "type": "primary",
+            "description": "large upholstered reading chair with a simple rounded silhouette",
+            "position": "center foreground",
+            "action": "is the main visual anchor"
+          },
+          {
+            "type": "secondary",
+            "description": "large arched window",
+            "position": "upper center background",
+            "action": "creates open breathing space behind the chair"
+          },
+          {
+            "type": "secondary",
+            "description": "single bookshelf with five or six large blank book forms",
+            "position": "left middle ground",
+            "action": "shows the bookstore purpose"
+          },
+          {
+            "type": "secondary",
+            "description": "small circular side table with one mug",
+            "position": "right foreground",
+            "action": "adds a functional detail"
+          },
+          {
+            "type": "secondary",
+            "description": "one potted plant with large leaves",
+            "position": "right background",
+            "action": "adds an organic counterweight"
+          },
+          {
+            "type": "grounding",
+            "description": "large plain circular rug",
+            "position": "lower center",
+            "action": "frames the seating area"
+          }
+        ],
+        "style": "professional printable coloring-book line art, thick rounded black outlines, clear interior construction lines, medium-large detail scale, generous white coloring regions",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft even daylight",
+        "mood": "relaxed and inviting",
+        "background": "simple bookstore architecture with restrained supporting detail",
+        "composition": "deliberate hierarchy from primary chair to secondary objects, comfortable margins and visible white space",
+        "camera": {
+          "angle": "eye level three-quarter",
+          "distance": "medium-wide",
+          "focus": "major objects rather than micro-details"
+        }
+      }
+    },
+    {
+      "page": 31,
+      "variant_id": "F1",
+      "family": "coloring-optimized-json",
+      "hypothesis": "Test prompts explicitly optimized for human coloring: large regions, deliberate purpose, readable silhouettes, and controlled detail scale.",
+      "label": "F1 · coloring-1",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A cozy bookstore reading nook built for an enjoyable coloring experience.",
+        "subjects": [
+          {
+            "description": "one large rounded armchair with broad cushions",
+            "position": "center foreground",
+            "action": "creates the largest easy-to-color region"
+          },
+          {
+            "description": "one large arched window",
+            "position": "center background",
+            "action": "creates one clean architectural frame"
+          },
+          {
+            "description": "one bookshelf with a few large book shapes",
+            "position": "left middle ground",
+            "action": "clearly communicates the bookstore setting"
+          },
+          {
+            "description": "one small round table with one cup",
+            "position": "right foreground",
+            "action": "adds one purposeful functional detail"
+          },
+          {
+            "description": "one potted plant with large leaves",
+            "position": "right background",
+            "action": "adds one simple organic shape"
+          },
+          {
+            "description": "one plain circular rug",
+            "position": "beneath chair",
+            "action": "creates a broad grounding shape"
+          }
+        ],
+        "style": "original cozy storybook coloring-book line art, thick smooth contours, large open white regions, medium-large details, crisp object boundaries",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft daylight",
+        "mood": "calm and welcoming",
+        "background": "simple bookstore room with only essential architectural lines",
+        "composition": "six clear major elements with generous space between them, chair first and window second"
+      }
+    },
+    {
+      "page": 32,
+      "variant_id": "F2",
+      "family": "coloring-optimized-json",
+      "hypothesis": "Test prompts explicitly optimized for human coloring: large regions, deliberate purpose, readable silhouettes, and controlled detail scale.",
+      "label": "F2 · coloring-2",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A simple little-world bookstore reading corner with a strong sense of order.",
+        "subjects": [
+          {
+            "description": "large armchair",
+            "position": "center foreground",
+            "action": "occupies the largest area"
+          },
+          {
+            "description": "arched window",
+            "position": "upper background",
+            "action": "creates the second-largest uninterrupted shape"
+          },
+          {
+            "description": "single shelf with broad book blocks",
+            "position": "left",
+            "action": "provides one readable vertical cluster"
+          },
+          {
+            "description": "small round table and cup",
+            "position": "right",
+            "action": "provides one small functional cluster"
+          },
+          {
+            "description": "single broad-leaf plant",
+            "position": "rear right",
+            "action": "adds one simple organic silhouette"
+          },
+          {
+            "description": "plain round rug",
+            "position": "floor center",
+            "action": "creates one large coloring region"
+          }
+        ],
+        "style": "clean black ink storybook line art, bold rounded outer contours, simplified interior lines, medium-large shapes, comfortable coloring scale",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "even gentle daylight",
+        "mood": "peaceful",
+        "background": "quiet bookstore walls and floor",
+        "composition": "balanced spacing and broad silhouettes, with no area dominated by tiny marks"
+      }
+    },
+    {
+      "page": 33,
+      "variant_id": "F3",
+      "family": "coloring-optimized-json",
+      "hypothesis": "Test prompts explicitly optimized for human coloring: large regions, deliberate purpose, readable silhouettes, and controlled detail scale.",
+      "label": "F3 · purposeful",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A charming bookstore reading nook where every visible object has an obvious everyday purpose.",
+        "subjects": [
+          {
+            "description": "large armchair",
+            "position": "center foreground",
+            "action": "provides the place to read"
+          },
+          {
+            "description": "arched window",
+            "position": "behind chair",
+            "action": "provides light and a view"
+          },
+          {
+            "description": "bookshelf with broad books",
+            "position": "left",
+            "action": "stores the books"
+          },
+          {
+            "description": "round table with one cup",
+            "position": "right of chair",
+            "action": "holds a drink"
+          },
+          {
+            "description": "potted plant with large leaves",
+            "position": "near window",
+            "action": "decorates the corner"
+          },
+          {
+            "description": "simple rug",
+            "position": "beneath chair",
+            "action": "defines the cozy seating area"
+          }
+        ],
+        "style": "original warm storybook black-ink coloring illustration, thick rounded contours, readable forms, moderate detail, large coloring spaces",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft daylight",
+        "mood": "thoughtful and cozy",
+        "background": "minimal supporting architecture",
+        "composition": "clear hierarchy, functional relationships between objects, ample white space"
+      }
+    },
+    {
+      "page": 34,
+      "variant_id": "F4",
+      "family": "coloring-optimized-json",
+      "hypothesis": "Test prompts explicitly optimized for human coloring: large regions, deliberate purpose, readable silhouettes, and controlled detail scale.",
+      "label": "F4 · big-details",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A cozy bookstore reading nook emphasizing details large enough to enjoy coloring by hand.",
+        "subjects": [
+          {
+            "description": "large cushioned armchair with two broad cushion panels",
+            "position": "center foreground",
+            "action": "dominates the page"
+          },
+          {
+            "description": "arched window with four large panes",
+            "position": "background center",
+            "action": "creates a strong architectural shape"
+          },
+          {
+            "description": "bookshelf with five large book silhouettes",
+            "position": "left middle ground",
+            "action": "adds a few purposeful details"
+          },
+          {
+            "description": "round table with one large simple mug",
+            "position": "right foreground",
+            "action": "adds a recognizable object"
+          },
+          {
+            "description": "single plant with six broad leaves",
+            "position": "right middle ground",
+            "action": "adds a large organic pattern"
+          },
+          {
+            "description": "plain circular rug with one border",
+            "position": "under chair",
+            "action": "creates a wide simple surface"
+          }
+        ],
+        "style": "crisp printable coloring-book ink, thick black contours, large readable details, broad white coloring areas, clean separation",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft even window light",
+        "mood": "warm and relaxed",
+        "background": "simple bookstore interior",
+        "composition": "large objects dominate, small details are grouped into readable shapes"
+      }
+    },
+    {
+      "page": 35,
+      "variant_id": "F5",
+      "family": "coloring-optimized-json",
+      "hypothesis": "Test prompts explicitly optimized for human coloring: large regions, deliberate purpose, readable silhouettes, and controlled detail scale.",
+      "label": "F5 · limited-decoration",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A cozy bookstore reading corner with restrained decoration and strong silhouettes.",
+        "subjects": [
+          {
+            "description": "rounded armchair",
+            "position": "center foreground",
+            "action": "anchors the page"
+          },
+          {
+            "description": "arched window",
+            "position": "upper center background",
+            "action": "creates open space"
+          },
+          {
+            "description": "one bookshelf",
+            "position": "left background",
+            "action": "adds a single storage form"
+          },
+          {
+            "description": "one round side table with cup",
+            "position": "right foreground",
+            "action": "adds functional interest"
+          },
+          {
+            "description": "one large-leaf plant",
+            "position": "right background",
+            "action": "adds a natural accent"
+          },
+          {
+            "description": "simple circular rug",
+            "position": "lower center",
+            "action": "connects the furniture"
+          }
+        ],
+        "style": "minimal cozy storybook ink coloring art, thick smooth outlines, restrained decoration, large open coloring areas, medium-large details",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "gentle daylight",
+        "mood": "quiet and uncluttered",
+        "background": "simple walls and floor",
+        "composition": "strong silhouettes, broad white space, visually calm hierarchy"
+      }
+    },
+    {
+      "page": 36,
+      "variant_id": "F6",
+      "family": "coloring-optimized-json",
+      "hypothesis": "Test prompts explicitly optimized for human coloring: large regions, deliberate purpose, readable silhouettes, and controlled detail scale.",
+      "label": "F6 · family-friendly",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A cozy bookstore reading nook designed to feel inviting and easy to color for children and adults.",
+        "subjects": [
+          {
+            "description": "friendly rounded armchair",
+            "position": "center foreground",
+            "action": "serves as the welcoming focal object"
+          },
+          {
+            "description": "large arched window",
+            "position": "background center",
+            "action": "provides a simple bright frame"
+          },
+          {
+            "description": "rounded bookshelf with large book shapes",
+            "position": "left",
+            "action": "makes the bookstore instantly recognizable"
+          },
+          {
+            "description": "small round table with one mug",
+            "position": "right",
+            "action": "adds a simple useful object"
+          },
+          {
+            "description": "large-leaf potted plant",
+            "position": "rear right",
+            "action": "adds a simple nature shape"
+          },
+          {
+            "description": "wide round rug",
+            "position": "under chair",
+            "action": "creates a satisfying broad region to color"
+          }
+        ],
+        "style": "friendly original storybook coloring line art, thick rounded black contours, simple expressive geometry, medium-large details, clean spacious composition",
+        "color_palette": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "lighting": "soft daylight",
+        "mood": "happy, calm, welcoming",
+        "background": "simple bookstore architecture with only essential support lines",
+        "composition": "large recognizable objects, clear separation, comfortable breathing room"
+      }
+    }
+  ]
+}
