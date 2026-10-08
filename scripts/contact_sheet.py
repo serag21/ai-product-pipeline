@@ -4,18 +4,18 @@
 from __future__ import annotations
 
 import argparse
+import json
 import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
-
-THUMB_W = 320
-THUMB_H = 413
-GAP = 24
-LABEL_H = 36
-COLS = 3
+THUMB_W = 280
+THUMB_H = 362
+GAP = 18
+LABEL_H = 48
+COLS = 5
 
 
 def resolve_product_root(value: str) -> Path:
@@ -25,18 +25,30 @@ def resolve_product_root(value: str) -> Path:
     return path.resolve()
 
 
+def load_labels(product_root: Path) -> dict[int, str]:
+    manifest_path = product_root / "prompts.json"
+    if not manifest_path.is_file():
+        return {}
+    try:
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return {
+        int(item["page"]): item.get("label", f"page_{int(item['page']):03d}")
+        for item in data.get("pages", [])
+        if "page" in item
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--product",
-        default="products/construction-vehicles-toddler-30",
-        help="Product directory containing the generated pages.",
-    )
+    parser.add_argument("--product", default="products/construction-vehicles-toddler-30")
     args = parser.parse_args()
 
     product_root = resolve_product_root(args.product)
     pages = product_root / "pages"
     out = product_root / "qa" / "contact_sheet.jpg"
+    labels = load_labels(product_root)
 
     files = sorted(pages.glob("page_*.png"))
     if not files:
@@ -61,7 +73,8 @@ def main() -> None:
         x = GAP + col * (THUMB_W + GAP)
         y = GAP + row * (THUMB_H + LABEL_H + GAP)
         sheet.paste(image, (x, y))
-        draw.text((x, y + THUMB_H + 8), path.stem, fill="black")
+        label = labels.get(int(path.stem.split("_")[-1]), path.stem)
+        draw.text((x, y + THUMB_H + 7), label, fill="black")
 
     out.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(out, quality=94, subsampling=0)
