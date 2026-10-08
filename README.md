@@ -4,80 +4,59 @@ Local-first automation for AI-assisted digital products, starting with printable
 
 ## Current milestone
 
-Prove this end-to-end:
+The generation foundation is proven:
 
-**ComfyUI -> local API -> deterministic Python product worker -> validated PNG pages -> printable product**
+**ComfyUI -> local API -> deterministic Python product worker -> validated PNG pages**
 
-The repository already contains the proven FLUX.2 Dev API workflow at `workflows/flux2_coloring_api.json` plus the multi-reference workflow.
+The repository contains the proven FLUX.2 Dev workflow at `workflows/flux2_coloring_api.json`.
 
-## Local setup
+## Product generation
 
-Clone once:
+The generator is now product-manifest driven. Each product lives under:
 
-```powershell
-cd C:\Users\serag\source\repos
-git clone https://github.com/serag21/ai-product-pipeline.git
-cd ai-product-pipeline
-```
+`products/<product-id>/prompts.json`
 
-Run setup:
+The manifest can use either the original text prompt format or the FLUX.2 structured JSON prompt format. Structured JSON is the preferred format for production books because it gives every page the same schema while allowing scenes, subjects, composition, mood, and other elements to vary independently.
 
-```powershell
-Set-ExecutionPolicy -Scope Process Bypass
-.\setup.ps1
-```
+The current prototype uses a shared visual bible across all five pages:
 
-Start the existing ComfyUI installation separately. The pipeline expects:
+`products/little-worlds-cozy-corners-5-prototype/prompts.json`
 
-```text
-http://127.0.0.1:8188
-```
+This is deliberately a visual-consistency gate, not the final sellable book. The five pages should read as one cohesive coloring-book series before we scale to a larger catalog product.
 
-The proven FLUX.2 Dev API workflow is already committed as:
-
-```text
-workflows/flux2_coloring_api.json
-```
-
-## First production product
-
-Product manifest:
-
-```text
-products/construction-vehicles-toddler-30/prompts.json
-```
-
-The production generator deliberately overrides the workflow's UI canvas to portrait printable dimensions (1536x1984), while keeping the proven model, sampler, 20 steps, and guidance 4 settings.
-
-Run a five-page QA batch:
+Run the prototype:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\generate_product.py --count 5
+.\.venv\Scripts\python.exe scripts\generate_product.py --product products/little-worlds-cozy-corners-5-prototype --count 5
 ```
 
-Create the visual QA sheet:
+Create its visual QA sheet:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\contact_sheet.py
+.\.venv\Scripts\python.exe scripts\contact_sheet.py --product products/little-worlds-cozy-corners-5-prototype
 ```
 
-Generated pages are written under:
+Generated prototype pages and QA artifacts stay under the product directory and are ignored by git.
 
-```text
-products/construction-vehicles-toddler-30/pages/
-```
-
-and QA artifacts under:
-
-```text
-products/construction-vehicles-toddler-30/qa/
-```
-
-After the five-page visual gate passes, the same generator can produce the full 30-page product:
+The original construction-vehicle manifest remains available as an engineering regression test:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\generate_product.py --count 30
+.\.venv\Scripts\python.exe scripts\generate_product.py --product products/construction-vehicles-toddler-30 --count 5
 ```
+
+## FLUX.2 prompting strategy
+
+The product manifests follow the current Black Forest Labs prompting guidance:
+
+- Main scene and subjects are placed first.
+- Each subject has a clear description, position, and action.
+- Style is defined once in a reusable visual bible and repeated across pages.
+- Structured JSON is used for the automated production workflow.
+- The coloring-book visual language is expressed positively as desired output instead of relying on negative prompts.
+- Seeds remain deterministic so a page can be reproduced.
+
+See the official guide:
+https://docs.bfl.ai/guides/prompting_guide_flux2
 
 ## Design principles
 
