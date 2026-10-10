@@ -58,6 +58,26 @@ The product manifests follow the current Black Forest Labs prompting guidance:
 See the official guide:
 https://docs.bfl.ai/guides/prompting_guide_flux2
 
+
+## Reference-conditioned visual refinement
+
+The selected page-35 composition can now be used as a visual reference with FLUX.2 Dev's `ReferenceLatent` conditioning path. The input image guides the broad composition while the prompt asks FLUX.2 to redesign the scene.
+
+The focused follow-up experiment is:
+
+`products/little-worlds-enchanted-nook-reference-lab-12/prompts.json`
+
+It holds the magical tree-library scene and reference image consistent while varying prompt wording and structure. This lab deliberately avoids a lighting field: the desired coloring-page treatment is defined through black contour lines, blank white interiors, sparse interior lines, and broad open regions.
+
+Run it from the repository root:
+
+```powershell
+.\\.venv\\Scripts\\python.exe scripts\\generate_product.py --product products/little-worlds-enchanted-nook-reference-lab-12 --reference products/little-worlds-prompt-lab-36/pages/page_035.png --count 12
+.\\.venv\\Scripts\\python.exe scripts\\contact_sheet.py --product products/little-worlds-enchanted-nook-reference-lab-12
+```
+
+The generator uploads the reference image to the local ComfyUI input folder, then uses the separate reference-conditioned API workflow. The regular text-to-image path remains unchanged when `--reference` is omitted.
+
 ## Design principles
 
 - Reuse existing tools, APIs, and open-source implementations before writing custom infrastructure.
