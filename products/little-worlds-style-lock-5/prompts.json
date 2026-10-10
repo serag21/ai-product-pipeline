@@ -1,0 +1,50 @@
+{
+  "product_id": "little-worlds-style-lock-5",
+  "title": "Little Worlds: Enchanted Cozy Corners — Five-Scene Style-Lock Prototype",
+  "purpose": "Final creative gate: test whether one fixed visual bible produces a coherent style across five different miniature fantasy environments. This is not the final 30-page book.",
+  "audience": "ages 7-99",
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "global_prompt": "Original whimsical storybook coloring-book line art for children and adults. Use smooth rounded forms, friendly exaggerated proportions, confident bold outer contours and a smaller number of simple inner contours. Draw crisp solid black ink on clean pure-white paper. Keep every enclosed object surface white and open for hand coloring; describe volume through clear silhouettes, overlap, a few purposeful seams, and line-weight hierarchy. Give the scene one unmistakable hero shape, a small number of useful supporting objects, generous gaps between neighboring objects, broad uncomplicated surfaces, and medium-large details that remain satisfying at printed page size. Use a calm eye-level three-quarter view, a balanced full-page composition, and a polished hand-drawn storybook appearance. Make the world feel magical through imaginative scale and rounded architecture, with visual richness coming from silhouettes and composition.",
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "S1",
+      "family": "style-lock-prose",
+      "label": "S1 · enchanted tree library",
+      "subject": "An enchanted reading nook inside the hollow trunk of a giant storybook tree. Make one oversized plump armchair the clear foreground focal point, with a tall rounded arch window behind it showing two giant mushrooms and three broad-petal flowers. Add one curved branch bookshelf containing five broad book shapes, one small acorn-shaped side table holding a single cup, one broad-leaf plant, and one plain circular rug. Shape the tree interior with three sweeping natural curves that create a cozy room."
+    },
+    {
+      "page": 2,
+      "variant_id": "S2",
+      "family": "style-lock-prose",
+      "label": "S2 · mushroom cottage bakery",
+      "subject": "A tiny bakery kitchen inside a huge rounded mushroom cottage. The hero shape is one wide arched oven built into the mushroom wall, with a simple loaf resting on a broad worktable in the foreground. Add one round window showing a giant flower outside, one large mixing bowl, one jar with a plain label panel, and one hanging wooden spoon. The curved mushroom cap forms a broad ceiling and the rounded doorway frames the room; arrange the objects with open space around each one."
+    },
+    {
+      "page": 3,
+      "variant_id": "S3",
+      "family": "style-lock-prose",
+      "label": "S3 · giant flower conservatory",
+      "subject": "A charming little greenhouse built inside the open center of an enormous flower. One broad-paned arched glass roof forms the main silhouette, while a simple potting bench sits in the foreground. Include one watering can, two large seedling pots, and one climbing vine with six broad leaves. Beyond the arched frame, show three oversized flower heads at different heights. Use a spacious layout with a clearly readable bench, broad glass panels, and distinct large plant shapes."
+    },
+    {
+      "page": 4,
+      "variant_id": "S4",
+      "family": "style-lock-prose",
+      "label": "S4 · seashell cottage nook",
+      "subject": "A snug seaside cottage room built into a giant spiral seashell on a quiet shore. The main feature is a large rounded window with a few broad panes looking out to one simple sailboat and two curved wave shapes. Place one friendly cushioned window seat beneath it, one small shell-shaped side table holding a single seashell, one potted palm with five broad leaves, and one plain oval rug. The shell's natural spiral creates the architecture with a few wide graceful contours."
+    },
+    {
+      "page": 5,
+      "variant_id": "S5",
+      "family": "style-lock-prose",
+      "label": "S5 · cloudtop observatory",
+      "subject": "A tiny observatory nestled inside a giant rounded cloud cottage above the world. Make one large friendly telescope the foreground focal object, aimed through a tall arched window. Outside the window, show a simple crescent moon and three large stars spaced apart. Include one small rounded table holding a single open book and one plain circular floor rug. The cloud walls form broad soft curves around the room, creating a magical enclosed space with clear silhouettes and generous open areas."
+    }
+  ]
+}
