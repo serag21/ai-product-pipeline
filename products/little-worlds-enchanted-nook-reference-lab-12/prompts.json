@@ -1,0 +1,355 @@
+{
+  "product_id": "little-worlds-enchanted-nook-reference-lab-12",
+  "title": "Little Worlds: Enchanted Tree Library — Reference-Conditioned FLUX.2 Lab",
+  "audience": "ages 7-99",
+  "purpose": "Focused second-stage experiment using the selected page-35 composition as a visual reference. The experiment tests how different prompt structures instruct FLUX.2 Dev to transform the same cozy composition into a cute otherworldly storybook setting while rendering only clean black outlines with white interiors.",
+  "reference_guidance": "Use the supplied image as a loose guide to major-object placement and cozy scale. Redesign the room as a tiny enchanted reading nook inside a giant hollow tree. Favor rounded forms and a few purposeful magical details, rather than replicating the realistic room or its gray tonal fills.",
+  "core_scene": "An adorable enchanted reading nook inside the hollow trunk of a giant storybook tree, with one oversized rounded reading chair, one large arched tree-window, one curved bookshelf with a few broad books, one acorn-shaped side table holding one cup, one broad-leaf plant, and one simple round rug. Outside the window, two giant mushrooms and a few oversized flowers suggest a magical world.",
+  "visual_targets": [
+    "Cozy and immersive composition inspired by the reference, transformed into an original enchanted setting.",
+    "Cute, rounded, friendly forms with whimsical architecture and only a few magical story cues.",
+    "Pure black outline coloring art on white paper: enclosed object interiors remain white and unfilled.",
+    "Form and depth communicated through contour lines and a few purposeful interior lines, rather than tonal fills.",
+    "Large, comfortably colorable spaces and medium-large secondary details.",
+    "Every visible object has an obvious purpose; no incidental symbols or busy micro-patterns.",
+    "One stable visual identity that can be reused throughout a 30–50-page book."
+  ],
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "A1",
+      "family": "concise-prose",
+      "label": "A1 · concise baseline",
+      "prompt_format": "text",
+      "prompt": "Reimagine the reference composition as an adorable enchanted reading nook inside the hollow trunk of a giant storybook tree. Keep one oversized rounded armchair, an arched window, one curved bookshelf with a few large books, one tiny acorn-shaped side table with a cup, one broad-leaf plant, and a simple round rug. Outside the window, show two giant mushroom silhouettes and oversized flowers. Pure black contour-only coloring illustration on clean white paper, blank white object interiors, bold rounded outlines, large easy-to-color regions, cute and uncluttered."
+    },
+    {
+      "page": 2,
+      "variant_id": "A2",
+      "family": "concise-prose",
+      "label": "A2 · world-first",
+      "prompt_format": "text",
+      "prompt": "A tiny enchanted library hidden inside a giant living tree, using the reference image's cozy arrangement of a big reading chair, arched window, curved bookshelf, little side table, plant, and round rug. Cute rounded storybook furniture, a view of giant mushrooms and magical flowers beyond the window, a few broad book shapes, and simple natural tree curves. Crisp black contour lines on pure white paper, open white coloring areas inside every shape, spacious composition."
+    },
+    {
+      "page": 3,
+      "variant_id": "A3",
+      "family": "concise-prose",
+      "label": "A3 · style-first",
+      "prompt_format": "text",
+      "prompt": "Original cute fairytale coloring-page line art: confident smooth black outlines, rounded friendly forms, generous white interiors, broad easy-to-color shapes, and only a few clean inner lines. Depict a cozy reading nook inside a giant hollow tree, with an oversized chair, arched window, curved bookshelf, acorn table with one cup, broad-leaf plant, and plain round rug. Giant mushrooms and oversized flowers peek through the window. A tiny magical world, charming and calm."
+    },
+    {
+      "page": 4,
+      "variant_id": "A4",
+      "family": "concise-prose",
+      "label": "A4 · composition-first",
+      "prompt_format": "text",
+      "prompt": "Use a large rounded reading chair in the foreground, a tall arched window behind it, a curved built-in bookshelf on the left, a small acorn table and single cup on the right, one broad-leaf plant, and a wide plain rug. Transform the room into a cute enchanted library inside an enormous tree, with giant mushrooms visible outdoors. Black outline-only storybook drawing on white paper, clearly separated objects, simple interiors, large colorable shapes."
+    },
+    {
+      "page": 5,
+      "variant_id": "A5",
+      "family": "concise-prose",
+      "label": "A5 · playful rounded forms",
+      "prompt_format": "text",
+      "prompt": "Create a cute little storybook world: a snug reading nook in a giant hollow tree, with a plump armchair, curved tree-trunk walls, a high arched window, a curved shelf holding a few big books, a tiny acorn-shaped table with one cup, one friendly large-leaf plant, and a broad round rug. Beyond the window are two oversized mushrooms and giant simple flowers. Pure black hand-drawn contours, white unfilled interiors, smooth rounded shapes, comfortably large spaces to color."
+    },
+    {
+      "page": 6,
+      "variant_id": "A6",
+      "family": "concise-prose",
+      "label": "A6 · purposeful details",
+      "prompt_format": "text",
+      "prompt": "Redesign the reference as a tiny enchanted tree library. Every object should have a clear job: the big rounded chair is for reading, the curved shelf holds a few large books, the acorn table holds a cup, the plant decorates the nook, the arched window reveals giant mushrooms outside, and the rug grounds the chair. Show the magical world through the architecture and silhouettes. Render solely with crisp black outlines on white paper, with blank white interiors and large areas for coloring."
+    },
+    {
+      "page": 7,
+      "variant_id": "B1",
+      "family": "structured-json",
+      "label": "B1 · compact structured",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "An adorable enchanted reading nook inside the hollow trunk of a giant storybook tree.",
+        "reference_role": "Use the reference for the broad cozy arrangement of major forms while redesigning the setting into an original magical world.",
+        "subjects": [
+          {
+            "description": "large rounded reading armchair with broad cushions",
+            "position": "center foreground",
+            "purpose": "the main place to sit and read"
+          },
+          {
+            "description": "tall arched window set into curved tree walls",
+            "position": "upper center background",
+            "purpose": "frames the outside magical world"
+          },
+          {
+            "description": "curved built-in bookshelf holding a few broad book shapes",
+            "position": "left middle ground",
+            "purpose": "shows this is a library"
+          },
+          {
+            "description": "small acorn-shaped side table holding one cup",
+            "position": "right foreground",
+            "purpose": "a useful companion to the chair"
+          },
+          {
+            "description": "one broad-leaf potted plant",
+            "position": "right background",
+            "purpose": "adds a single organic form"
+          },
+          {
+            "description": "plain round rug",
+            "position": "beneath the chair",
+            "purpose": "grounds the reading nook"
+          }
+        ],
+        "world_details": "Two giant mushroom silhouettes and a few oversized simple flowers outside the window.",
+        "line_art": "Pure black contour-only storybook illustration; smooth confident outlines, rounded forms, sparse purposeful inner lines, pure white unfilled object interiors.",
+        "coloring_design": "Large open regions, medium-large details, clear object boundaries, ample breathing room.",
+        "composition": "Eye-level three-quarter view with strong chair silhouette, clear window, and six readable major elements."
+      }
+    },
+    {
+      "page": 8,
+      "variant_id": "B2",
+      "family": "structured-json",
+      "label": "B2 · style and linework",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A cozy fantasy library carved into a giant living tree, designed as a charming little world.",
+        "reference_role": "Preserve the reference's pleasing furniture scale and spatial rhythm, but make the architecture and setting fantastical.",
+        "subjects": [
+          {
+            "description": "plump armchair with two broad cushion sections",
+            "position": "foreground center",
+            "purpose": "the main cozy seating shape"
+          },
+          {
+            "description": "arched tree-window with a thick rounded wooden frame",
+            "position": "upper center",
+            "purpose": "the main architectural silhouette"
+          },
+          {
+            "description": "one curving shelf integrated into the tree trunk with five large book forms",
+            "position": "left",
+            "purpose": "clearly identifies a reading space"
+          },
+          {
+            "description": "small acorn table with one simple cup",
+            "position": "right foreground",
+            "purpose": "a useful everyday object"
+          },
+          {
+            "description": "one large-leaf plant in a rounded pot",
+            "position": "right behind table",
+            "purpose": "softens the scene"
+          },
+          {
+            "description": "broad circular rug with a single border",
+            "position": "floor",
+            "purpose": "defines the nook"
+          }
+        ],
+        "world_details": "A whimsical view of giant mushrooms and oversized flowers beyond the window, drawn as broad simple silhouettes.",
+        "line_art": "Clean black ink outlines, thick friendly outer contours, fewer thinner interior lines, pure white paper inside every enclosed shape, dimensional form described through contour only.",
+        "coloring_design": "Broad coloring regions and clear white gaps between neighboring objects.",
+        "composition": "Balanced three-quarter interior view, strong silhouette hierarchy, secondary details kept subordinate."
+      }
+    },
+    {
+      "page": 9,
+      "variant_id": "B3",
+      "family": "structured-json",
+      "label": "B3 · low detail density",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A simple magical reading nook hidden inside an ancient hollow tree.",
+        "reference_role": "Use the reference only for the broad chair-window-shelf-table arrangement.",
+        "subjects": [
+          {
+            "description": "one oversized rounded chair",
+            "position": "center foreground",
+            "purpose": "main reading seat"
+          },
+          {
+            "description": "one tall arched window",
+            "position": "background center",
+            "purpose": "opens onto the fairytale forest"
+          },
+          {
+            "description": "one curved bookshelf with four or five broad books",
+            "position": "left",
+            "purpose": "stores books"
+          },
+          {
+            "description": "one acorn table with one cup",
+            "position": "right",
+            "purpose": "holds a drink"
+          },
+          {
+            "description": "one large-leaf plant",
+            "position": "right background",
+            "purpose": "adds a simple natural accent"
+          },
+          {
+            "description": "one plain circular rug",
+            "position": "floor",
+            "purpose": "grounds the furniture"
+          }
+        ],
+        "world_details": "One giant mushroom and two oversized flowers outside the window; the tree architecture provides the magical setting.",
+        "line_art": "Unshaded outline drawing in black on clean white paper; all object interiors stay white; smooth thick outer contours and a few simple inner lines.",
+        "coloring_design": "Very spacious, large uncomplicated regions designed for relaxed hand coloring.",
+        "composition": "Few strong forms, generous gaps, minimal architecture, no decorative clutter."
+      }
+    },
+    {
+      "page": 10,
+      "variant_id": "B4",
+      "family": "structured-json",
+      "label": "B4 · cute fairytale architecture",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A cute storybook library tucked into a giant tree with rounded roots and naturally curved walls.",
+        "reference_role": "Keep the comfortable intimate layout of the reference, translating the room into a whimsical miniature fantasy space.",
+        "subjects": [
+          {
+            "description": "large plump armchair with rounded arms and broad cushions",
+            "position": "center foreground",
+            "purpose": "a welcoming reading seat"
+          },
+          {
+            "description": "high arched window shaped into the living tree",
+            "position": "center background",
+            "purpose": "frames the enchanted garden outside"
+          },
+          {
+            "description": "curved branch bookshelf with a handful of large books",
+            "position": "left middle ground",
+            "purpose": "stores the books"
+          },
+          {
+            "description": "tiny acorn-shaped side table with a single cup",
+            "position": "right foreground",
+            "purpose": "holds a warm drink"
+          },
+          {
+            "description": "one potted plant with large rounded leaves",
+            "position": "right background",
+            "purpose": "adds a cheerful natural silhouette"
+          },
+          {
+            "description": "plain round leaf-shaped rug with broad sections",
+            "position": "below chair",
+            "purpose": "finishes the nook"
+          }
+        ],
+        "world_details": "The window overlooks two large mushrooms and a giant flower with broad petals, creating a clearly otherworldly scale.",
+        "line_art": "Cute black-ink storybook contours with rounded joins, consistent confident line weight, white interiors, medium-large details, simple object boundaries.",
+        "coloring_design": "Prioritize easy-to-fill shapes and generous white paper between elements.",
+        "composition": "Soft asymmetry, readable foreground chair, background window, and simple shelving."
+      }
+    },
+    {
+      "page": 11,
+      "variant_id": "B5",
+      "family": "structured-json",
+      "label": "B5 · broad shapes and purpose",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "A whimsical little reading world inside a giant hollow tree, calm and inviting rather than busy.",
+        "reference_role": "Borrow only the clear major-object arrangement from the reference; redesign every shape into a more imaginative cute fantasy setting.",
+        "subjects": [
+          {
+            "description": "one large rounded armchair with broad empty cushion panels",
+            "position": "center foreground",
+            "purpose": "the place to settle down with a book"
+          },
+          {
+            "description": "one arched tree-window with wide simple panes",
+            "position": "background center",
+            "purpose": "shows an unusual magical landscape"
+          },
+          {
+            "description": "one built-in curved bookshelf with a few distinct oversized books",
+            "position": "left",
+            "purpose": "library storage"
+          },
+          {
+            "description": "one little acorn table with one cup",
+            "position": "right foreground",
+            "purpose": "a useful side table"
+          },
+          {
+            "description": "one broad-leaf plant in a large simple pot",
+            "position": "right background",
+            "purpose": "a living accent"
+          },
+          {
+            "description": "one wide circular rug with one outline border",
+            "position": "floor center",
+            "purpose": "anchors the seating area"
+          }
+        ],
+        "world_details": "A pair of giant mushrooms and three large flower silhouettes beyond the window, clearly belonging to a miniature fairytale world.",
+        "line_art": "Outline-only black ink illustration, bold smooth outer contours, sparse clean interior lines, all shape interiors white, shape and depth communicated by linework alone.",
+        "coloring_design": "A few large areas per object, broad book forms, large leaves, plain surfaces, and clear separations.",
+        "composition": "A calm, readable scene with six main objects and no unnecessary decorations."
+      }
+    },
+    {
+      "page": 12,
+      "variant_id": "B6",
+      "family": "structured-json",
+      "label": "B6 · polished picture-book",
+      "prompt_format": "json",
+      "prompt": {
+        "scene": "An original cute picture-book world: a snug enchanted library inside the hollow trunk of a giant old tree.",
+        "reference_role": "Let the reference guide the intimate furniture scale and inviting composition, not the original realistic materials or tonal treatment.",
+        "subjects": [
+          {
+            "description": "oversized friendly armchair with smooth rounded arms and two broad cushion areas",
+            "position": "large center foreground",
+            "purpose": "the obvious cozy focal point"
+          },
+          {
+            "description": "high rounded arch window built into the tree trunk",
+            "position": "center background",
+            "purpose": "reveals the scale of the magical forest"
+          },
+          {
+            "description": "living-wood bookshelf curved into the left wall with five broad books",
+            "position": "left middle ground",
+            "purpose": "makes the space feel like a library"
+          },
+          {
+            "description": "small acorn side table holding one simple cup",
+            "position": "right foreground",
+            "purpose": "provides one practical detail"
+          },
+          {
+            "description": "one leafy plant with six broad leaves",
+            "position": "right background",
+            "purpose": "adds a friendly natural counter-shape"
+          },
+          {
+            "description": "wide plain rug with one simple concentric border",
+            "position": "floor",
+            "purpose": "connects the furniture"
+          }
+        ],
+        "world_details": "Outside are two oversized mushrooms, a few broad magical flowers, and three large floating star-shaped fireflies spaced well apart.",
+        "line_art": "Refined black-outline coloring illustration with rounded storybook geometry, clean white paper interiors, consistent bold outlines, and only the minimum inner lines needed for clear forms.",
+        "coloring_design": "Every enclosed surface remains blank white and ready to color; detail scale stays medium-large with a generous amount of open paper.",
+        "composition": "Eye-level three-quarter view with clear foreground, middle ground, and background; visual richness comes from silhouettes and imaginative scale."
+      }
+    }
+  ]
+}
