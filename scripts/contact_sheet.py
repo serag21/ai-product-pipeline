@@ -11,11 +11,11 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
-THUMB_W = 280
-THUMB_H = 362
-GAP = 18
-LABEL_H = 48
-COLS = 5
+THUMB_W = 200
+THUMB_H = 258
+GAP = 12
+LABEL_H = 34
+COLS = 6
 
 
 def resolve_product_root(value: str) -> Path:
