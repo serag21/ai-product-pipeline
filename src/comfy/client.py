@@ -190,6 +190,24 @@ class ComfyUIClient:
             prompt_id,
         )
 
+    def upload_image(self, source: Path, overwrite: bool = True) -> dict[str, Any]:
+        """Upload a local image to ComfyUI's input directory for reference conditioning."""
+        source = Path(source)
+        if not source.is_file():
+            raise ComfyUIError(f"Reference image does not exist: {source}")
+        with source.open("rb") as handle:
+            response = requests.post(
+                f"{self.server_url}/upload/image",
+                data={"type": "input", "overwrite": str(overwrite).lower()},
+                files={"image": (source.name, handle, "image/png")},
+                timeout=120,
+            )
+        response.raise_for_status()
+        payload = response.json()
+        if not payload.get("name"):
+            raise ComfyUIError(f"ComfyUI did not return an uploaded image name: {payload}")
+        return payload
+
     def download_image(
         self,
         image_info: dict[str, Any],
