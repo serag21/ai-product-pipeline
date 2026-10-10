@@ -101,6 +101,21 @@ def validate_workflow(workflow: dict) -> None:
                 f"Workflow node {node_id}: missing required input {input_name!r}."
             )
 
+    if "70" in workflow:
+        reference_nodes = {
+            "70": ("LoadImage", "image"),
+            "71": ("VAEEncode", "pixels"),
+            "72": ("ReferenceLatent", "conditioning"),
+        }
+        for node_id, (class_type, input_name) in reference_nodes.items():
+            node = workflow.get(node_id)
+            if not isinstance(node, dict) or node.get("class_type") != class_type:
+                raise RuntimeError(f"Invalid reference workflow node {node_id}: expected {class_type}.")
+            if input_name not in (node.get("inputs") or {}):
+                raise RuntimeError(f"Reference workflow node {node_id} lacks input {input_name!r}.")
+        if workflow.get("22", {}).get("inputs", {}).get("conditioning") != ["72", 0]:
+            raise RuntimeError("Reference workflow must route reference-conditioned output into BasicGuider.")
+
 
 def quality_check(path: Path) -> dict:
     with Image.open(path) as source:
