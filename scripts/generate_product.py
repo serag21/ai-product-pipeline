@@ -193,7 +193,7 @@ def main() -> int:
     manifest = {
         "product_id": product["product_id"],
         "workflow": str(workflow_path.relative_to(PROJECT_ROOT)),
-        "reference_image": str(reference_path.relative_to(PROJECT_ROOT)) if reference_path else None,
+        "reference_image": str(reference_path) if reference_path else None,
         "canvas": {"width": width, "height": height},
         "steps": steps,
         "guidance": guidance,
