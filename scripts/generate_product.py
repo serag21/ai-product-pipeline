@@ -18,6 +18,7 @@ from comfy.client import ComfyUIClient, ComfyUIError
 
 
 WORKFLOW_PATH = PROJECT_ROOT / "workflows" / "flux2_coloring_api.json"
+REFERENCE_WORKFLOW_PATH = PROJECT_ROOT / "workflows" / "flux2_coloring_reference_api.json"
 
 PROMPT_NODE = "6"
 SEED_NODE = "25"
@@ -122,6 +123,7 @@ def main() -> int:
     parser.add_argument("--start", type=int, default=1)
     parser.add_argument("--server", default="http://127.0.0.1:8188")
     parser.add_argument("--timeout", type=int, default=1800)
+    parser.add_argument("--reference", help="Optional image path used for FLUX.2 reference conditioning.")
     args = parser.parse_args()
 
     product_root = resolve_product_root(args.product)
@@ -135,7 +137,19 @@ def main() -> int:
     pages_root = product_root / "pages"
     qa_root = product_root / "qa"
 
-    workflow = ComfyUIClient.load_workflow(WORKFLOW_PATH)
+    reference_path = None
+    if args.reference:
+        reference_path = Path(args.reference)
+        if not reference_path.is_absolute():
+            reference_path = PROJECT_ROOT / reference_path
+        reference_path = reference_path.resolve()
+        if not reference_path.is_file():
+            raise RuntimeError(f"Reference image not found: {reference_path}")
+        workflow_path = REFERENCE_WORKFLOW_PATH
+    else:
+        workflow_path = WORKFLOW_PATH
+
+    workflow = ComfyUIClient.load_workflow(workflow_path)
     validate_workflow(workflow)
 
     pages_root.mkdir(parents=True, exist_ok=True)
@@ -143,10 +157,19 @@ def main() -> int:
 
     client = ComfyUIClient(args.server)
     health = client.health()
+    uploaded_reference = None
+    if reference_path:
+        uploaded_reference = client.upload_image(reference_path)
+        uploaded_name = uploaded_reference.get("name", "")
+        uploaded_subfolder = uploaded_reference.get("subfolder", "")
+        if uploaded_subfolder:
+            uploaded_name = f"{uploaded_subfolder}/{uploaded_name}"
+        workflow["70"]["inputs"]["image"] = uploaded_name
+        print(f"Reference image uploaded to ComfyUI: {uploaded_name}")
     print(f"Product: {product['product_id']}")
     print(f"ComfyUI: {args.server}")
     print(f"GPU devices reported: {health.get('devices', [])}")
-    print(f"Workflow: {WORKFLOW_PATH}")
+    print(f"Workflow: {workflow_path}")
     print(
         f"Canvas: {width}x{height} | steps={steps} | "
         f"guidance={guidance} | items={len(selected)}"
@@ -154,7 +177,8 @@ def main() -> int:
 
     manifest = {
         "product_id": product["product_id"],
-        "workflow": str(WORKFLOW_PATH.relative_to(PROJECT_ROOT)),
+        "workflow": str(workflow_path.relative_to(PROJECT_ROOT)),
+        "reference_image": str(reference_path.relative_to(PROJECT_ROOT)) if reference_path else None,
         "canvas": {"width": width, "height": height},
         "steps": steps,
         "guidance": guidance,
