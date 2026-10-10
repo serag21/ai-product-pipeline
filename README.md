@@ -72,8 +72,8 @@ It holds the magical tree-library scene and reference image consistent while var
 Run it from the repository root:
 
 ```powershell
-.\\.venv\\Scripts\\python.exe scripts\\generate_product.py --product products/little-worlds-enchanted-nook-reference-lab-12 --reference products/little-worlds-prompt-lab-36/pages/page_035.png --count 12
-.\\.venv\\Scripts\\python.exe scripts\\contact_sheet.py --product products/little-worlds-enchanted-nook-reference-lab-12
+.\.venv\Scripts\python.exe scripts\generate_product.py --product products/little-worlds-enchanted-nook-reference-lab-12 --reference products/little-worlds-prompt-lab-36/pages/page_035.png --count 12
+.\.venv\Scripts\python.exe scripts\contact_sheet.py --product products/little-worlds-enchanted-nook-reference-lab-12
 ```
 
 The generator uploads the reference image to the local ComfyUI input folder, then uses the separate reference-conditioned API workflow. The regular text-to-image path remains unchanged when `--reference` is omitted.
