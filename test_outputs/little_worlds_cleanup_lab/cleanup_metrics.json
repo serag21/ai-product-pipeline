@@ -1,0 +1,169 @@
+{
+  "purpose": "Compare gray originals with binary thresholds; source files are never modified.",
+  "methods": {
+    "original": {
+      "threshold": null
+    },
+    "threshold_150": {
+      "threshold": 150
+    },
+    "threshold_180": {
+      "threshold": 180
+    },
+    "threshold_210": {
+      "threshold": 210
+    }
+  },
+  "pages": [
+    {
+      "page": "page_001",
+      "source_size": [
+        1536,
+        1984
+      ],
+      "source_midtone_50_to_239_percent": 36.899,
+      "variants": {
+        "original": {
+          "black_pixels_percent": 5.395,
+          "white_pixels_percent": 53.334,
+          "midtone_pixels_percent": 41.271
+        },
+        "threshold_150": {
+          "black_pixels_percent": 12.58,
+          "white_pixels_percent": 87.42,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_180": {
+          "black_pixels_percent": 18.325,
+          "white_pixels_percent": 81.675,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_210": {
+          "black_pixels_percent": 27.497,
+          "white_pixels_percent": 72.503,
+          "midtone_pixels_percent": 0.0
+        }
+      }
+    },
+    {
+      "page": "page_002",
+      "source_size": [
+        1536,
+        1984
+      ],
+      "source_midtone_50_to_239_percent": 34.107,
+      "variants": {
+        "original": {
+          "black_pixels_percent": 4.302,
+          "white_pixels_percent": 60.297,
+          "midtone_pixels_percent": 35.401
+        },
+        "threshold_150": {
+          "black_pixels_percent": 8.084,
+          "white_pixels_percent": 91.916,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_180": {
+          "black_pixels_percent": 9.933,
+          "white_pixels_percent": 90.067,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_210": {
+          "black_pixels_percent": 14.953,
+          "white_pixels_percent": 85.047,
+          "midtone_pixels_percent": 0.0
+        }
+      }
+    },
+    {
+      "page": "page_003",
+      "source_size": [
+        1536,
+        1984
+      ],
+      "source_midtone_50_to_239_percent": 7.507,
+      "variants": {
+        "original": {
+          "black_pixels_percent": 5.2,
+          "white_pixels_percent": 85.497,
+          "midtone_pixels_percent": 9.303
+        },
+        "threshold_150": {
+          "black_pixels_percent": 9.689,
+          "white_pixels_percent": 90.311,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_180": {
+          "black_pixels_percent": 10.76,
+          "white_pixels_percent": 89.24,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_210": {
+          "black_pixels_percent": 12.039,
+          "white_pixels_percent": 87.961,
+          "midtone_pixels_percent": 0.0
+        }
+      }
+    },
+    {
+      "page": "page_004",
+      "source_size": [
+        1536,
+        1984
+      ],
+      "source_midtone_50_to_239_percent": 3.839,
+      "variants": {
+        "original": {
+          "black_pixels_percent": 4.308,
+          "white_pixels_percent": 90.909,
+          "midtone_pixels_percent": 4.783
+        },
+        "threshold_150": {
+          "black_pixels_percent": 6.829,
+          "white_pixels_percent": 93.171,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_180": {
+          "black_pixels_percent": 7.384,
+          "white_pixels_percent": 92.616,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_210": {
+          "black_pixels_percent": 7.985,
+          "white_pixels_percent": 92.015,
+          "midtone_pixels_percent": 0.0
+        }
+      }
+    },
+    {
+      "page": "page_005",
+      "source_size": [
+        1536,
+        1984
+      ],
+      "source_midtone_50_to_239_percent": 17.158,
+      "variants": {
+        "original": {
+          "black_pixels_percent": 2.425,
+          "white_pixels_percent": 71.659,
+          "midtone_pixels_percent": 25.916
+        },
+        "threshold_150": {
+          "black_pixels_percent": 5.688,
+          "white_pixels_percent": 94.312,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_180": {
+          "black_pixels_percent": 6.213,
+          "white_pixels_percent": 93.787,
+          "midtone_pixels_percent": 0.0
+        },
+        "threshold_210": {
+          "black_pixels_percent": 7.007,
+          "white_pixels_percent": 92.993,
+          "midtone_pixels_percent": 0.0
+        }
+      }
+    }
+  ]
+}
