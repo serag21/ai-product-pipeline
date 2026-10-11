@@ -43,22 +43,22 @@ def make_overview(
     output: Path,
     tile_size: tuple[int, int] = (250, 323),
 ) -> None:
-    margin, gap, title_h, label_h = 18, 10, 38, 32
+    margin, gap, title_h, label_h = 18, 10, 58, 32
     cols, rows = len(METHODS), len(entries)
     tw, th = tile_size
     canvas = Image.new(
         "RGB",
         (2 * margin + cols * tw + (cols - 1) * gap,
-         2 * margin + title_h + rows * (th + label_h) + (rows - 1) * gap),
+         2 * margin + title_h + 18 + rows * (th + label_h) + (rows - 1) * gap),
         "white",
     )
     draw = ImageDraw.Draw(canvas)
     draw.text((margin, margin), "Little Worlds — original vs. monochrome cleanup", fill="black")
     for col, (name, _) in enumerate(METHODS):
         x = margin + col * (tw + gap)
-        draw.text((x, margin + title_h - 3), name, fill="black")
+        draw.text((x, margin + title_h - 2), name, fill="black")
     for row, entry in enumerate(entries):
-        y = margin + title_h + row * (th + label_h + gap)
+        y = margin + title_h + 18 + row * (th + label_h + gap)
         for col, (name, _) in enumerate(METHODS):
             image = entry["variants"][name]
             thumb = ImageOps.contain(image, tile_size)
@@ -79,21 +79,21 @@ def make_detail(entry: dict, output: Path, crop_width: int = 420) -> None:
         ("bottom-right", (mx, my, width, height)),
     ]
     crop_height = round(crop_width * (my / mx))
-    label_h, margin, gap, title_h = 25, 14, 8, 40
+    label_h, margin, gap, title_h = 25, 14, 8, 42
     cols, rows = len(METHODS), len(regions)
     cell_h = crop_height + label_h
     canvas = Image.new(
         "RGB",
         (2 * margin + cols * crop_width + (cols - 1) * gap,
-         2 * margin + title_h + rows * cell_h + (rows - 1) * gap),
+         2 * margin + title_h + 15 + rows * cell_h + (rows - 1) * gap),
         "white",
     )
     draw = ImageDraw.Draw(canvas)
     draw.text((margin, margin), f"{entry['page_label']} — linework detail comparison", fill="black")
     for col, (method, _) in enumerate(METHODS):
-        draw.text((margin + col * (crop_width + gap), margin + title_h - 3), method, fill="black")
+        draw.text((margin + col * (crop_width + gap), margin + title_h - 2), method, fill="black")
     for row, (region_label, bounds) in enumerate(regions):
-        y = margin + title_h + row * (cell_h + gap)
+        y = margin + title_h + 15 + row * (cell_h + gap)
         for col, (method, _) in enumerate(METHODS):
             crop = entry["variants"][method].crop(bounds)
             crop = crop.resize((crop_width, crop_height), Image.Resampling.LANCZOS)
