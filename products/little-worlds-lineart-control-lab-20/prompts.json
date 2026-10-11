@@ -180,7 +180,7 @@
     {
       "page": 17,
       "variant_id": "MU-V1",
-      "scene_id": "mushroom_porche",
+      "scene_id": "mushroom_porch",
       "style_variant": "V1",
       "family": "controlled-style-variants",
       "label": "Mushroom Cottage Porch · V1",
@@ -190,7 +190,7 @@
     {
       "page": 18,
       "variant_id": "MU-V2",
-      "scene_id": "mushroom_porche",
+      "scene_id": "mushroom_porch",
       "style_variant": "V2",
       "family": "controlled-style-variants",
       "label": "Mushroom Cottage Porch · V2",
@@ -200,7 +200,7 @@
     {
       "page": 19,
       "variant_id": "MU-V3",
-      "scene_id": "mushroom_porche",
+      "scene_id": "mushroom_porch",
       "style_variant": "V3",
       "family": "controlled-style-variants",
       "label": "Mushroom Cottage Porch · V3",
@@ -210,7 +210,7 @@
     {
       "page": 20,
       "variant_id": "MU-V4",
-      "scene_id": "mushroom_porche",
+      "scene_id": "mushroom_porch",
       "style_variant": "V4",
       "family": "controlled-style-variants",
       "label": "Mushroom Cottage Porch · V4",
