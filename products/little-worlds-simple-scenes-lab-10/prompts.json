@@ -1,0 +1,85 @@
+{
+  "product_id": "little-worlds-simple-scenes-lab-10",
+  "title": "Little Worlds: Simple Enchanted Scenes — Linework and Colorability Lab",
+  "purpose": "Test whether a more constrained scene vocabulary and a stronger outline-first visual bible produce simple, intentional, colorable magical environments suitable for a coherent first book.",
+  "audience": "ages 7-99",
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "global_prompt": "Original whimsical storybook coloring illustration, drawn as crisp black ink contours on clean pure-white paper. The picture is made of bold smooth outer outlines and a small number of clean inner contours. Every enclosed object surface is blank white and open for coloring; volume is communicated through silhouette, overlap, and a few purposeful contour lines. The line drawing has strong contrast and an unshaded white-paper finish, with shape and depth communicated by outlines rather than tonal rendering. Use cute rounded architecture, friendly proportions, a magical sense of scale, and clear large silhouettes. One obvious hero shape with only three or four useful supporting objects. Objects have broad simple surfaces, medium-large interior regions, and visible white gaps between them. Keep textures and decorative patterns sparse; add only a few large background forms. Use a calm eye-level three-quarter view with generous breathing room and balanced full-page composition. The page should feel enchanting because of its imaginative forms and composition, not because it contains many details.",
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "L01",
+      "family": "simple-scenes",
+      "label": "L01 · cloudtop observatory",
+      "subject": "A cozy observatory inside a giant soft cloud. One large friendly telescope is the foreground focal object, pointed toward a tall arched window. Through the window are one crescent moon and three large simple stars. Add one small round table with a single open book and one broad plain rug. The cloud walls form three broad flowing curves around the room."
+    },
+    {
+      "page": 2,
+      "variant_id": "L02",
+      "family": "simple-scenes",
+      "label": "L02 · mushroom cottage bakery",
+      "subject": "A tiny bakery inside a giant rounded mushroom cottage. A wide arched oven built into the curved wall is the main feature. In front is one broad worktable with a single loaf of bread and one mixing bowl. Add one round window with a single large flower visible outside. The mushroom cap forms a broad ceiling, and the floor and walls remain simple open shapes."
+    },
+    {
+      "page": 3,
+      "variant_id": "L03",
+      "family": "simple-scenes",
+      "label": "L03 · hollow tree reading room",
+      "subject": "A calm reading room inside the hollow trunk of an ancient storybook tree. One oversized rounded armchair sits in front of a tall arched window. Beside the chair is one curved shelf containing four large books and one small acorn table holding a single cup. Beyond the window stands one giant mushroom. The tree interior is formed by a few broad flowing contours, with large clear spaces between the objects."
+    },
+    {
+      "page": 4,
+      "variant_id": "L04",
+      "family": "simple-scenes",
+      "label": "L04 · seashell window seat",
+      "subject": "A snug cottage room inside a giant spiral seashell. The main feature is one large rounded window overlooking a tiny sailboat and two broad wave curves. Beneath the window is one built-in cushioned seat with two large cushion shapes. Add one small shell-shaped side table holding a single seashell. The spiral shell architecture is shown with a few wide graceful contours."
+    },
+    {
+      "page": 5,
+      "variant_id": "L05",
+      "family": "simple-scenes",
+      "label": "L05 · giant flower greenhouse",
+      "subject": "A small greenhouse nestled inside one enormous open flower. The flower forms a broad arched roof with only six large glass panels. Beneath it is one plain potting bench, one simple watering can, and two large flowerpots with broad leaves. The surrounding petals form the walls as a few oversized curved shapes, and the floor is a single open area."
+    },
+    {
+      "page": 6,
+      "variant_id": "L06",
+      "family": "simple-scenes",
+      "label": "L06 · teapot cottage kitchen",
+      "subject": "A little kitchen inside a giant round teapot cottage. The curved teapot body forms the room, and its large spout becomes a window with one simple view of a flower garden. Include one broad kitchen counter, one large kettle, and one hanging cup. The teapot handle forms a large arch behind the room. Keep the surfaces plain and the objects widely spaced."
+    },
+    {
+      "page": 7,
+      "variant_id": "L07",
+      "family": "simple-scenes",
+      "label": "L07 · acorn cottage bedroom",
+      "subject": "A welcoming bedroom inside a giant acorn cottage. One large rounded bed with two broad pillows is the main object. A tall arched window behind the bed shows one crescent moon and two large stars. Add one simple bedside table with a round lamp and one plain oval rug. The curved acorn shell creates the walls and sloping roof with a few large contours."
+    },
+    {
+      "page": 8,
+      "variant_id": "L08",
+      "family": "simple-scenes",
+      "label": "L08 · pocket lighthouse room",
+      "subject": "A cozy keeper's room inside a tiny storybook lighthouse. One broad circular window looks out over two large ocean waves and a single sailboat. Place one rounded reading chair in front of the window, one small table with a simple map, and one large lantern on a shelf. Curved lighthouse walls create a clear circular room with broad open surfaces."
+    },
+    {
+      "page": 9,
+      "variant_id": "L09",
+      "family": "simple-scenes",
+      "label": "L09 · lily pond tea room",
+      "subject": "A tiny tea room built on an enormous lily pad beside a magical pond. One broad arched opening looks out at a single giant lotus flower and two rounded lily pads. Inside is one simple rounded bench, one low round tea table with one teapot and one cup, and one large plain circular mat. The walls are formed by two broad leaf curves, leaving generous white space."
+    },
+    {
+      "page": 10,
+      "variant_id": "L10",
+      "family": "simple-scenes",
+      "label": "L10 · little moon train cabin",
+      "subject": "A tiny sleeping cabin inside a whimsical moon-shaped train car floating among soft clouds. One large rounded window shows a crescent moon and three large stars. Beneath it is one broad cushioned bench. Add one small round table holding a single book and one plain oval rug. The curved train cabin walls form large smooth shapes, with the moon-and-cloud world visible through the window."
+    }
+  ]
+}
