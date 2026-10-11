@@ -60,6 +60,13 @@ def build_prompt(product: dict, item: dict) -> str:
             return prompt
         return json.dumps(prompt, ensure_ascii=False, separators=(",", ":"))
 
+    style_variant = item.get("style_variant")
+    if style_variant:
+        variants = product.get("style_variants", {})
+        if style_variant not in variants:
+            raise RuntimeError(f"Unknown style variant {style_variant!r}.")
+        return f'{item["subject"]}. {variants[style_variant]}. {product["global_prompt"]}'
+
     if product.get("prompt_format") == "json":
         bible = product.get("visual_bible", {})
         payload = {
@@ -203,7 +210,7 @@ def main() -> int:
     for item in selected:
         page_no = int(item["page"])
         prompt = build_prompt(product, item)
-        seed = 120000 + page_no * 7919
+        seed = int(item["seed"]) if item.get("seed") is not None else 120000 + page_no * 7919
         wf = copy.deepcopy(workflow)
         wf[PROMPT_NODE]["inputs"]["text"] = prompt
         wf[SEED_NODE]["inputs"]["noise_seed"] = seed
@@ -239,6 +246,8 @@ def main() -> int:
                 "family": item.get("family"),
                 "label": item.get("label"),
                 "prompt_format": item.get("prompt_format"),
+                "scene_id": item.get("scene_id"),
+                "style_variant": item.get("style_variant"),
                 "seed": seed,
                 "prompt_id": prompt_id,
                 "file": str(destination.relative_to(PROJECT_ROOT)),
@@ -258,6 +267,8 @@ def main() -> int:
                 "family": item.get("family"),
                 "label": item.get("label"),
                 "prompt_format": item.get("prompt_format"),
+                "scene_id": item.get("scene_id"),
+                "style_variant": item.get("style_variant"),
                 "seed": seed,
                 "status": "failed",
                 "error": str(exc),
