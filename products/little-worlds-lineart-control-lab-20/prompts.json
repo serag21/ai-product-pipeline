@@ -1,0 +1,221 @@
+{
+  "product_id": "little-worlds-lineart-control-lab-20",
+  "title": "Little Worlds: Line-Art Control Laboratory — 20 Controlled Variants",
+  "purpose": "Controlled style experiment with five scene concepts and four shared-prompt style variants per scene. Each scene's four variants use the same seed to isolate prompt wording more cleanly. Intended to choose a production art direction, not to serve as the final book.",
+  "audience": "ages 7-99",
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "global_prompt": "Original whimsical miniature-fantasy coloring illustration for ages 7–99. Clean black linework on pure white paper, with open white interiors designed for hand coloring. One obvious hero silhouette, only a few useful supporting objects, rounded friendly forms, clearly separated objects, and a calm eye-level composition. Surface detail is sparse, purposeful, and medium-large; visual richness comes from imaginative shapes and scale.",
+  "style_variants": {
+    "V1": "Render the scene as crisp black-ink outline coloring art. Use clear bold outer contours, a few delicate but readable interior contours, plain white object interiors, and white open sky areas. Keep the page graphic, clean, and easy to color.",
+    "V2": "Use an extra-cute rounded storybook illustration style with friendly oversized proportions, smooth confident black contours, broad surfaces, and a clear hero silhouette. Enclosed shapes remain white and colorable; the visual charm comes from rounded shapes and playful scale.",
+    "V3": "Prioritize a relaxed coloring experience: build the image around four to six large readable shapes, broad unmarked surfaces, a handful of meaningful supporting details, clean closed boundaries, and generous white space between objects. Use crisp black outline art on white paper.",
+    "V4": "Make the objects feel gently dimensional through overlapping silhouettes and a few purposeful contour lines. Use bold black outer outlines, sparse thinner inner outlines, smooth rounded geometry, clear white interiors, and a polished miniature-fantasy storybook look."
+  },
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "CL-V1",
+      "scene_id": "cloud_observatory",
+      "style_variant": "V1",
+      "family": "controlled-style-variants",
+      "label": "Cloudtop Observatory · V1",
+      "seed": 710101,
+      "subject": "A cozy observatory inside a giant soft cloud cottage. One large rounded telescope is the main foreground object beside a tall arched window. Through the window is an open white sky, one crescent moon drawn as a simple outline, and three large hollow star outlines. Add one small round table with a single closed book and one plain oval rug. Broad cloud curves form the room."
+    },
+    {
+      "page": 2,
+      "variant_id": "CL-V2",
+      "scene_id": "cloud_observatory",
+      "style_variant": "V2",
+      "family": "controlled-style-variants",
+      "label": "Cloudtop Observatory · V2",
+      "seed": 710101,
+      "subject": "A cozy observatory inside a giant soft cloud cottage. One large rounded telescope is the main foreground object beside a tall arched window. Through the window is an open white sky, one crescent moon drawn as a simple outline, and three large hollow star outlines. Add one small round table with a single closed book and one plain oval rug. Broad cloud curves form the room."
+    },
+    {
+      "page": 3,
+      "variant_id": "CL-V3",
+      "scene_id": "cloud_observatory",
+      "style_variant": "V3",
+      "family": "controlled-style-variants",
+      "label": "Cloudtop Observatory · V3",
+      "seed": 710101,
+      "subject": "A cozy observatory inside a giant soft cloud cottage. One large rounded telescope is the main foreground object beside a tall arched window. Through the window is an open white sky, one crescent moon drawn as a simple outline, and three large hollow star outlines. Add one small round table with a single closed book and one plain oval rug. Broad cloud curves form the room."
+    },
+    {
+      "page": 4,
+      "variant_id": "CL-V4",
+      "scene_id": "cloud_observatory",
+      "style_variant": "V4",
+      "family": "controlled-style-variants",
+      "label": "Cloudtop Observatory · V4",
+      "seed": 710101,
+      "subject": "A cozy observatory inside a giant soft cloud cottage. One large rounded telescope is the main foreground object beside a tall arched window. Through the window is an open white sky, one crescent moon drawn as a simple outline, and three large hollow star outlines. Add one small round table with a single closed book and one plain oval rug. Broad cloud curves form the room."
+    },
+    {
+      "page": 5,
+      "variant_id": "SE-V1",
+      "scene_id": "seashell_reading_nook",
+      "style_variant": "V1",
+      "family": "controlled-style-variants",
+      "label": "Seashell Reading Nook · V1",
+      "seed": 710102,
+      "subject": "A cozy reading nook inside one enormous spiral seashell. One large rounded armchair is the foreground focal point, with a broad arched window behind it. Through the window is an open white sky, two simple wave contours, and one small sailboat. Add one shell-shaped side table with a single cup and one plain oval rug. The shell architecture uses a few wide sweeping curves."
+    },
+    {
+      "page": 6,
+      "variant_id": "SE-V2",
+      "scene_id": "seashell_reading_nook",
+      "style_variant": "V2",
+      "family": "controlled-style-variants",
+      "label": "Seashell Reading Nook · V2",
+      "seed": 710102,
+      "subject": "A cozy reading nook inside one enormous spiral seashell. One large rounded armchair is the foreground focal point, with a broad arched window behind it. Through the window is an open white sky, two simple wave contours, and one small sailboat. Add one shell-shaped side table with a single cup and one plain oval rug. The shell architecture uses a few wide sweeping curves."
+    },
+    {
+      "page": 7,
+      "variant_id": "SE-V3",
+      "scene_id": "seashell_reading_nook",
+      "style_variant": "V3",
+      "family": "controlled-style-variants",
+      "label": "Seashell Reading Nook · V3",
+      "seed": 710102,
+      "subject": "A cozy reading nook inside one enormous spiral seashell. One large rounded armchair is the foreground focal point, with a broad arched window behind it. Through the window is an open white sky, two simple wave contours, and one small sailboat. Add one shell-shaped side table with a single cup and one plain oval rug. The shell architecture uses a few wide sweeping curves."
+    },
+    {
+      "page": 8,
+      "variant_id": "SE-V4",
+      "scene_id": "seashell_reading_nook",
+      "style_variant": "V4",
+      "family": "controlled-style-variants",
+      "label": "Seashell Reading Nook · V4",
+      "seed": 710102,
+      "subject": "A cozy reading nook inside one enormous spiral seashell. One large rounded armchair is the foreground focal point, with a broad arched window behind it. Through the window is an open white sky, two simple wave contours, and one small sailboat. Add one shell-shaped side table with a single cup and one plain oval rug. The shell architecture uses a few wide sweeping curves."
+    },
+    {
+      "page": 9,
+      "variant_id": "TE-V1",
+      "scene_id": "teacup_cottage",
+      "style_variant": "V1",
+      "family": "controlled-style-variants",
+      "label": "Teacup Cottage · V1",
+      "seed": 710103,
+      "subject": "A tiny sitting room inside one giant teacup cottage. A wide circular window sits above one built-in cushioned bench with two broad cushions. Outside the window is a simple garden with three oversized flowers on open white ground. Add one little round table with a teapot and one plain oval rug. The teacup rim forms a broad curved arch around the room."
+    },
+    {
+      "page": 10,
+      "variant_id": "TE-V2",
+      "scene_id": "teacup_cottage",
+      "style_variant": "V2",
+      "family": "controlled-style-variants",
+      "label": "Teacup Cottage · V2",
+      "seed": 710103,
+      "subject": "A tiny sitting room inside one giant teacup cottage. A wide circular window sits above one built-in cushioned bench with two broad cushions. Outside the window is a simple garden with three oversized flowers on open white ground. Add one little round table with a teapot and one plain oval rug. The teacup rim forms a broad curved arch around the room."
+    },
+    {
+      "page": 11,
+      "variant_id": "TE-V3",
+      "scene_id": "teacup_cottage",
+      "style_variant": "V3",
+      "family": "controlled-style-variants",
+      "label": "Teacup Cottage · V3",
+      "seed": 710103,
+      "subject": "A tiny sitting room inside one giant teacup cottage. A wide circular window sits above one built-in cushioned bench with two broad cushions. Outside the window is a simple garden with three oversized flowers on open white ground. Add one little round table with a teapot and one plain oval rug. The teacup rim forms a broad curved arch around the room."
+    },
+    {
+      "page": 12,
+      "variant_id": "TE-V4",
+      "scene_id": "teacup_cottage",
+      "style_variant": "V4",
+      "family": "controlled-style-variants",
+      "label": "Teacup Cottage · V4",
+      "seed": 710103,
+      "subject": "A tiny sitting room inside one giant teacup cottage. A wide circular window sits above one built-in cushioned bench with two broad cushions. Outside the window is a simple garden with three oversized flowers on open white ground. Add one little round table with a teapot and one plain oval rug. The teacup rim forms a broad curved arch around the room."
+    },
+    {
+      "page": 13,
+      "variant_id": "AC-V1",
+      "scene_id": "acorn_bedroom",
+      "style_variant": "V1",
+      "family": "controlled-style-variants",
+      "label": "Acorn Cottage Bedroom · V1",
+      "seed": 710104,
+      "subject": "A welcoming bedroom inside a giant acorn cottage. One large rounded bed with two broad pillows is the main shape. A tall arched window shows a bright open daytime sky with two simple cloud outlines and one low rounded hill. Add one bedside table with a round lamp and one plain oval rug. The acorn shell forms a few broad curved walls and a simple roof."
+    },
+    {
+      "page": 14,
+      "variant_id": "AC-V2",
+      "scene_id": "acorn_bedroom",
+      "style_variant": "V2",
+      "family": "controlled-style-variants",
+      "label": "Acorn Cottage Bedroom · V2",
+      "seed": 710104,
+      "subject": "A welcoming bedroom inside a giant acorn cottage. One large rounded bed with two broad pillows is the main shape. A tall arched window shows a bright open daytime sky with two simple cloud outlines and one low rounded hill. Add one bedside table with a round lamp and one plain oval rug. The acorn shell forms a few broad curved walls and a simple roof."
+    },
+    {
+      "page": 15,
+      "variant_id": "AC-V3",
+      "scene_id": "acorn_bedroom",
+      "style_variant": "V3",
+      "family": "controlled-style-variants",
+      "label": "Acorn Cottage Bedroom · V3",
+      "seed": 710104,
+      "subject": "A welcoming bedroom inside a giant acorn cottage. One large rounded bed with two broad pillows is the main shape. A tall arched window shows a bright open daytime sky with two simple cloud outlines and one low rounded hill. Add one bedside table with a round lamp and one plain oval rug. The acorn shell forms a few broad curved walls and a simple roof."
+    },
+    {
+      "page": 16,
+      "variant_id": "AC-V4",
+      "scene_id": "acorn_bedroom",
+      "style_variant": "V4",
+      "family": "controlled-style-variants",
+      "label": "Acorn Cottage Bedroom · V4",
+      "seed": 710104,
+      "subject": "A welcoming bedroom inside a giant acorn cottage. One large rounded bed with two broad pillows is the main shape. A tall arched window shows a bright open daytime sky with two simple cloud outlines and one low rounded hill. Add one bedside table with a round lamp and one plain oval rug. The acorn shell forms a few broad curved walls and a simple roof."
+    },
+    {
+      "page": 17,
+      "variant_id": "MU-V1",
+      "scene_id": "mushroom_porche",
+      "style_variant": "V1",
+      "family": "controlled-style-variants",
+      "label": "Mushroom Cottage Porch · V1",
+      "seed": 710105,
+      "subject": "A charming little mushroom cottage seen from the front, with a huge rounded mushroom-cap roof and five large round cap spots. The house has one broad arched door and one round window. In front is one simple wooden bench beside a single large watering can and one oversized flower. The cap and cottage walls are large continuous shapes, with the door and window clearly framed."
+    },
+    {
+      "page": 18,
+      "variant_id": "MU-V2",
+      "scene_id": "mushroom_porche",
+      "style_variant": "V2",
+      "family": "controlled-style-variants",
+      "label": "Mushroom Cottage Porch · V2",
+      "seed": 710105,
+      "subject": "A charming little mushroom cottage seen from the front, with a huge rounded mushroom-cap roof and five large round cap spots. The house has one broad arched door and one round window. In front is one simple wooden bench beside a single large watering can and one oversized flower. The cap and cottage walls are large continuous shapes, with the door and window clearly framed."
+    },
+    {
+      "page": 19,
+      "variant_id": "MU-V3",
+      "scene_id": "mushroom_porche",
+      "style_variant": "V3",
+      "family": "controlled-style-variants",
+      "label": "Mushroom Cottage Porch · V3",
+      "seed": 710105,
+      "subject": "A charming little mushroom cottage seen from the front, with a huge rounded mushroom-cap roof and five large round cap spots. The house has one broad arched door and one round window. In front is one simple wooden bench beside a single large watering can and one oversized flower. The cap and cottage walls are large continuous shapes, with the door and window clearly framed."
+    },
+    {
+      "page": 20,
+      "variant_id": "MU-V4",
+      "scene_id": "mushroom_porche",
+      "style_variant": "V4",
+      "family": "controlled-style-variants",
+      "label": "Mushroom Cottage Porch · V4",
+      "seed": 710105,
+      "subject": "A charming little mushroom cottage seen from the front, with a huge rounded mushroom-cap roof and five large round cap spots. The house has one broad arched door and one round window. In front is one simple wooden bench beside a single large watering can and one oversized flower. The cap and cottage walls are large continuous shapes, with the door and window clearly framed."
+    }
+  ]
+}
