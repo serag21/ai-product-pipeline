@@ -367,14 +367,19 @@ def main() -> int:
         "cute coloring pages", "adult coloring", "kids coloring pages",
         "printable PDF"
     ])
+    price_text = str(listing.get(
+        "price_test",
+        "Start with a competitive launch price and adjust based on views, clicks, favorites, and purchases."
+    ))
     listing_draft = (
         f"# Etsy Listing Draft\n\n## Title\n{listing_title}\n\n"
         f"## Description\n{description}\n\n## Suggested tags\n"
         + "\n".join(f"- {tag}" for tag in tags)
-        + "\n\n## Price test\nStart around $3.49–$4.49 for the initial validation listing, then adjust based on views, clicks, favorites, "
-          "and purchases.\n\n## Before publishing\nReview every full-resolution page, confirm all files open and print correctly, "
+        + f"\n\n## Price test\n{price_text}\n\n## Before publishing\n"
+          "Review every full-resolution page, confirm all files open and print correctly, "
           "verify the AI disclosure remains in the description, and check current Etsy listing requirements.\n"
-    )    (final_root / "etsy_listing_draft.md").write_text(listing_draft, encoding="utf-8")
+    )
+    (final_root / "etsy_listing_draft.md").write_text(listing_draft, encoding="utf-8")
 
     upload_files = [letter_pdf, a4_pdf, *png_archives]
     limit_bytes = args.etsy_limit_mb * 1024 * 1024
