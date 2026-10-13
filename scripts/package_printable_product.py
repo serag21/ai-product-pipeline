@@ -269,6 +269,8 @@ def main() -> int:
             raise SystemExit(f"Generation QA is not fully green: {gm.get('summary')}")
 
     final_root = product_root / "final"
+    # Rebuild deterministically so stale archives from a previous run cannot leak into delivery.
+    shutil.rmtree(final_root, ignore_errors=True)
     pages_out = final_root / "pages"
     upload_root = final_root / "etsy_uploads"
     listing_root = final_root / "listing_images"
