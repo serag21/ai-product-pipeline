@@ -148,5 +148,47 @@
       "prompt": "Original cute-spooky storybook coloring page, clean solid-black contours on pure white paper, blank white interiors ready for coloring, bold smooth outer contours with only a few purposeful inner lines, rounded friendly proportions, expressive but simple ghost and cat faces, broad surfaces, medium-large colorable regions, clear gaps between objects, and a calm readable composition. One central gag or activity, one obvious focal character, and three to five useful supporting objects. Every prop has an obvious physical relationship: feet touch floors, furniture rests on the floor, books rest on shelves or tables, shelves attach to walls or stand on supports, handles connect to the objects they belong to, and doors and windows fit inside their frames. The only airborne characters are intentionally floating ghosts and tiny bats; all inanimate props are supported by a surface or visibly attached. Keep the humor in the situation and expressions, the scene friendly rather than frightening, and the background simple. Use crisp, printable black line art with white interiors throughout; express volume through silhouette and overlap rather than tonal rendering. Scene: A tiny friendly sheet ghost helps decorate a simple front garden for Halloween. The ghost stands beside a large jack-o'-lantern placed on a flat stepping stone, while a round black cat sits on the garden path. A small watering can rests on the ground, two broad flowers grow from a sturdy planter, and a little garden gnome stands upright with its base touching the soil. A short fence and one front window establish the setting without crowding it."
     }
   ],
-  "prompt_strategy": "Each page starts with an identical style-first visual bible and then describes one original, physically coherent spooky-comedy scene. Prompts emphasize affirmative object relationships and limit scene density."
+  "prompt_strategy": "Each page starts with an identical style-first visual bible and then describes one original, physically coherent spooky-comedy scene. Prompts emphasize affirmative object relationships and limit scene density.",
+  "brand": "LITTLE HAUNTS CLUB",
+  "subtitle": "COZY SPOOKY MOMENTS",
+  "listing": {
+    "title": "Cute Spooky Coloring Pages for Kids, Teens & Adults — 15 Cozy Halloween Scenes PDF + PNG",
+    "subtitle": "15 silly, cozy Halloween scenes",
+    "tagline": "A little spooky, a lot silly — made for relaxing coloring",
+    "description": "Meet the Little Haunts Club: a friendly ghost and curious black cat getting into silly, cozy Halloween situations. This original collection includes bubble-bath mishaps, pumpkin soup, costume try-ons, midnight tea, candy sorting, and other playful spooky moments. The designs use crisp black outlines and open white areas for your own colors.",
+    "tags": [
+      "cute spooky coloring",
+      "Halloween coloring",
+      "ghost coloring pages",
+      "cozy Halloween",
+      "printable coloring",
+      "spooky coloring PDF",
+      "black cat coloring",
+      "Halloween activity",
+      "cute ghost printable",
+      "coloring pages adults",
+      "kids Halloween art",
+      "instant download",
+      "funny Halloween"
+    ],
+    "hero_page_numbers": [
+      1,
+      2,
+      7,
+      8,
+      11,
+      13
+    ],
+    "gallery_page_numbers": [
+      3,
+      4,
+      5,
+      6,
+      9,
+      10,
+      12,
+      14,
+      15
+    ]
+  }
 }
