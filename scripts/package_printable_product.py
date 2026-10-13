@@ -305,7 +305,7 @@ def main() -> int:
     make_pdf(output_pages, a4_pdf, A4, f"{manifest.get('title', 'Little Worlds')} — A4")
 
     readme_text = (
-        "LITTLE WORLDS — WHIMSICAL FANTASY HOMES\n"
+        f"{manifest.get('title', 'Printable Coloring Pages')}\n"
         f"{expected} printable coloring pages\n\n"
         "FILES\n"
         f"- {letter_pdf.name}: US Letter print-ready PDF\n"
