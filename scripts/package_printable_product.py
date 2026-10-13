@@ -298,8 +298,9 @@ def main() -> int:
         page_metrics.append(metric)
         output_pages.append(output)
 
-    letter_pdf = upload_root / "Little-Worlds-Letter.pdf"
-    a4_pdf = upload_root / "Little-Worlds-A4.pdf"
+    file_prefix = str(manifest.get("file_prefix", "Little-Worlds"))
+    letter_pdf = upload_root / f"{file_prefix}-Letter.pdf"
+    a4_pdf = upload_root / f"{file_prefix}-A4.pdf"
     make_pdf(output_pages, letter_pdf, letter, f"{manifest.get('title', 'Little Worlds')} — US Letter")
     make_pdf(output_pages, a4_pdf, A4, f"{manifest.get('title', 'Little Worlds')} — A4")
 
@@ -307,9 +308,9 @@ def main() -> int:
         "LITTLE WORLDS — WHIMSICAL FANTASY HOMES\n"
         f"{expected} printable coloring pages\n\n"
         "FILES\n"
-        "- Little-Worlds-Letter.pdf: US Letter print-ready PDF\n"
-        "- Little-Worlds-A4.pdf: A4 print-ready PDF\n"
-        "- Little-Worlds-PNGs-01/02/03.zip: individual high-resolution PNG pages\n\n"
+        f"- {letter_pdf.name}: US Letter print-ready PDF\n"
+        f"- {a4_pdf.name}: A4 print-ready PDF\n"
+        f"- {file_prefix}-PNGs-XX.zip: individual high-resolution PNG pages\n\n"
         "PRINTING\n"
         "1. Open the PDF for your paper size, or extract a PNG ZIP to print a single page.\n"
         "2. Select Actual Size or Fit to Page in your printer dialog.\n"
@@ -330,7 +331,7 @@ def main() -> int:
     pages_per_archive = 10
     for start in range(0, len(output_pages), pages_per_archive):
         part = start // pages_per_archive + 1
-        archive_path = upload_root / f"Little-Worlds-PNGs-{part:02d}.zip"
+        archive_path = upload_root / f"{file_prefix}-PNGs-{part:02d}.zip"
         with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
             archive.writestr("READ_ME_FIRST.txt", readme_text)
             for page_path in output_pages[start:start + pages_per_archive]:
@@ -340,45 +341,40 @@ def main() -> int:
     previews = make_listing_images(output_pages, listing_root, manifest)
     original_sheet = final_root / "preview_original_pages.jpg"
     final_sheet = final_root / "preview_print_ready_pages.jpg"
-    make_contact_sheet(sources, page_labels, original_sheet, "Little Worlds — Original Generated Pages")
-    make_contact_sheet(output_pages, page_labels, final_sheet, "Little Worlds — Print-Ready Monochrome Pages")
+    make_contact_sheet(sources, page_labels, original_sheet, f"{manifest.get('title', 'Coloring Pages')} — Original Generated Pages")
+    make_contact_sheet(output_pages, page_labels, final_sheet, f"{manifest.get('title', 'Coloring Pages')} — Print-Ready Monochrome Pages")
 
-    listing_title = "Whimsical Fantasy Homes Coloring Pages, 30 Printable PDF and PNG Pages"
-    description = (
-        "Step into Little Worlds: Whimsical Fantasy Homes, a collection of 30 cozy, imaginative "
-        "coloring scenes featuring cloudtop observatories, mushroom cottages, magical gardens, "
-        "tiny seaside rooms, and other storybook-inspired places. Designed with black outlines "
-        "and open white spaces for your own colors.\n\n"
-        "YOU WILL RECEIVE\n"
-        "• One US Letter PDF with all 30 pages\n"
-        "• One A4 PDF with all 30 pages\n"
-        "• 30 individual high-resolution PNG pages in three ZIP files\n\n"
+    listing = manifest.get("listing", {})
+    listing_title = str(listing.get("title", f"{manifest.get('title', 'Coloring Pages')} — {expected} Printable PDF and PNG Pages"))
+    description = str(listing.get("description", f"Enjoy this original collection of {expected} printable coloring pages.")) + (
+        "\n\nYOU WILL RECEIVE\n"
+        f"• One US Letter PDF with all {expected} pages\n"
+        f"• One A4 PDF with all {expected} pages\n"
+        f"• {expected} individual high-resolution PNG pages in {len(png_archives)} ZIP file(s)\n\n"
         "HOW TO USE\n"
-        "Download the files, open the PDF for your paper size, and print at home or at a local "
-        "print shop. You can also extract the PNG files to print individual designs. Printer "
-        "margins vary, so choose Actual Size or Fit to Page as appropriate.\n\n"
+        "Download the files, open the PDF for your paper size, and print at home or at a local print shop. "
+        "You can also extract the PNG files to print individual designs. Printer margins vary, so choose "
+        "Actual Size or Fit to Page as appropriate.\n\n"
         "PLEASE NOTE\n"
-        "This is a digital product; no physical book or printed pages will be shipped. Colors "
-        "and print appearance can vary by screen, printer, and paper. For personal coloring use.\n\n"
+        "This is a digital product; no physical book or printed pages will be shipped. Colors and print "
+        "appearance can vary by screen, printer, and paper. For personal coloring use.\n\n"
         "AI DISCLOSURE\n"
-        "The illustrations were created using AI-assisted image generation from original scene "
-        "prompts, then curated and prepared into this printable collection.\n"
+        "The illustrations were created with AI-assisted image generation using original scene prompts, "
+        "then curated and prepared into this printable collection.\n"
     )
-    tags = [
-        "fantasy coloring", "cozy coloring", "printable coloring", "coloring pages",
-        "whimsical home", "fantasy cottage", "cute coloring pages", "instant download",
-        "adult coloring", "kids coloring pages", "mushroom cottage", "fairy tale art",
+    tags = listing.get("tags", [
+        "printable coloring", "coloring pages", "instant download",
+        "cute coloring pages", "adult coloring", "kids coloring pages",
         "printable PDF"
-    ]
+    ])
     listing_draft = (
         f"# Etsy Listing Draft\n\n## Title\n{listing_title}\n\n"
         f"## Description\n{description}\n\n## Suggested tags\n"
         + "\n".join(f"- {tag}" for tag in tags)
-        + "\n\n## Price test\nStart around $4.99 for the launch test, then adjust based on views, clicks, favorites, "
+        + "\n\n## Price test\nStart around $3.49–$4.49 for the initial validation listing, then adjust based on views, clicks, favorites, "
           "and purchases.\n\n## Before publishing\nReview every full-resolution page, confirm all files open and print correctly, "
-          "verify that the AI disclosure remains in the description, and check current Etsy listing requirements.\n"
-    )
-    (final_root / "etsy_listing_draft.md").write_text(listing_draft, encoding="utf-8")
+          "verify the AI disclosure remains in the description, and check current Etsy listing requirements.\n"
+    )    (final_root / "etsy_listing_draft.md").write_text(listing_draft, encoding="utf-8")
 
     upload_files = [letter_pdf, a4_pdf, *png_archives]
     limit_bytes = args.etsy_limit_mb * 1024 * 1024
