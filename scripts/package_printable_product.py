@@ -144,7 +144,12 @@ def draw_center(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str, font,
     draw.text(xy, text, font=font, fill=fill, anchor="mm")
 
 
-def make_listing_images(final_pages: list[Path], preview_dir: Path) -> list[Path]:
+def make_listing_images(final_pages: list[Path], preview_dir: Path, manifest: dict | None = None) -> list[Path]:
+    manifest = manifest or {}
+    listing = manifest.get("listing", {})
+    brand = str(manifest.get("brand", "LITTLE WORLDS"))
+    subtitle = str(manifest.get("subtitle", manifest.get("title", "Printable Coloring Pages")))
+    count = len(final_pages)
     preview_dir.mkdir(parents=True, exist_ok=True)
     loaded_pages = []
     for path in final_pages:
@@ -157,10 +162,10 @@ def make_listing_images(final_pages: list[Path], preview_dir: Path) -> list[Path
     img = Image.new("RGB", (width, height), PAPER)
     draw = ImageDraw.Draw(img)
     draw.rounded_rectangle((48, 48, width - 48, height - 48), radius=38, outline=INK, width=5)
-    draw_center(draw, (width // 2, 165), "LITTLE WORLDS", load_font(104, True))
-    draw_center(draw, (width // 2, 285), "WHIMSICAL FANTASY HOMES", load_font(52, True), ACCENT)
-    draw_center(draw, (width // 2, 380), "30 PRINTABLE COLORING PAGES", load_font(38, True))
-    sample_ids = [0, 1, 4, 8, 13, 21]
+    draw_center(draw, (width // 2, 165), brand, load_font(92, True))
+    draw_center(draw, (width // 2, 285), subtitle.upper(), load_font(43, True), ACCENT)
+    draw_center(draw, (width // 2, 380), f"{count} PRINTABLE COLORING PAGES", load_font(38, True))
+    sample_ids = [max(1, min(count, int(n))) - 1 for n in listing.get("hero_page_numbers", [1, 2, 5, 9, 14, count])][:6]
     card_w, card_h, gap = 520, 690, 55
     left = (width - (3 * card_w + 2 * gap)) // 2
     top = 500
@@ -171,7 +176,7 @@ def make_listing_images(final_pages: list[Path], preview_dir: Path) -> list[Path
         add_preview_card(img, loaded_pages[page_id], (x, y, card_w, card_h))
     draw_center(draw, (width // 2, 2045), "US LETTER + A4 PDFs  •  INDIVIDUAL PNG PAGES", load_font(32, True))
     draw_center(draw, (width // 2, 2120), "Instant digital download · No physical item shipped", load_font(29), MUTED)
-    draw_center(draw, (width // 2, 2210), "Imaginative cozy worlds for kids and grown-ups", load_font(32, True), INK)
+    draw_center(draw, (width // 2, 2210), str(listing.get("tagline", "Imaginative coloring pages for all ages")), load_font(30, True), INK)
     path = preview_dir / "listing_01_hero.jpg"
     img.save(path, "JPEG", quality=89, optimize=True, subsampling=0)
     made.append(path)
@@ -180,14 +185,14 @@ def make_listing_images(final_pages: list[Path], preview_dir: Path) -> list[Path
     img = Image.new("RGB", (width, height), "#FBFAF6")
     draw = ImageDraw.Draw(img)
     draw_center(draw, (width // 2, 125), "A PEEK INSIDE", load_font(86, True))
-    draw_center(draw, (width // 2, 230), "A few of the little worlds waiting to be colored", load_font(35), MUTED)
+    draw_center(draw, (width // 2, 230), "A selection of pages included in your download", load_font(35), MUTED)
     card_w, card_h, gap_x, gap_y = 485, 555, 65, 40
     left, top = (width - 3 * card_w - 2 * gap_x) // 2, 335
-    sample_ids = [2, 3, 5, 6, 9, 11, 17, 23, 29]
+    sample_ids = [max(1, min(count, int(n))) - 1 for n in listing.get("gallery_page_numbers", list(range(1, min(count, 9) + 1)))][:9]
     for idx, page_id in enumerate(sample_ids):
         row, col = divmod(idx, 3)
         add_preview_card(img, loaded_pages[page_id], (left + col * (card_w + gap_x), top + row * (card_h + gap_y), card_w, card_h))
-    draw_center(draw, (width // 2, 2245), "30 DISTINCT SCENES  •  CLEAN BLACK-AND-WHITE LINE ART", load_font(31, True), ACCENT)
+    draw_center(draw, (width // 2, 2245), f"{count} DISTINCT SCENES  •  CLEAN BLACK-AND-WHITE LINE ART", load_font(31, True), ACCENT)
     path = preview_dir / "listing_02_gallery.jpg"
     img.save(path, "JPEG", quality=89, optimize=True, subsampling=0)
     made.append(path)
@@ -197,9 +202,9 @@ def make_listing_images(final_pages: list[Path], preview_dir: Path) -> list[Path
     draw = ImageDraw.Draw(img)
     draw_center(draw, (width // 2, 170), "WHAT'S INCLUDED", load_font(82, True))
     blocks = [
-        ("30", "unique coloring pages", "30 individual printable illustrations"),
+        (str(count), "unique coloring pages", f"{count} individual printable illustrations"),
         ("2", "print-ready PDFs", "US Letter and A4 paper sizes"),
-        ("30", "individual PNGs", "High-resolution black-and-white pages"),
+        (str(count), "individual PNGs", "High-resolution black-and-white pages"),
         ("0", "physical items", "Digital download only"),
     ]
     y = 360
@@ -332,7 +337,7 @@ def main() -> int:
                 archive.write(page_path, f"PNG_Pages/{page_path.name}")
         png_archives.append(archive_path)
 
-    previews = make_listing_images(output_pages, listing_root)
+    previews = make_listing_images(output_pages, listing_root, manifest)
     original_sheet = final_root / "preview_original_pages.jpg"
     final_sheet = final_root / "preview_print_ready_pages.jpg"
     make_contact_sheet(sources, page_labels, original_sheet, "Little Worlds — Original Generated Pages")
