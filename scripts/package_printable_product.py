@@ -181,7 +181,7 @@ def make_listing_images(final_pages: list[Path], preview_dir: Path) -> list[Path
     draw = ImageDraw.Draw(img)
     draw_center(draw, (width // 2, 125), "A PEEK INSIDE", load_font(86, True))
     draw_center(draw, (width // 2, 230), "A few of the little worlds waiting to be colored", load_font(35), MUTED)
-    card_w, card_h, gap_x, gap_y = 485, 625, 65, 40
+    card_w, card_h, gap_x, gap_y = 485, 555, 65, 40
     left, top = (width - 3 * card_w - 2 * gap_x) // 2, 335
     sample_ids = [2, 3, 5, 6, 9, 11, 17, 23, 29]
     for idx, page_id in enumerate(sample_ids):
