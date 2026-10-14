@@ -1,0 +1,276 @@
+{
+  "product_id": "little-haunts-club-spooky-neighbors-15",
+  "file_prefix": "Little-Haunts-Club",
+  "title": "Little Haunts Club: A Very Odd Halloween — 15 Printable Coloring Pages",
+  "brand": "LITTLE HAUNTS CLUB",
+  "subtitle": "A VERY ODD HALLOWEEN",
+  "purpose": "A carefully art-directed first seasonal Etsy validation product with 15 distinct spooky-cute character archetypes and individually planned scenes. Each page has a readable mini-story, grounded props, open coloring regions, and a deliberate reason for each supporting detail.",
+  "audience": "older children, teens, and adults who enjoy cozy spooky illustration",
+  "prompt_format": "text",
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "visual_bible": "Original spooky-cute storybook coloring art for older children, teens, and adults: friendly oddball creatures, small comic mishaps, cozy settings, clear silhouettes, and detail with a purpose. The illustration uses crisp black contour lines on pure white paper, confident outer lines, a few thinner inner contours, broad white coloring areas, and moderate detail that is satisfying at printed page size. Solid black is limited to small accents such as pupils, noses, or tiny markings; clothing, fur, feathers, bones, wings, furniture, and props have clearly enclosed white interiors to color. Frame the portrait scene with a simple rounded rectangle and a generous white margin. Every prop is visibly supported, attached, or held by the character using it. Use warm-hearted expressions and an amusing scene-specific story; never rely on repeated floating bats as filler.",
+  "prompt_strategy": "Per the FLUX.2 prompting guide, each prompt starts with the main subject and action, then specifies critical line-art style, then adds spatial relationships and scene context. Prompts describe the intended printable linework affirmatively. Each page has a unique art-direction rationale and a targeted defect checklist.",
+  "art_direction_principles": [
+    "One distinct creature archetype per page; ghosts and cats are recurring accents, not the whole cast.",
+    "Every page has one focal action and three to five supporting objects that explain the setting.",
+    "Small decorative details such as flowers, portraits, pumpkins, a fireplace, a fence, or a framed picture belong to the scene and help composition.",
+    "Avoid black-filled environmental panels; backgrounds and character surfaces remain open white coloring regions.",
+    "Keep solid black only as a small accent; wings, fur, bones, clothing, bandages, and large props should stay colorable.",
+    "Ground and connect every prop; describe object support and attachment explicitly.",
+    "Use a simple rounded border, medium-large detail, clear object separation, and a generous printable margin consistently."
+  ],
+  "research_notes": [
+    {
+      "source": "Black Forest Labs FLUX.2 Prompting Guide",
+      "url": "https://docs.bfl.ai/guides/prompting_guide_flux2",
+      "takeaway": "Uses Subject + Action + Style + Context; word order matters; describe desired output instead of relying on negative prompts; structured scene planning is useful for production."
+    },
+    {
+      "source": "Penguin Random House — Spooky Cutie",
+      "url": "https://www.penguinrandomhouse.com/books/824611/spooky-cutie-by-coco-wyo/",
+      "takeaway": "Current ages-7+ book description promotes 45 hand-drawn pages with large bold designs and a varied cast including cozy ghosts, grim reapers, and zombie cats."
+    },
+    {
+      "source": "Etsy — Printable Halloween Creatures",
+      "url": "https://www.etsy.com/listing/1305339872/printable-halloween-coloring-pages",
+      "takeaway": "A six-page printable listing uses distinct Halloween archetypes such as mummy, vampire, witch, Frankenstein-style monster, cat, and bat, showing that variety can be the product's promise."
+    },
+    {
+      "source": "Etsy — Haunted Home Moments",
+      "url": "https://www.etsy.com/listing/4337130396/haunted-home-moments-coloring-book-cozy",
+      "takeaway": "Example listings show variety across home scenes and creatures; the strongest lesson is scene diversity plus readable props, not just a higher page count."
+    },
+    {
+      "source": "Etsy — Spooky Comfy",
+      "url": "https://www.etsy.com/listing/4396516924/spooky-comfy-cozy-creepy-coloring-book",
+      "takeaway": "Preview imagery includes distinct archetypes and scene ideas such as skeleton at home, mummy, stitched doll, zombie, bride, and grim reaper. Used only as genre-level market research; new prompts use original compositions."
+    }
+  ],
+  "listing": {
+    "title": "Cute Spooky Halloween Coloring Pages for Kids, Teens & Adults — 15 Original Printable PDF + PNG",
+    "tagline": "A little strange, a little cozy, and full of Halloween charm",
+    "description": "Meet the Little Haunts Club: a curious cast of friendly spooky neighbors, from a ghostly tailor and patchwork monster to a masked crow apothecary, cozy skeleton reader, tiny witch, vampire baker, and more. Each page tells a small, funny story with pumpkins, flowers, picture frames, cottage details, and other purposeful accents. Original black-outline illustrations with open white areas for your own colors.",
+    "tags": [
+      "cute spooky coloring",
+      "Halloween coloring",
+      "ghost coloring pages",
+      "Frankenstein coloring",
+      "skeleton coloring",
+      "witch coloring pages",
+      "black cat coloring",
+      "printable coloring",
+      "spooky coloring PDF",
+      "cute monster art",
+      "Halloween activity",
+      "instant download",
+      "coloring pages adults"
+    ],
+    "hero_page_numbers": [
+      1,
+      2,
+      3,
+      4,
+      7,
+      13
+    ],
+    "gallery_page_numbers": [
+      5,
+      6,
+      8,
+      9,
+      10,
+      11,
+      12,
+      14,
+      15
+    ],
+    "price_test": "Launch at $2.99 for the initial seasonal validation test. If listing views, favorites, and conversion are healthy, test $3.49; expand the pack or create a companion product before raising the price substantially."
+  },
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "GTRA01",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "01 · Ghost Tailor Repairs a Bat Cape",
+      "character_archetype": "Friendly sheet ghost",
+      "scene_title": "Ghost Tailor Repairs a Bat Cape",
+      "design_rationale": "Keeps the strongest existing ghost-tailor idea, but gives the black cat a large colorable body and a clear reason to be in the scene. The sewing machine and framed example communicate the activity immediately.",
+      "qa_focus": "Check that the sewing machine sits fully on the table, scissors rest flat, cat paws meet the floor, and the frame stays separate from the cape.",
+      "prompt_format": "text",
+      "prompt": "A friendly sheet ghost carefully repairs a torn bat-shaped cape at a sturdy sewing table, guiding fabric beneath a simple sewing machine. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: A large spool of thread and rounded craft scissors rest flat on the tabletop; a folded cloth sits on a short stool beside a small pumpkin. A round cat with a broad open body shape and only a few black facial marks plays with a yarn ball on the floor. One small framed picture of a finished cape hangs on the wall. Arrange the table, stool, cat, and wall frame with clear breathing room."
+    },
+    {
+      "page": 2,
+      "variant_id": "PMBA02",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "02 · Patchwork Monster Builds a Birdhouse",
+      "character_archetype": "Original stitched monster child",
+      "scene_title": "Patchwork Monster Builds a Birdhouse",
+      "design_rationale": "Introduces the Frankenstein-like archetype in an original garden-building scene rather than copying a competitor's bird-and-nest composition. The birdhouse, tools, bird, pumpkins, and flowers each serve the central action.",
+      "qa_focus": "Check exactly two neck bolts, clear birdhouse/post contact, hammer held naturally, bird feet touching the roof, and broad uncluttered overalls.",
+      "prompt_format": "text",
+      "prompt": "A cheerful square-headed patchwork monster child with two small neck bolts and big round eyes secures a little wooden birdhouse to a sturdy garden post. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: A broad workbench holds one wooden hammer and three wide spare boards. A tiny robin perches on the birdhouse roof, while two large pumpkins and three oversized flowers decorate the foot of the post. A low fence establishes the garden behind the monster. The monster wears simple overalls with two broad patch shapes, and the birdhouse has one clear round entrance."
+    },
+    {
+      "page": 3,
+      "variant_id": "TPCA03",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "03 · The Plague-Doctor Crow's Apothecary",
+      "character_archetype": "Friendly crow in a beaked doctor mask",
+      "scene_title": "The Plague-Doctor Crow's Apothecary",
+      "design_rationale": "Adds the distinctive masked-bird character called out in the reference, with a friendly, non-graphic presentation. The apothecary has a clear role and the props form a coherent counter display.",
+      "qa_focus": "Check the mask reads as one beak-shaped costume, the crow has one consistent pair of wings and feet, bottles sit flat, herbs attach to the rail, and the background window stays white.",
+      "prompt_format": "text",
+      "prompt": "A small upright crow dressed as a kindly plague doctor organizes three large potion bottles behind a sturdy apothecary counter, wearing a rounded long-beak mask and a little hood. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: One wing-like hand places a cork beside an open bottle, while the crow's feet stand visibly on a low platform behind the counter. A basket of three oversized mushrooms sits on the counter, two bundles of herbs hang from one wooden rail, and a framed botanical drawing hangs beside a rounded window showing a crescent moon. Keep the bottle labels blank and broad."
+    },
+    {
+      "page": 4,
+      "variant_id": "SFSH04",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "04 · Skeleton's Fireside Story Hour",
+      "character_archetype": "Cozy childlike skeleton",
+      "scene_title": "Skeleton's Fireside Story Hour",
+      "design_rationale": "Delivers the exact cozy indoor richness we want: fireplace, framed wall art, a mug, cookies, rug, and a clear character activity. It also introduces a skeleton without leaning on a graveyard.",
+      "qa_focus": "Check armchair legs touch the floor, hands hold the book naturally, fire stays inside the firebox, portrait is attached to the wall, and skeleton bones remain readable and colorable.",
+      "prompt_format": "text",
+      "prompt": "A friendly childlike skeleton wearing a roomy knitted sweater and long scarf sits securely in a rounded armchair, reading a large open storybook beside a cottage fireplace. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The fireplace has a clear stone frame, three broad logs, and three simple flame shapes. A sturdy side table supports a pumpkin-shaped mug and a small plate of two cookies. One framed portrait hangs above the mantel, and a plain oval rug sits beneath the chair. The skeleton's skull, ribs, hands, and feet use open white regions separated by clean black outlines."
+    },
+    {
+      "page": 5,
+      "variant_id": "MTP05",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "05 · Mummy's Tangled Present",
+      "character_archetype": "Friendly mummy",
+      "scene_title": "Mummy's Tangled Present",
+      "design_rationale": "Uses the mummy's defining bandages as the joke itself, rather than adding bandage texture everywhere. The gift-wrapping tools and parcels all support one simple action.",
+      "qa_focus": "Check the loose bandage connects continuously from the mummy to the ribbon, both presents rest on the floor, the scissors are recognizable, and bandage strips remain broad.",
+      "prompt_format": "text",
+      "prompt": "A friendly mummy sits on a round floor cushion and tries to finish wrapping one large present, discovering that its trailing bandage has tangled around the gift ribbon. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The present rests on the floor in front of the mummy, with a second smaller parcel beside it. A low side table holds one broad roll of wrapping paper, a tape roll, and rounded craft scissors. A small pumpkin lantern and a framed moon picture decorate the room. Draw the mummy's bandages as five broad, clearly separated strips, with a single loose strip visibly looping around the bow."
+    },
+    {
+      "page": 6,
+      "variant_id": "TWTP06",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "06 · The Witch's Tiny Potion Clinic",
+      "character_archetype": "Friendly young witch",
+      "scene_title": "The Witch's Tiny Potion Clinic",
+      "design_rationale": "Gives the witch a clear, active magical task and uses familiar Halloween props in a grounded cottage scene. The labels are blank and the ingredients are large instead of becoming tiny pseudo-text.",
+      "qa_focus": "Check cauldron sits on the hearth, shelf brackets connect to wall and shelf, frog sits on stool, spoon connects to the witch's hand, and bubbles are outlined rather than filled.",
+      "prompt_format": "text",
+      "prompt": "A friendly young witch in a soft pointed hat stirs a round potion cauldron that rests securely on a small brick hearth in her cottage clinic. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: A frog sits on a mushroom-shaped stool beside the hearth, two large labeled-as-blank bottles rest on a wall shelf with visible brackets, and two potted moonflowers stand on the floor. One framed plant illustration hangs beside a small arched window. Three large bubbles rise from the cauldron, and a wooden spoon rests in the witch's hand."
+    },
+    {
+      "page": 7,
+      "variant_id": "VMB07",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "07 · Vampire's Midnight Bakery",
+      "character_archetype": "Friendly young vampire baker",
+      "scene_title": "Vampire's Midnight Bakery",
+      "design_rationale": "Combines a recognizable vampire silhouette and light humor with a bakery layout that makes physical sense. The cookie shapes add Halloween identity without filling the page with bats.",
+      "qa_focus": "Check tray is supported by the oven or held with both hands, oven door and rails make sense, cape remains white inside, and the starry window has a white background.",
+      "prompt_format": "text",
+      "prompt": "A friendly young vampire baker in a simple apron lifts a tray of three large bat-shaped cookies from the counter oven in a cozy little bakery. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The oven door is open with its tray rails visible; a quilted oven mitt lies flat on the counter. One mixing bowl and a rolling pin sit beside a broad plate, and a rounded window shows a crescent moon and two large stars. A framed picture of a cupcake hangs over the counter, while two small pumpkins sit beneath the window. The vampire's cape is a broad outlined shape with an open white interior."
+    },
+    {
+      "page": 8,
+      "variant_id": "GBN08",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "08 · Ghost-and-Cat Blanket-Fort Night",
+      "character_archetype": "Friendly ghost and curious cat",
+      "scene_title": "Ghost-and-Cat Blanket-Fort Night",
+      "design_rationale": "Keeps the strongest shared-character moment from the earlier batch. The fort's supports are visible, and each extra object reinforces a cozy movie/story-night activity.",
+      "qa_focus": "Check blanket contacts both chair backs, chair legs meet the floor, book has two clear pages, flashlight lies flat, and popcorn stays in the bowl.",
+      "prompt_format": "text",
+      "prompt": "A friendly sheet ghost reads a picture book inside a cozy blanket fort built securely over the backs of two sturdy chairs, while a curious cat sits on a cushion beside the ghost. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The blanket drapes from both chair backs to the floor in one large readable shape. A low table just outside the fort supports a broad bowl of popcorn, and a flashlight lies flat on the floor pointing toward the entrance. One small framed family picture hangs on the wall. The ghost holds the book with two clear hands; the cat's tail curls around its own body."
+    },
+    {
+      "page": 9,
+      "variant_id": "TSMS09",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "09 · The Skeleton Mermaid's Shell Collection",
+      "character_archetype": "Friendly skeleton mermaid",
+      "scene_title": "The Skeleton Mermaid's Shell Collection",
+      "design_rationale": "Adds a clearly different creature and setting, drawing on the genre's spooky-mermaid appeal while keeping the anatomy stylized and colorable. The shells and treasure chest have a clear shared purpose.",
+      "qa_focus": "Check one head, one rib cage, two arms, one continuous tail, fish separated from the body, and treasure chest resting on the ledge.",
+      "prompt_format": "text",
+      "prompt": "A sweet skeleton mermaid with a simple skull face and a broad curved fish tail sits on a wide rock ledge in an underwater grotto, sorting three large seashells into a shallow treasure chest. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The tail has five broad scale panels, and the rib cage is suggested with a few open, widely spaced bone contours. Two friendly fish swim nearby, three simple bubble outlines rise above the ledge, and two broad coral plants grow from the seabed. The cave opening forms a natural rounded frame around the mermaid, with large open white spaces between the sea plants."
+    },
+    {
+      "page": 10,
+      "variant_id": "ZPS10",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "10 · Zombie's Pumpkin-Pie Stand",
+      "character_archetype": "Friendly little zombie baker",
+      "scene_title": "Zombie's Pumpkin-Pie Stand",
+      "design_rationale": "Creates an outdoor market scene and a different character silhouette. The cart, pies, sign panel, awning, pumpkins, and crow all belong to the same small seasonal business.",
+      "qa_focus": "Check both wheels touch the ground, cart counter supports pies, crow feet touch handle, awning connects to cart, and zombie hands hold or rest on the counter clearly.",
+      "prompt_format": "text",
+      "prompt": "A cheerful little zombie baker with one stitched cheek and a broad apron serves a pumpkin pie from a sturdy two-wheeled wooden garden cart. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: A second pie sits beside the first on the cart counter, and a blank rectangular sign panel hangs from the front. Two pumpkins sit at the cart's base and a small crow perches on the cart handle. A short awning uses four broad fabric panels, while three fallen leaves sit along the path. The zombie's sleeves, apron, and head remain open white coloring areas."
+    },
+    {
+      "page": 11,
+      "variant_id": "SFPH11",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "11 · Scarecrow's First Pumpkin Harvest",
+      "character_archetype": "Friendly patchwork scarecrow",
+      "scene_title": "Scarecrow's First Pumpkin Harvest",
+      "design_rationale": "Introduces a scarecrow and garden setting with a clear seasonal action. Limiting straw to a few large tufts avoids the dense scratchy texture that hurt the previous pumpkin-patch image.",
+      "qa_focus": "Check exactly three pumpkins, attached stems, crow feet touching the fence, fence rails connecting posts, and sparse straw detail.",
+      "prompt_format": "text",
+      "prompt": "A friendly patchwork scarecrow in a floppy hat waters three large pumpkins growing in a small garden patch, with a curious crow perched on the top rail of the fence. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The scarecrow wears simple overalls with two broad fabric patches and a shirt with only a few visible straw tufts at the cuffs. A watering can rests on the soil after use, two oversized flowers grow near a short four-post fence, and one wide autumn leaf lies in the foreground. The pumpkins have broad lobes and clearly attached stems."
+    },
+    {
+      "page": 12,
+      "variant_id": "WPMD12",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "12 · Werewolf Pup's Moonlit Doghouse",
+      "character_archetype": "Cute werewolf puppy",
+      "scene_title": "Werewolf Pup's Moonlit Doghouse",
+      "design_rationale": "Adds a dog-like monster with a distinct body and simple emotional gag. The bowl, toy, house, and moon all support the puppy story without copying the ghost-and-cat format.",
+      "qa_focus": "Check four paws, one tail, doghouse doorway, roof supports, bowl and bone on the ground, and moon/stars as open outlined shapes.",
+      "prompt_format": "text",
+      "prompt": "A fluffy little werewolf puppy with rounded ears and two tiny friendly fangs sits beside its own sturdy doghouse, proudly howling toward a large crescent moon. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: A bone-shaped chew toy and a round water bowl rest on the ground. The doghouse has a broad arched entrance and a clearly supported roof; a small pumpkin lantern sits beside the entrance. A low picket fence and two large moonflowers frame the yard, with three outlined stars in the open sky. The puppy's fur is shown with a few large tufts rather than many short strokes."
+    },
+    {
+      "page": 13,
+      "variant_id": "LGRF13",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "13 · Little Grim Reaper's Flower Delivery",
+      "character_archetype": "Small friendly grim reaper",
+      "scene_title": "Little Grim Reaper's Flower Delivery",
+      "design_rationale": "Adds the recognizable reaper archetype while making the story gentle and kind: bringing flowers rather than frightening anyone. The tombstone, gate, lantern, flowers, and pumpkin establish the place intentionally.",
+      "qa_focus": "Check both hands connect to bouquet, scythe leans against the post rather than floating, lantern attaches to gate, tombstone rests on ground, and flowers have clear stems.",
+      "prompt_format": "text",
+      "prompt": "A tiny friendly grim reaper in a roomy hooded cloak carries a generous bouquet to a rounded tombstone engraved with a simple flower emblem in a peaceful little cemetery. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: A small crescent-shaped scythe leans safely against the gate post while the reaper holds the bouquet with both hands. A lantern hangs from the gate, three large flowers grow beside the tombstone, and one pumpkin rests on a flat stepping stone. Two curved branches form a soft overhead arch, leaving the center of the scene open."
+    },
+    {
+      "page": 14,
+      "variant_id": "CRTP14",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "14 · Cyclops Runs the Pumpkin Ring Toss",
+      "character_archetype": "Friendly one-eyed carnival monster",
+      "scene_title": "Cyclops Runs the Pumpkin Ring Toss",
+      "design_rationale": "Adds a new monster silhouette and a clear activity-based scene. Targets, rings, prizes, booth, and pennants all reinforce a small Halloween carnival without relying on text.",
+      "qa_focus": "Check one eye centered on the face, ring actually encircles a pumpkin target, targets rest on shelf, plush sits on shelf, and awning has clear supports.",
+      "prompt_format": "text",
+      "prompt": "A round friendly cyclops with one large central eye and two tiny horns runs a miniature Halloween ring-toss booth, smiling as a ring lands around one pumpkin target. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: Three large pumpkins sit on a stable shelf behind the counter, and a small ghost plush prize sits upright on a separate side shelf. The booth awning has four broad panels and two small triangular pennants. A paper lantern hangs from a visible hook, and one pumpkin rests on the ground at each side of the booth. Leave the sign panel blank."
+    },
+    {
+      "page": 15,
+      "variant_id": "TBCM15",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "15 · The Bat Courier's Moonlit Delivery",
+      "character_archetype": "Small bat messenger",
+      "scene_title": "The Bat Courier's Moonlit Delivery",
+      "design_rationale": "Uses a bat as the featured character instead of scattering identical filled silhouettes across every page. The delivery action, satchel, letter, mailbox, doorway, lantern, and flowers form one readable mini-story.",
+      "qa_focus": "Check one bat with two wings and two feet, wing panels stay open white, satchel attaches to body, mailbox is mounted to its post, porch light is attached to frame, and letter remains separate from feet and satchel.",
+      "prompt_format": "text",
+      "prompt": "A friendly little bat courier with a tiny satchel lands beside a rounded mailbox mounted on a sturdy post outside a cozy haunted cottage, holding one sealed letter in its feet. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The bat's wings spread wide with three broad outlined membrane panels inside each wing, leaving the panels white for coloring. The cottage has a rounded door and a framed square window; a porch light is attached to the door frame, and a pumpkin lantern sits on the front step. Two large flowers grow at the mailbox base, while a crescent moon and two outlined stars sit in the open sky. The single letter has a blank envelope face."
+    }
+  ]
+}
