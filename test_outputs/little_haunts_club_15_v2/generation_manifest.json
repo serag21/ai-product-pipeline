@@ -1,0 +1,288 @@
+{
+  "product_id": "little-haunts-club-cozy-spooky-moments-15",
+  "workflow": "workflows\\flux2_coloring_api.json",
+  "reference_image": null,
+  "canvas": {
+    "width": 1536,
+    "height": 1984
+  },
+  "steps": 20,
+  "guidance": 4.0,
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "LH01",
+      "family": "production-spooky-story-v1",
+      "label": "LH01 \u00b7 Ghost's Costume Repair Shop",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 127919,
+      "prompt_id": "6cda5eef-db43-42fd-b58e-0c084d3c618d",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_001.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 82.581
+      }
+    },
+    {
+      "page": 2,
+      "variant_id": "LH02",
+      "family": "production-spooky-story-v1",
+      "label": "LH02 \u00b7 Laundry Day at the Haunted House",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 135838,
+      "prompt_id": "bef0629b-afd1-4cb4-ba66-41904e4d1b54",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_002.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 79.073
+      }
+    },
+    {
+      "page": 3,
+      "variant_id": "LH03",
+      "family": "production-spooky-story-v1",
+      "label": "LH03 \u00b7 Pumpkin Soup Mix-Up",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 143757,
+      "prompt_id": "4506737d-aa0d-4e99-afca-f81234f687bd",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_003.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 91.113
+      }
+    },
+    {
+      "page": 4,
+      "variant_id": "LH04",
+      "family": "production-spooky-story-v1",
+      "label": "LH04 \u00b7 The Cookie Tray Tumble",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 151676,
+      "prompt_id": "ce38fe54-ea44-484e-afe0-8bb6abe5d895",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_004.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 92.117
+      }
+    },
+    {
+      "page": 5,
+      "variant_id": "LH05",
+      "family": "production-spooky-story-v1",
+      "label": "LH05 \u00b7 Ghost Story Blanket Fort",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 159595,
+      "prompt_id": "6e59fe94-c3fa-4e13-bf20-01e8666d20a2",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_005.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 73.453
+      }
+    },
+    {
+      "page": 6,
+      "variant_id": "LH06",
+      "family": "production-spooky-story-v1",
+      "label": "LH06 \u00b7 The Costume Closet",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 167514,
+      "prompt_id": "960038ad-add6-43c8-bc0f-20b1065765b0",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_006.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 69.583
+      }
+    },
+    {
+      "page": 7,
+      "variant_id": "LH07",
+      "family": "production-spooky-story-v1",
+      "label": "LH07 \u00b7 Trick-or-Treat Doorstep",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 175433,
+      "prompt_id": "954325db-e9d4-4ef2-b6de-2da03b065907",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_007.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 66.381
+      }
+    },
+    {
+      "page": 8,
+      "variant_id": "LH08",
+      "family": "production-spooky-story-v1",
+      "label": "LH08 \u00b7 Potion Spill, Almost",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 183352,
+      "prompt_id": "5f230542-bfc0-4b57-873e-5f4f91e510ce",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_008.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 83.659
+      }
+    },
+    {
+      "page": 9,
+      "variant_id": "LH09",
+      "family": "production-spooky-story-v1",
+      "label": "LH09 \u00b7 Midnight Tea Party",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 191271,
+      "prompt_id": "a180b339-2af8-42ec-8559-fcb8fad9ee82",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_009.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 80.308
+      }
+    },
+    {
+      "page": 10,
+      "variant_id": "LH10",
+      "family": "production-spooky-story-v1",
+      "label": "LH10 \u00b7 Movie Night for One Ghost Too Many",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 199190,
+      "prompt_id": "58fb1aa4-8811-41a7-b1c8-b246b572b0cd",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_010.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 74.224
+      }
+    },
+    {
+      "page": 11,
+      "variant_id": "LH11",
+      "family": "production-spooky-story-v1",
+      "label": "LH11 \u00b7 Pumpkin Patch Nap",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 207109,
+      "prompt_id": "10c281d4-c6bb-451a-85ed-e27ae0e52b5e",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_011.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 69.779
+      }
+    },
+    {
+      "page": 12,
+      "variant_id": "LH12",
+      "family": "production-spooky-story-v1",
+      "label": "LH12 \u00b7 Ghost's Bookshelf Trouble",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 215028,
+      "prompt_id": "ae9d5ff7-7b91-4c79-8d1f-2b2387c3ee03",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_012.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 69.864
+      }
+    },
+    {
+      "page": 13,
+      "variant_id": "LH13",
+      "family": "production-spooky-story-v1",
+      "label": "LH13 \u00b7 The Sleepy Haunted Bedroom",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 222947,
+      "prompt_id": "2d84dae7-720c-4df0-96e2-48b63cf3671c",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_013.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 56.682
+      }
+    },
+    {
+      "page": 14,
+      "variant_id": "LH14",
+      "family": "production-spooky-story-v1",
+      "label": "LH14 \u00b7 Candy Sorting Committee",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 230866,
+      "prompt_id": "70cce875-3e2f-4498-8951-f7a730f3b88b",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_014.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 84.999
+      }
+    },
+    {
+      "page": 15,
+      "variant_id": "LH15",
+      "family": "production-spooky-story-v1",
+      "label": "LH15 \u00b7 The Ghost Garden Gnome",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 238785,
+      "prompt_id": "907e819a-17fa-4441-84b9-018e29e09ac4",
+      "file": "products\\little-haunts-club-cozy-spooky-moments-15\\pages\\page_015.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 80.217
+      }
+    }
+  ],
+  "summary": {
+    "requested": 15,
+    "passed": 15,
+    "failed": 0
+  }
+}
