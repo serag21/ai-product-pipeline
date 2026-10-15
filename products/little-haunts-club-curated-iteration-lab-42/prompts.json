@@ -1,0 +1,845 @@
+{
+  "product_id": "little-haunts-club-curated-iteration-lab-42",
+  "title": "Little Haunts Club — Curated Scene Variations (42 Candidates)",
+  "purpose": "Three deliberately designed candidate variations for each of fourteen concepts. This is an art-direction selection lab, not the final product. The existing skeleton-mermaid page 09 is held as a provisional keeper and is not regenerated.",
+  "audience": "older children, teens and adults who enjoy cute cozy-spooky coloring art",
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "visual_bible": "Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish.",
+  "prompt_strategy": "Each candidate starts with subject and action, establishes one consistent cute-spooky cartoon coloring-book style, then gives a small number of purposeful context details and a distinct composition. These prompts deliberately avoid technical rendering vocabulary and over-specified construction detail that made revision-9 pages feel overly technical.",
+  "candidate_plan": [
+    {
+      "slot": 1,
+      "title": "Ghost Tailor Repairs a Bat Cape",
+      "character": "sheet ghost and round cat",
+      "rationale": "Fix the ghost portrait, awkward table-facing drawer, oversized cat and bare wall while keeping the sewing gag.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · centered sewing scene"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · wider tailor's nook"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · sewing mishap gag"
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "title": "Patchwork Monster Builds a Birdhouse",
+      "character": "soft stitched monster and robin",
+      "rationale": "Make the hero clearly a cloth-and-stitch monster rather than a screen-faced robot; keep a birdhouse and tools logically supported.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · garden workbench"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · monster carpenter"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · birdhouse finishing touch"
+        }
+      ]
+    },
+    {
+      "slot": 3,
+      "title": "Gargoyle's Little Observatory",
+      "character": "cute gargoyle",
+      "rationale": "Replace the disliked plague-doctor crow with a more original character and a different, clear activity.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · attic telescope"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · charting the stars"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · moonwatching nook"
+        }
+      ]
+    },
+    {
+      "slot": 4,
+      "title": "Skeleton's Fireside Story Hour",
+      "character": "cozy skeleton",
+      "rationale": "Keep the cozy fireplace scene but make the sweater plain, portrait meaningful and hand/book interaction clean.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · classic fireside chair"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · reading by the hearth"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · cozy book nook"
+        }
+      ]
+    },
+    {
+      "slot": 5,
+      "title": "Mummy's Tangled Present",
+      "character": "friendly mummy",
+      "rationale": "Preserve the funny wrapping scene while simplifying bandages and removing the stretched wrapping-paper roll and excess pumpkins.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · bow trouble"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · gift-wrapping station"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · ribbon unraveling"
+        }
+      ]
+    },
+    {
+      "slot": 6,
+      "title": "The Witch's Tiny Potion Clinic",
+      "character": "young witch and frog",
+      "rationale": "Make the character read unmistakably as a witch, not a fairy; reinforce witchcraft through outfit, broom, spellbook and room design.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · cottage cauldron"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · little cave workshop"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · potion recipe mishap"
+        }
+      ]
+    },
+    {
+      "slot": 7,
+      "title": "Vampire's Midnight Bakery",
+      "character": "vampire baker",
+      "rationale": "Keep the excellent bat-cookie joke, while balancing the large black hair/cape accents and removing repetitive pumpkin décor.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · pulling cookies from oven"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · decorating bat cookies"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · proud bakery display"
+        }
+      ]
+    },
+    {
+      "slot": 8,
+      "title": "Ghost-and-Cat Blanket-Fort Night",
+      "character": "sheet ghost and one cat",
+      "rationale": "Retain the cozy favorite and explicitly test alternatives for a single clear cat tail and readable overlap.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · reading under a fort"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · storytime doorway"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · sleepy fort night"
+        }
+      ]
+    },
+    {
+      "slot": 10,
+      "title": "Zombie's First Piano Recital",
+      "character": "friendly zombie musician",
+      "rationale": "Replace the repetitive pie/pumpkin stand with a different lighthearted activity and a fresh indoor setting.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · living-room recital"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · musical mishap"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · monster music corner"
+        }
+      ]
+    },
+    {
+      "slot": 11,
+      "title": "Scarecrow's First Pumpkin Harvest",
+      "character": "patchwork scarecrow and crow",
+      "rationale": "Keep the good scarecrow idea but reduce pumpkins to two, simplify soil and foliage, and make the bird mostly outline-based.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · two-pumpkin harvest"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · crow helper"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · harvest basket"
+        }
+      ]
+    },
+    {
+      "slot": 12,
+      "title": "Werewolf Pup's Moonlit Doghouse",
+      "character": "werewolf puppy",
+      "rationale": "Keep the liked puppy; clarify its wolf identity and scale, make flowers realistically small relative to it, and keep the doghouse doorway white.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · puppy by doghouse"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · goodnight at the kennel"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · guarding a toy"
+        }
+      ]
+    },
+    {
+      "slot": 13,
+      "title": "Little Grim Reaper's Flower Delivery",
+      "character": "friendly grim reaper",
+      "rationale": "Retain the clever gentle premise but correct the disconnected scythe and the rotated grave plot; reduce tiny flowers.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · upright grave plot"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · flowers at the gate"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · gentle cemetery visit"
+        }
+      ]
+    },
+    {
+      "slot": 14,
+      "title": "Cyclops's Tiny Puppet Theatre",
+      "character": "one-eyed carnival monster",
+      "rationale": "Replace the bland pumpkin ring-toss booth with a story-driven theatre scene and varied props.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · puppet stage"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · backstage rehearsal"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · the audience of one"
+        }
+      ]
+    },
+    {
+      "slot": 15,
+      "title": "The Bat Courier's Moonlit Delivery",
+      "character": "cute bat messenger",
+      "rationale": "Retain the popular cottage-mail delivery, while making the face read as a bat and connecting wings, feet, envelope and satchel clearly.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "A · letter to the cottage"
+        },
+        {
+          "iteration": "B",
+          "composition": "B · landing at the mailbox"
+        },
+        {
+          "iteration": "C",
+          "composition": "C · porch delivery"
+        }
+      ]
+    }
+  ],
+  "locked_keep": "Existing original page 09 — The Skeleton Mermaid's Shell Collection — retained provisionally for final book assembly.",
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "GHOST-TAILOR-A",
+      "candidate_scene_slot": 1,
+      "candidate_title": "Ghost Tailor Repairs a Bat Cape",
+      "iteration": "A",
+      "label": "S01-A · Ghost Tailor Repairs a Bat Cape",
+      "character_archetype": "sheet ghost and round cat",
+      "design_rationale": "Fix the ghost portrait, awkward table-facing drawer, oversized cat and bare wall while keeping the sewing gag.",
+      "prompt_format": "text",
+      "seed": 477919,
+      "prompt": "A surprised but sweet sheet ghost carefully sews a small bat cape at a cozy worktable. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The sewing machine sits squarely on the table with the drawer facing the ghost. A round cat sits on a floor cushion beside a single yarn ball. A framed drawing of a smiling ghost hangs above a small wall shelf with two folded fabrics and one little pumpkin. Eye-level three-quarter composition; character and cat both have clear space. Composition option: A · centered sewing scene."
+    },
+    {
+      "page": 2,
+      "variant_id": "GHOST-TAILOR-B",
+      "candidate_scene_slot": 1,
+      "candidate_title": "Ghost Tailor Repairs a Bat Cape",
+      "iteration": "B",
+      "label": "S01-B · Ghost Tailor Repairs a Bat Cape",
+      "character_archetype": "sheet ghost and round cat",
+      "design_rationale": "Fix the ghost portrait, awkward table-facing drawer, oversized cat and bare wall while keeping the sewing gag.",
+      "prompt_format": "text",
+      "seed": 485838,
+      "prompt": "A cheerful sheet ghost finishes stitching a little bat cape in a cozy tailor's nook. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Place the ghost at the center behind a simple sturdy sewing table, with the machine and folded cape clearly supported on top. A small round cat curls on a low stool at the right. Add a framed ghost portrait, a short shelf of three fabric rolls, and a floor lamp. Leave broad white wall space broken up by these purposeful details. Composition option: B · wider tailor's nook."
+    },
+    {
+      "page": 3,
+      "variant_id": "GHOST-TAILOR-C",
+      "candidate_scene_slot": 1,
+      "candidate_title": "Ghost Tailor Repairs a Bat Cape",
+      "iteration": "C",
+      "label": "S01-C · Ghost Tailor Repairs a Bat Cape",
+      "character_archetype": "sheet ghost and round cat",
+      "design_rationale": "Fix the ghost portrait, awkward table-facing drawer, oversized cat and bare wall while keeping the sewing gag.",
+      "prompt_format": "text",
+      "seed": 493757,
+      "prompt": "A sheet ghost stitches a bat cape while a playful cat unravels one loose yarn strand on the floor. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The sewing machine rests flat on a sturdy table with the drawer facing the ghost, and the cape drapes naturally over the near edge. The cat sits beside one yarn ball and one folded cloth. Hang a small framed ghost sketch above a simple wall shelf holding two fabric rolls. Keep the scene open and the ghost's surprised face charming. Composition option: C · sewing mishap gag."
+    },
+    {
+      "page": 4,
+      "variant_id": "PATCHWORK-MONSTER-A",
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster Builds a Birdhouse",
+      "iteration": "A",
+      "label": "S02-A · Patchwork Monster Builds a Birdhouse",
+      "character_archetype": "soft stitched monster and robin",
+      "design_rationale": "Make the hero clearly a cloth-and-stitch monster rather than a screen-faced robot; keep a birdhouse and tools logically supported.",
+      "prompt_format": "text",
+      "seed": 501676,
+      "prompt": "A plump patchwork monster with a soft fabric face, visible hand stitches and two small neck bolts builds a birdhouse in a garden. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The monster wears simple overalls and has a round cloth face with two eyes and a friendly stitched smile. A wooden hammer and three wide boards rest on the workbench. The birdhouse stands on a clear post with a white outlined entrance; a robin perches on the roof. Two pumpkins and one daisy sit at the post base. Composition option: A · garden workbench."
+    },
+    {
+      "page": 5,
+      "variant_id": "PATCHWORK-MONSTER-B",
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster Builds a Birdhouse",
+      "iteration": "B",
+      "label": "S02-B · Patchwork Monster Builds a Birdhouse",
+      "character_archetype": "soft stitched monster and robin",
+      "design_rationale": "Make the hero clearly a cloth-and-stitch monster rather than a screen-faced robot; keep a birdhouse and tools logically supported.",
+      "prompt_format": "text",
+      "seed": 509595,
+      "prompt": "A gentle Frankenstein-inspired patchwork creature in overalls secures a little birdhouse to a garden post. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Give the creature soft rounded cheeks, a simple stitched forehead seam, dark swept hair and small neck bolts. It holds one board against the birdhouse while a wooden hammer rests flat on the table. The bird's feet grip the roof edge. One pumpkin, a daisy and a short joined fence sit behind the post. Composition option: B · monster carpenter."
+    },
+    {
+      "page": 6,
+      "variant_id": "PATCHWORK-MONSTER-C",
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster Builds a Birdhouse",
+      "iteration": "C",
+      "label": "S02-C · Patchwork Monster Builds a Birdhouse",
+      "character_archetype": "soft stitched monster and robin",
+      "design_rationale": "Make the hero clearly a cloth-and-stitch monster rather than a screen-faced robot; keep a birdhouse and tools logically supported.",
+      "prompt_format": "text",
+      "seed": 517514,
+      "prompt": "A cute stitched monster proudly paints the last broad panel of a birdhouse on a sturdy outdoor workbench. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The monster's head is rounded fabric with visible seams and a warm cartoon face. A brush and paint pot rest on the bench, with three wide boards stacked beside them. The finished birdhouse stands upright on its post with a robin perched on top. Add a little fence, two flowers and plenty of white garden ground. Composition option: C · birdhouse finishing touch."
+    },
+    {
+      "page": 7,
+      "variant_id": "GARGOYLE-ASTRONOMER-A",
+      "candidate_scene_slot": 3,
+      "candidate_title": "Gargoyle's Little Observatory",
+      "iteration": "A",
+      "label": "S03-A · Gargoyle's Little Observatory",
+      "character_archetype": "cute gargoyle",
+      "design_rationale": "Replace the disliked plague-doctor crow with a more original character and a different, clear activity.",
+      "prompt_format": "text",
+      "seed": 525433,
+      "prompt": "A small friendly gargoyle with rounded horns and folded bat wings looks through a telescope at a crescent moon from a cozy attic observatory. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The telescope stands firmly on a three-legged tripod beside a dormer window. A short table holds an open star chart and one cup. A framed constellation drawing hangs on the wall, and a potted moonflower sits on the floor. The gargoyle's wings are simple white outlined shapes folded against its back. Composition option: A · attic telescope."
+    },
+    {
+      "page": 8,
+      "variant_id": "GARGOYLE-ASTRONOMER-B",
+      "candidate_scene_slot": 3,
+      "candidate_title": "Gargoyle's Little Observatory",
+      "iteration": "B",
+      "label": "S03-B · Gargoyle's Little Observatory",
+      "character_archetype": "cute gargoyle",
+      "design_rationale": "Replace the disliked plague-doctor crow with a more original character and a different, clear activity.",
+      "prompt_format": "text",
+      "seed": 533352,
+      "prompt": "A chubby storybook gargoyle astronomer pins a simple star chart to the wall of a tiny attic observatory. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The gargoyle stands on a low sturdy stool, pointing to the chart with one clawed finger. A small telescope rests on a stable tripod by the arched window, which shows an outlined moon and three open stars. A round rug and one potted plant warm the room. Folded wings and the character's whole body remain broad and colorable. Composition option: B · charting the stars."
+    },
+    {
+      "page": 9,
+      "variant_id": "GARGOYLE-ASTRONOMER-C",
+      "candidate_scene_slot": 3,
+      "candidate_title": "Gargoyle's Little Observatory",
+      "iteration": "C",
+      "label": "S03-C · Gargoyle's Little Observatory",
+      "character_archetype": "cute gargoyle",
+      "design_rationale": "Replace the disliked plague-doctor crow with a more original character and a different, clear activity.",
+      "prompt_format": "text",
+      "seed": 541271,
+      "prompt": "A cute little gargoyle sits on a wide window seat, happily sketching the moon after looking through a small telescope. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The telescope rests on the floor beside the seat, its tripod feet clearly touching the boards. A clipboard with a simple moon drawing rests on the gargoyle's lap. Add a framed star map, a small shelf with two books and one plant. Use a calm front three-quarter view and broad white shapes. Composition option: C · moonwatching nook."
+    },
+    {
+      "page": 10,
+      "variant_id": "SKELETON-FIRESIDE-A",
+      "candidate_scene_slot": 4,
+      "candidate_title": "Skeleton's Fireside Story Hour",
+      "iteration": "A",
+      "label": "S04-A · Skeleton's Fireside Story Hour",
+      "character_archetype": "cozy skeleton",
+      "design_rationale": "Keep the cozy fireplace scene but make the sweater plain, portrait meaningful and hand/book interaction clean.",
+      "prompt_format": "text",
+      "seed": 549190,
+      "prompt": "A friendly childlike skeleton in a plain cozy sweater reads a large open storybook in a rounded armchair beside a cottage fireplace. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The skeleton's hands hold the book at its outer edges. Three broad logs and simple outlined flames sit within a clear stone hearth. A framed pumpkin-and-leaf still life hangs above the mantel. A small side table supports a pumpkin mug and two cookies on a plate; a plain oval rug lies under the chair. Composition option: A · classic fireside chair."
+    },
+    {
+      "page": 11,
+      "variant_id": "SKELETON-FIRESIDE-B",
+      "candidate_scene_slot": 4,
+      "candidate_title": "Skeleton's Fireside Story Hour",
+      "iteration": "B",
+      "label": "S04-B · Skeleton's Fireside Story Hour",
+      "character_archetype": "cozy skeleton",
+      "design_rationale": "Keep the cozy fireplace scene but make the sweater plain, portrait meaningful and hand/book interaction clean.",
+      "prompt_format": "text",
+      "seed": 557109,
+      "prompt": "A sweet cartoon skeleton curls into an armchair for a bedtime story beside a small stone fireplace. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The skeleton wears a simple scarf and a plain sweater with two broad bands. A book rests open in both hands. On the mantel is a framed picture of a smiling black cat; beside the chair, a sturdy table holds a mug and a plate of cookies. The fire stays inside the hearth and the room has a few books on one supported shelf. Composition option: B · reading by the hearth."
+    },
+    {
+      "page": 12,
+      "variant_id": "SKELETON-FIRESIDE-C",
+      "candidate_scene_slot": 4,
+      "candidate_title": "Skeleton's Fireside Story Hour",
+      "iteration": "C",
+      "label": "S04-C · Skeleton's Fireside Story Hour",
+      "character_archetype": "cozy skeleton",
+      "design_rationale": "Keep the cozy fireplace scene but make the sweater plain, portrait meaningful and hand/book interaction clean.",
+      "prompt_format": "text",
+      "seed": 565028,
+      "prompt": "A little skeleton sits sideways in a plump armchair reading a picture book while a tiny candle lantern glows on the mantel. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Show the fireplace, logs and three outline flames inside a rectangular hearth. A framed botanical illustration hangs on the adjacent wall. A sturdy footstool and small side table support a folded blanket, mug and one cookie plate. Keep rib and finger lines sparse so the skeleton stays cute and easy to color. Composition option: C · cozy book nook."
+    },
+    {
+      "page": 13,
+      "variant_id": "MUMMY-GIFT-A",
+      "candidate_scene_slot": 5,
+      "candidate_title": "Mummy's Tangled Present",
+      "iteration": "A",
+      "label": "S05-A · Mummy's Tangled Present",
+      "character_archetype": "friendly mummy",
+      "design_rationale": "Preserve the funny wrapping scene while simplifying bandages and removing the stretched wrapping-paper roll and excess pumpkins.",
+      "prompt_format": "text",
+      "seed": 572947,
+      "prompt": "A friendly mummy sits on a floor cushion, trying to tie the bow on one oversized present while a loose bandage loops around the ribbon. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Both mummy hands hold the ribbon ends in front of the gift. Five broad bandage strips wrap the head and body. A small table supports rounded scissors and one neat roll of wrapping paper. A smaller gift rests beside the larger one on a rug; a framed moon-and-stars picture hangs on the wall. Composition option: A · bow trouble."
+    },
+    {
+      "page": 14,
+      "variant_id": "MUMMY-GIFT-B",
+      "candidate_scene_slot": 5,
+      "candidate_title": "Mummy's Tangled Present",
+      "iteration": "B",
+      "label": "S05-B · Mummy's Tangled Present",
+      "character_archetype": "friendly mummy",
+      "design_rationale": "Preserve the funny wrapping scene while simplifying bandages and removing the stretched wrapping-paper roll and excess pumpkins.",
+      "prompt_format": "text",
+      "seed": 580866,
+      "prompt": "A cute mummy carefully wraps a square present at a low craft table, discovering its own bandage has become the ribbon. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The present rests squarely on the tabletop and the mummy holds the bow with both hands. Show one compact paper roll, a tape dispenser and rounded scissors arranged neatly on the table. One framed picture of three stars hangs overhead, and one folded cloth sits on a stool. Use broad bandage shapes with open white interiors. Composition option: B · gift-wrapping station."
+    },
+    {
+      "page": 15,
+      "variant_id": "MUMMY-GIFT-C",
+      "candidate_scene_slot": 5,
+      "candidate_title": "Mummy's Tangled Present",
+      "iteration": "C",
+      "label": "S05-C · Mummy's Tangled Present",
+      "character_archetype": "friendly mummy",
+      "design_rationale": "Preserve the funny wrapping scene while simplifying bandages and removing the stretched wrapping-paper roll and excess pumpkins.",
+      "prompt_format": "text",
+      "seed": 588785,
+      "prompt": "A seated mummy proudly finishes a small wrapped gift as one long bandage trails from its arm and curls around the present's bow. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Place one large gift on a round work mat with a smaller gift at its side. The mummy's hands meet at the bow, and the single trailing bandage follows a clear continuous path. A low side table holds scissors and one folded sheet of paper; a little shelf displays two jars and a tiny flower pot. Composition option: C · ribbon unraveling."
+    },
+    {
+      "page": 16,
+      "variant_id": "WITCH-CLINIC-A",
+      "candidate_scene_slot": 6,
+      "candidate_title": "The Witch's Tiny Potion Clinic",
+      "iteration": "A",
+      "label": "S06-A · The Witch's Tiny Potion Clinic",
+      "character_archetype": "young witch and frog",
+      "design_rationale": "Make the character read unmistakably as a witch, not a fairy; reinforce witchcraft through outfit, broom, spellbook and room design.",
+      "prompt_format": "text",
+      "seed": 596704,
+      "prompt": "A cheerful young witch in a floppy pointed hat and simple long robe stirs a round cauldron on a low brick hearth in her cozy cottage. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Her robe has wide sleeves and a plain white coloring interior. A broom leans securely against the wall, a spellbook lies open on a side table, and two large potion bottles sit on a bracketed shelf. A friendly frog sits on a plain stool. One framed moonflower drawing and two potted herbs finish the room. Composition option: A · cottage cauldron."
+    },
+    {
+      "page": 17,
+      "variant_id": "WITCH-CLINIC-B",
+      "candidate_scene_slot": 6,
+      "candidate_title": "The Witch's Tiny Potion Clinic",
+      "iteration": "B",
+      "label": "S06-B · The Witch's Tiny Potion Clinic",
+      "character_archetype": "young witch and frog",
+      "design_rationale": "Make the character read unmistakably as a witch, not a fairy; reinforce witchcraft through outfit, broom, spellbook and room design.",
+      "prompt_format": "text",
+      "seed": 604623,
+      "prompt": "A small friendly witch wearing a tall pointed hat reads a spellbook beside her bubbling cauldron in a snug stone cottage nook. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The cauldron stands on a brick base and the witch holds a wooden spoon. A broom rests against the wall by the door, while three large bottles stand on a supported shelf. A frog sits on a flat mushroom stool and a simple framed picture of a crescent moon hangs near a rounded window. The character's back silhouette is a flowing fabric cloak. Composition option: B · little cave workshop."
+    },
+    {
+      "page": 18,
+      "variant_id": "WITCH-CLINIC-C",
+      "candidate_scene_slot": 6,
+      "candidate_title": "The Witch's Tiny Potion Clinic",
+      "iteration": "C",
+      "label": "S06-C · The Witch's Tiny Potion Clinic",
+      "character_archetype": "young witch and frog",
+      "design_rationale": "Make the character read unmistakably as a witch, not a fairy; reinforce witchcraft through outfit, broom, spellbook and room design.",
+      "prompt_format": "text",
+      "seed": 612542,
+      "prompt": "A young witch in a pointed hat checks a large illustrated recipe book while her round cauldron releases three oversized outlined bubbles. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The cauldron rests on a sturdy hearth; a wooden spoon lies on the side table beside one wide potion bottle. A broom leans by the doorway, two herb bundles hang from a wooden rail, and a frog watches from a stool. A framed flower picture and a small rug create a warm room. Give the witch an unmistakable hat, robe and belt. Composition option: C · potion recipe mishap."
+    },
+    {
+      "page": 19,
+      "variant_id": "VAMPIRE-BAKERY-A",
+      "candidate_scene_slot": 7,
+      "candidate_title": "Vampire's Midnight Bakery",
+      "iteration": "A",
+      "label": "S07-A · Vampire's Midnight Bakery",
+      "character_archetype": "vampire baker",
+      "design_rationale": "Keep the excellent bat-cookie joke, while balancing the large black hair/cape accents and removing repetitive pumpkin décor.",
+      "prompt_format": "text",
+      "seed": 620461,
+      "prompt": "A cheerful little vampire baker in an apron carefully pulls a tray of three bat-shaped cookies from a cottage oven. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The tray is supported by the oven rails and held by both hands. The vampire's cape has a bold outline and a large white interior for coloring; dark hair is only a small accent. A bowl and rolling pin rest on the counter, with one oven mitt nearby. A framed cupcake picture hangs beside a window showing an outlined moon and stars on white. Composition option: A · pulling cookies from oven."
+    },
+    {
+      "page": 20,
+      "variant_id": "VAMPIRE-BAKERY-B",
+      "candidate_scene_slot": 7,
+      "candidate_title": "Vampire's Midnight Bakery",
+      "iteration": "B",
+      "label": "S07-B · Vampire's Midnight Bakery",
+      "character_archetype": "vampire baker",
+      "design_rationale": "Keep the excellent bat-cookie joke, while balancing the large black hair/cape accents and removing repetitive pumpkin décor.",
+      "prompt_format": "text",
+      "seed": 628380,
+      "prompt": "A cute vampire baker decorates three oversized bat-shaped cookies at a kitchen counter in a cozy moonlit bakery. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The cookie tray rests flat on the counter, with a piping bag and one bowl nearby. A small open oven, two plates and a framed cupcake drawing establish the kitchen. The arched window shows a white sky with outlined stars and a crescent moon. The cape is a white enclosed shape bordered by clean black linework. Composition option: B · decorating bat cookies."
+    },
+    {
+      "page": 21,
+      "variant_id": "VAMPIRE-BAKERY-C",
+      "candidate_scene_slot": 7,
+      "candidate_title": "Vampire's Midnight Bakery",
+      "iteration": "C",
+      "label": "S07-C · Vampire's Midnight Bakery",
+      "character_archetype": "vampire baker",
+      "design_rationale": "Keep the excellent bat-cookie joke, while balancing the large black hair/cape accents and removing repetitive pumpkin décor.",
+      "prompt_format": "text",
+      "seed": 636299,
+      "prompt": "A friendly young vampire presents a plate of three bat-shaped cookies on a small bakery counter, smiling proudly at the fresh batch. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: A rolling pin and mixing bowl sit on the work surface, and an oven mitt rests beside the oven door. A little display shelf supports the plate. Above it hangs a framed cupcake drawing; the rounded window shows outlined moon and stars in a white sky. The vampire's cape falls behind as a simple white outlined shape. Composition option: C · proud bakery display."
+    },
+    {
+      "page": 22,
+      "variant_id": "BLANKET-FORT-A",
+      "candidate_scene_slot": 8,
+      "candidate_title": "Ghost-and-Cat Blanket-Fort Night",
+      "iteration": "A",
+      "label": "S08-A · Ghost-and-Cat Blanket-Fort Night",
+      "character_archetype": "sheet ghost and one cat",
+      "design_rationale": "Retain the cozy favorite and explicitly test alternatives for a single clear cat tail and readable overlap.",
+      "prompt_format": "text",
+      "seed": 644218,
+      "prompt": "A sweet sheet ghost reads a picture book inside a blanket fort draped over two sturdy chairs, while one round cat sits on a cushion beside them. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The blanket rests visibly across both chair backs and trails to the floor. The cat is fully visible in side view with four paws and one curled tail. A low table outside the fort supports a popcorn bowl; a flashlight lies flat on the floor. A framed family picture and one small shelf decorate the wall. Composition option: A · reading under a fort."
+    },
+    {
+      "page": 23,
+      "variant_id": "BLANKET-FORT-B",
+      "candidate_scene_slot": 8,
+      "candidate_title": "Ghost-and-Cat Blanket-Fort Night",
+      "iteration": "B",
+      "label": "S08-B · Ghost-and-Cat Blanket-Fort Night",
+      "character_archetype": "sheet ghost and one cat",
+      "design_rationale": "Retain the cozy favorite and explicitly test alternatives for a single clear cat tail and readable overlap.",
+      "prompt_format": "text",
+      "seed": 652137,
+      "prompt": "A cozy ghost peeks from a blanket-fort entrance while reading a large open storybook to one curious sitting cat. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Two chairs visibly support the blanket roof. The cat sits outside the fort on a single cushion with four paws and one tail curled around its body. A little side table holds popcorn, and a flashlight rests beside one chair leg. The wall shows one simple framed picture, leaving broad white areas around the fort. Composition option: B · storytime doorway."
+    },
+    {
+      "page": 24,
+      "variant_id": "BLANKET-FORT-C",
+      "candidate_scene_slot": 8,
+      "candidate_title": "Ghost-and-Cat Blanket-Fort Night",
+      "iteration": "C",
+      "label": "S08-C · Ghost-and-Cat Blanket-Fort Night",
+      "character_archetype": "sheet ghost and one cat",
+      "design_rationale": "Retain the cozy favorite and explicitly test alternatives for a single clear cat tail and readable overlap.",
+      "prompt_format": "text",
+      "seed": 660056,
+      "prompt": "A sleepy sheet ghost relaxes on a floor cushion inside a blanket fort while one cat listens to a storybook beside a bowl of popcorn. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The blanket roof is supported by two visible chair backs and hangs in one broad white shape. The cat has four paws, two ears and one continuous tail visible once, curled along its side. A low sturdy table carries the popcorn bowl; one flashlight lies on the floor and a framed picture hangs on the wall. Composition option: C · sleepy fort night."
+    },
+    {
+      "page": 25,
+      "variant_id": "ZOMBIE-MUSIC-A",
+      "candidate_scene_slot": 10,
+      "candidate_title": "Zombie's First Piano Recital",
+      "iteration": "A",
+      "label": "S10-A · Zombie's First Piano Recital",
+      "character_archetype": "friendly zombie musician",
+      "design_rationale": "Replace the repetitive pie/pumpkin stand with a different lighthearted activity and a fresh indoor setting.",
+      "prompt_format": "text",
+      "seed": 667975,
+      "prompt": "A friendly little zombie in a patched cardigan plays a small upright piano during a cozy living-room practice session. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Both hands rest clearly over the broad piano keys, and a simple music book sits open on the stand. A round stool supports the zombie, while a side table holds a cup and one cookie. A framed picture of a crescent moon hangs beside a floor lamp and one potted plant. The cardigan patches are large white coloring shapes. Composition option: A · living-room recital."
+    },
+    {
+      "page": 26,
+      "variant_id": "ZOMBIE-MUSIC-B",
+      "candidate_scene_slot": 10,
+      "candidate_title": "Zombie's First Piano Recital",
+      "iteration": "B",
+      "label": "S10-B · Zombie's First Piano Recital",
+      "character_archetype": "friendly zombie musician",
+      "design_rationale": "Replace the repetitive pie/pumpkin stand with a different lighthearted activity and a fresh indoor setting.",
+      "prompt_format": "text",
+      "seed": 675894,
+      "prompt": "A cheerful cartoon zombie practices a tune on an upright piano as one loose shirt button rests on the music stand. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The zombie sits squarely on a sturdy piano bench with both feet on a small rug and fingers resting on the keys. A closed music book, a little metronome and a cup on a side table establish the practice room. One framed portrait and a floor lamp fill the wall space. The zombie's stitches are just a few clear cheek and sleeve marks. Composition option: B · musical mishap."
+    },
+    {
+      "page": 27,
+      "variant_id": "ZOMBIE-MUSIC-C",
+      "candidate_scene_slot": 10,
+      "candidate_title": "Zombie's First Piano Recital",
+      "iteration": "C",
+      "label": "S10-C · Zombie's First Piano Recital",
+      "character_archetype": "friendly zombie musician",
+      "design_rationale": "Replace the repetitive pie/pumpkin stand with a different lighthearted activity and a fresh indoor setting.",
+      "prompt_format": "text",
+      "seed": 683813,
+      "prompt": "A shy little zombie performs a song on a small piano for a smiling sheet ghost sitting on a nearby cushioned chair. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The piano sits against the wall and the bench rests squarely in front of it. A single music book is open on the piano stand. The ghost holds a simple music sheet. A framed moon print, one small plant and a side table with a cup make a cozy music corner. Both characters have broad white coloring areas. Composition option: C · monster music corner."
+    },
+    {
+      "page": 28,
+      "variant_id": "SCARECROW-HARVEST-A",
+      "candidate_scene_slot": 11,
+      "candidate_title": "Scarecrow's First Pumpkin Harvest",
+      "iteration": "A",
+      "label": "S11-A · Scarecrow's First Pumpkin Harvest",
+      "character_archetype": "patchwork scarecrow and crow",
+      "design_rationale": "Keep the good scarecrow idea but reduce pumpkins to two, simplify soil and foliage, and make the bird mostly outline-based.",
+      "prompt_format": "text",
+      "seed": 691732,
+      "prompt": "A friendly patchwork scarecrow tends two large pumpkins in a tidy autumn garden while a crow perches on the joined top rail of a short fence. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The scarecrow wears a floppy hat and simple overalls with two broad patches, with only a few large straw tufts at the cuffs. One watering can rests on the soil. Two large flowers stand by the fence and one broad leaf lies in the foreground. The crow has outlined wings with open white feather panels. Composition option: A · two-pumpkin harvest."
+    },
+    {
+      "page": 29,
+      "variant_id": "SCARECROW-HARVEST-B",
+      "candidate_scene_slot": 11,
+      "candidate_title": "Scarecrow's First Pumpkin Harvest",
+      "iteration": "B",
+      "label": "S11-B · Scarecrow's First Pumpkin Harvest",
+      "character_archetype": "patchwork scarecrow and crow",
+      "design_rationale": "Keep the good scarecrow idea but reduce pumpkins to two, simplify soil and foliage, and make the bird mostly outline-based.",
+      "prompt_format": "text",
+      "seed": 699651,
+      "prompt": "A cute scarecrow smiles at a crow perched on its outstretched sleeve beside two ripe pumpkins and one little garden flower. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The two pumpkins sit firmly on a broad patch of simple ground. A watering can rests beside them, and a short fence has four posts with two connected rails. The scarecrow's straw is drawn as a few wide pieces; the crow has an outlined white body and wing feathers with a small black beak and eyes. Composition option: B · crow helper."
+    },
+    {
+      "page": 30,
+      "variant_id": "SCARECROW-HARVEST-C",
+      "candidate_scene_slot": 11,
+      "candidate_title": "Scarecrow's First Pumpkin Harvest",
+      "iteration": "C",
+      "label": "S11-C · Scarecrow's First Pumpkin Harvest",
+      "character_archetype": "patchwork scarecrow and crow",
+      "design_rationale": "Keep the good scarecrow idea but reduce pumpkins to two, simplify soil and foliage, and make the bird mostly outline-based.",
+      "prompt_format": "text",
+      "seed": 707570,
+      "prompt": "A cheerful scarecrow places one small pumpkin into a wide harvest basket while a crow watches from a fence post. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: One larger pumpkin rests on the ground beside the basket. A watering can, two flowers and a simple framed garden sign give the scene context. The scarecrow's face is friendly and round, its overalls have broad patches, and its straw hair is sparse. The crow's feathers are outlined and colorable. Composition option: C · harvest basket."
+    },
+    {
+      "page": 31,
+      "variant_id": "WEREWOLF-PUP-A",
+      "candidate_scene_slot": 12,
+      "candidate_title": "Werewolf Pup's Moonlit Doghouse",
+      "iteration": "A",
+      "label": "S12-A · Werewolf Pup's Moonlit Doghouse",
+      "character_archetype": "werewolf puppy",
+      "design_rationale": "Keep the liked puppy; clarify its wolf identity and scale, make flowers realistically small relative to it, and keep the doghouse doorway white.",
+      "prompt_format": "text",
+      "seed": 715489,
+      "prompt": "A cute werewolf puppy with pointed wolf ears and two tiny friendly fangs sits beside its sturdy doghouse under a crescent moon. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The puppy has four clear paws on the ground, one curled tail and a fluffy coat made from a few broad tufts. The doghouse doorway has a white interior with a small outlined cushion. One bone and one water bowl rest on the ground; two small ankle-high flowers grow beside the house. Three outlined stars sit in the white sky. Composition option: A · puppy by doghouse."
+    },
+    {
+      "page": 32,
+      "variant_id": "WEREWOLF-PUP-B",
+      "candidate_scene_slot": 12,
+      "candidate_title": "Werewolf Pup's Moonlit Doghouse",
+      "iteration": "B",
+      "label": "S12-B · Werewolf Pup's Moonlit Doghouse",
+      "character_archetype": "werewolf puppy",
+      "design_rationale": "Keep the liked puppy; clarify its wolf identity and scale, make flowers realistically small relative to it, and keep the doghouse doorway white.",
+      "prompt_format": "text",
+      "seed": 723408,
+      "prompt": "A sleepy little werewolf pup sits at the entrance of a cozy doghouse, looking up at a large crescent moon. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The roof rests visibly on the doghouse walls and the doorway interior stays white, with a simple cushion inside. The puppy has two pointed ears, a tiny pair of fangs, four paws and one continuous tail. A water bowl and bone lie side by side. Small low flowers form a short border that reaches only the puppy's lower legs. Composition option: B · goodnight at the kennel."
+    },
+    {
+      "page": 33,
+      "variant_id": "WEREWOLF-PUP-C",
+      "candidate_scene_slot": 12,
+      "candidate_title": "Werewolf Pup's Moonlit Doghouse",
+      "iteration": "C",
+      "label": "S12-C · Werewolf Pup's Moonlit Doghouse",
+      "character_archetype": "werewolf puppy",
+      "design_rationale": "Keep the liked puppy; clarify its wolf identity and scale, make flowers realistically small relative to it, and keep the doghouse doorway white.",
+      "prompt_format": "text",
+      "seed": 731327,
+      "prompt": "A playful werewolf puppy proudly sits beside its doghouse with a bone-shaped chew toy between its front paws. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The pup has two upright pointed ears, broad fluffy cheeks and a small friendly smile with two tiny fangs. Its four paws touch the ground; one tail curls behind the body. The doghouse shows a white outlined doorway and a roof with visible supports. A simple moon, two stars and two small garden flowers complete the open background. Composition option: C · guarding a toy."
+    },
+    {
+      "page": 34,
+      "variant_id": "GRIM-REAPER-A",
+      "candidate_scene_slot": 13,
+      "candidate_title": "Little Grim Reaper's Flower Delivery",
+      "iteration": "A",
+      "label": "S13-A · Little Grim Reaper's Flower Delivery",
+      "character_archetype": "friendly grim reaper",
+      "design_rationale": "Retain the clever gentle premise but correct the disconnected scythe and the rotated grave plot; reduce tiny flowers.",
+      "prompt_format": "text",
+      "seed": 739246,
+      "prompt": "A tiny friendly grim reaper brings a bouquet of three large flowers to a rounded tombstone in a peaceful little cemetery. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The tombstone marks the head of a long rectangular grave plot that extends away from the marker toward the foreground, with its long axis receding into depth. The reaper holds all three flower stems with both hands. A small scythe leans as one connected tool against a gate post, handle touching the ground and blade visibly attached. One lantern hangs from a hook and one pumpkin rests by the stone. Composition option: A · upright grave plot."
+    },
+    {
+      "page": 35,
+      "variant_id": "GRIM-REAPER-B",
+      "candidate_scene_slot": 13,
+      "candidate_title": "Little Grim Reaper's Flower Delivery",
+      "iteration": "B",
+      "label": "S13-B · Little Grim Reaper's Flower Delivery",
+      "character_archetype": "friendly grim reaper",
+      "design_rationale": "Retain the clever gentle premise but correct the disconnected scythe and the rotated grave plot; reduce tiny flowers.",
+      "prompt_format": "text",
+      "seed": 747165,
+      "prompt": "A shy little grim reaper stands beside a cemetery gate, holding three large flowers to place at a simple rounded headstone. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The grave plot is an elongated rectangle running from the headstone back toward the viewer, aligned lengthwise with the view. The scythe has one continuous handle joined cleanly to its curved blade and leans against the outside gate post. Two broad flowers grow at the base of the stone, with one lantern hanging from the gate. Composition option: B · flowers at the gate."
+    },
+    {
+      "page": 36,
+      "variant_id": "GRIM-REAPER-C",
+      "candidate_scene_slot": 13,
+      "candidate_title": "Little Grim Reaper's Flower Delivery",
+      "iteration": "C",
+      "label": "S13-C · Little Grim Reaper's Flower Delivery",
+      "character_archetype": "friendly grim reaper",
+      "design_rationale": "Retain the clever gentle premise but correct the disconnected scythe and the rotated grave plot; reduce tiny flowers.",
+      "prompt_format": "text",
+      "seed": 755084,
+      "prompt": "A cute hooded grim reaper kneels beside an upright rounded tombstone and lays a small bouquet of three flowers on its base. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The long rectangular grave plot extends straight away from the headstone into the background, so the head-to-foot direction is clear. A scythe leans against the fence with its blade attached to the shaft. One lantern hangs from a bracket and two large flowers grow beside the marker. The robe and the ground stay broad, simple white coloring areas. Composition option: C · gentle cemetery visit."
+    },
+    {
+      "page": 37,
+      "variant_id": "CYCLOPS-PUPPET-A",
+      "candidate_scene_slot": 14,
+      "candidate_title": "Cyclops's Tiny Puppet Theatre",
+      "iteration": "A",
+      "label": "S14-A · Cyclops's Tiny Puppet Theatre",
+      "character_archetype": "one-eyed carnival monster",
+      "design_rationale": "Replace the bland pumpkin ring-toss booth with a story-driven theatre scene and varied props.",
+      "prompt_format": "text",
+      "seed": 763003,
+      "prompt": "A cheerful one-eyed cyclops in simple overalls operates a tiny puppet theatre in a cozy room, making a friendly ghost puppet wave to its audience. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The stage has a short fabric curtain supported by a clear wooden frame. One ghost puppet and one skeleton puppet hang from visible strings on a simple crossbar. A small stool holds a box of props, and a framed star poster hangs on the wall. The cyclops has one large central eye and two tiny horns. Composition option: A · puppet stage."
+    },
+    {
+      "page": 38,
+      "variant_id": "CYCLOPS-PUPPET-B",
+      "candidate_scene_slot": 14,
+      "candidate_title": "Cyclops's Tiny Puppet Theatre",
+      "iteration": "B",
+      "label": "S14-B · Cyclops's Tiny Puppet Theatre",
+      "character_archetype": "one-eyed carnival monster",
+      "design_rationale": "Replace the bland pumpkin ring-toss booth with a story-driven theatre scene and varied props.",
+      "prompt_format": "text",
+      "seed": 770922,
+      "prompt": "A round friendly cyclops rehearses a tiny Halloween puppet show behind a small wooden stage with open curtains. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The cyclops holds two simple puppet sticks, one carrying a ghost and one carrying a smiling skeleton. The stage rests on a sturdy table; a box of puppets and folded curtain fabric sit underneath. A wall picture and a small lantern provide cozy context. The single eye is clear and centered. Composition option: B · backstage rehearsal."
+    },
+    {
+      "page": 39,
+      "variant_id": "CYCLOPS-PUPPET-C",
+      "candidate_scene_slot": 14,
+      "candidate_title": "Cyclops's Tiny Puppet Theatre",
+      "iteration": "C",
+      "label": "S14-C · Cyclops's Tiny Puppet Theatre",
+      "character_archetype": "one-eyed carnival monster",
+      "design_rationale": "Replace the bland pumpkin ring-toss booth with a story-driven theatre scene and varied props.",
+      "prompt_format": "text",
+      "seed": 778841,
+      "prompt": "A happy one-eyed cyclops gives a puppet performance for a little plush monster sitting upright on a front-row stool. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The puppet stage is supported by two clear legs and has one broad curtain on each side. A friendly ghost puppet peeks above the stage edge. A small box of fabric props rests on the floor and a framed picture hangs beside the stage. The cyclops has one central eye, a rounded face and simple arms with open white interiors. Composition option: C · the audience of one."
+    },
+    {
+      "page": 40,
+      "variant_id": "BAT-COURIER-A",
+      "candidate_scene_slot": 15,
+      "candidate_title": "The Bat Courier's Moonlit Delivery",
+      "iteration": "A",
+      "label": "S15-A · The Bat Courier's Moonlit Delivery",
+      "character_archetype": "cute bat messenger",
+      "design_rationale": "Retain the popular cottage-mail delivery, while making the face read as a bat and connecting wings, feet, envelope and satchel clearly.",
+      "prompt_format": "text",
+      "seed": 786760,
+      "prompt": "A tiny cute bat courier with pointed ears and a small rounded muzzle delivers a blank envelope to a cottage mailbox. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The bat has two wings attached behind its arms, each with three broad white outlined panels. One little satchel strap crosses the chest and connects to a pouch at the hip. The bat's two feet hold the envelope clearly. The mailbox sits on one post beside the path; a porch lantern attaches to the door frame and one flower pot stands by the step. Composition option: A · letter to the cottage."
+    },
+    {
+      "page": 41,
+      "variant_id": "BAT-COURIER-B",
+      "candidate_scene_slot": 15,
+      "candidate_title": "The Bat Courier's Moonlit Delivery",
+      "iteration": "B",
+      "label": "S15-B · The Bat Courier's Moonlit Delivery",
+      "character_archetype": "cute bat messenger",
+      "design_rationale": "Retain the popular cottage-mail delivery, while making the face read as a bat and connecting wings, feet, envelope and satchel clearly.",
+      "prompt_format": "text",
+      "seed": 794679,
+      "prompt": "A round little bat courier lands beside a sturdy mailbox post, holding a letter with both feet after a nighttime delivery. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: The bat has a clear bat silhouette: two pointed ears, a tiny nose, short feet and wide wings with three open panels each. Its satchel hangs from a visible strap. Behind it stands a cozy cottage with a rounded door, four-pane window and a wall-mounted lantern. One small pumpkin-shaped lantern rests by the door, with two flowers beside the path. Composition option: B · landing at the mailbox."
+    },
+    {
+      "page": 42,
+      "variant_id": "BAT-COURIER-C",
+      "candidate_scene_slot": 15,
+      "candidate_title": "The Bat Courier's Moonlit Delivery",
+      "iteration": "C",
+      "label": "S15-C · The Bat Courier's Moonlit Delivery",
+      "character_archetype": "cute bat messenger",
+      "design_rationale": "Retain the popular cottage-mail delivery, while making the face read as a bat and connecting wings, feet, envelope and satchel clearly.",
+      "prompt_format": "text",
+      "seed": 802598,
+      "prompt": "A friendly little bat messenger stands on the cottage porch and offers one envelope toward the mailbox beside the steps. Original cute-spooky cartoon coloring-page art: rounded chibi forms, expressive friendly faces, smooth bold black outer lines, a few clean inner lines, pure white paper, broad white coloring areas, depth shown by silhouettes and overlap, tiny black accents only, medium-large details, generous spacing, warm comic mood, simple rounded page frame, consistent hand-drawn storybook finish. Scene details: Both small feet touch the porch board, while the wings fold outward behind the arms with broad white panels. The satchel rests against the body on one visible strap. A rounded mailbox stands on its own post near the path. Add one framed window, a porch lantern and a small pair of flowers; the crescent moon and two stars are outlined on white sky. Composition option: C · porch delivery."
+    }
+  ]
+}
