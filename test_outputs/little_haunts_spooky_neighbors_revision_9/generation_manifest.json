@@ -1,0 +1,180 @@
+{
+  "product_id": "little-haunts-club-spooky-neighbors-revision-9",
+  "workflow": "workflows\\flux2_coloring_api.json",
+  "reference_image": null,
+  "canvas": {
+    "width": 1536,
+    "height": 1984
+  },
+  "steps": 20,
+  "guidance": 4.0,
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "R02",
+      "family": "targeted-revision-v1",
+      "label": "R01 \u00b7 replaces original page 02 \u2014 Patchwork Monster Builds a Birdhouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 135838,
+      "prompt_id": "814e48fd-4d69-4625-ad5a-1d70bc7b4bac",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_001.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 71.648
+      }
+    },
+    {
+      "page": 2,
+      "variant_id": "R03",
+      "family": "targeted-revision-v1",
+      "label": "R02 \u00b7 replaces original page 03 \u2014 The Plague-Doctor Crow's Apothecary",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 143757,
+      "prompt_id": "2db0c37d-a52b-4ed2-b058-d669a90a361e",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_002.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 72.41
+      }
+    },
+    {
+      "page": 3,
+      "variant_id": "R04",
+      "family": "targeted-revision-v1",
+      "label": "R03 \u00b7 replaces original page 04 \u2014 Skeleton's Fireside Story Hour",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 151676,
+      "prompt_id": "95487567-cdae-4ff2-ad1c-c2bd60f1f680",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_003.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 75.136
+      }
+    },
+    {
+      "page": 4,
+      "variant_id": "R05",
+      "family": "targeted-revision-v1",
+      "label": "R04 \u00b7 replaces original page 05 \u2014 Mummy's Tangled Present",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 159595,
+      "prompt_id": "249dcf75-6007-40bf-ac07-d9eb98bc9f5a",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_004.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 73.382
+      }
+    },
+    {
+      "page": 5,
+      "variant_id": "R07",
+      "family": "targeted-revision-v1",
+      "label": "R05 \u00b7 replaces original page 07 \u2014 Vampire's Midnight Bakery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 175433,
+      "prompt_id": "0f06116e-fa05-4cca-9a42-5a5b3ae39042",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_005.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 89.414
+      }
+    },
+    {
+      "page": 6,
+      "variant_id": "R11",
+      "family": "targeted-revision-v1",
+      "label": "R06 \u00b7 replaces original page 11 \u2014 Scarecrow's First Pumpkin Harvest",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 207109,
+      "prompt_id": "732d33ec-b42c-4ed5-92bc-491e32ccd0ad",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_006.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 68.268
+      }
+    },
+    {
+      "page": 7,
+      "variant_id": "R12",
+      "family": "targeted-revision-v1",
+      "label": "R07 \u00b7 replaces original page 12 \u2014 Werewolf Pup's Moonlit Doghouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 215028,
+      "prompt_id": "ed03e4bf-9689-4f93-96df-0c8504bd301d",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_007.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 64.34
+      }
+    },
+    {
+      "page": 8,
+      "variant_id": "R13",
+      "family": "targeted-revision-v1",
+      "label": "R09 \u00b7 replaces original page 13 \u2014 Little Grim Reaper's Flower Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 222947,
+      "prompt_id": "0016185d-131e-4768-8aed-01836afd8c21",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_008.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 65.682
+      }
+    },
+    {
+      "page": 9,
+      "variant_id": "R15",
+      "family": "targeted-revision-v1",
+      "label": "R08 \u00b7 replaces original page 15 \u2014 The Bat Courier's Moonlit Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 238785,
+      "prompt_id": "07fc43ee-1a0b-4bb5-a655-97c4805c20a2",
+      "file": "products\\little-haunts-club-spooky-neighbors-revision-9\\pages\\page_009.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 69.927
+      }
+    }
+  ],
+  "summary": {
+    "requested": 9,
+    "passed": 9,
+    "failed": 0
+  }
+}
