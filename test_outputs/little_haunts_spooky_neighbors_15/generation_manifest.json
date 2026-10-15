@@ -1,0 +1,288 @@
+{
+  "product_id": "little-haunts-club-spooky-neighbors-15",
+  "workflow": "workflows\\flux2_coloring_api.json",
+  "reference_image": null,
+  "canvas": {
+    "width": 1536,
+    "height": 1984
+  },
+  "steps": 20,
+  "guidance": 4.0,
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "GTRA01",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "01 \u00b7 Ghost Tailor Repairs a Bat Cape",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 127919,
+      "prompt_id": "b345bb04-6981-40c1-a453-938bcfeb9cb7",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_001.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 67.048
+      }
+    },
+    {
+      "page": 2,
+      "variant_id": "PMBA02",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "02 \u00b7 Patchwork Monster Builds a Birdhouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 135838,
+      "prompt_id": "14506dc3-4b15-46b7-baf9-60fc2ba94a5c",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_002.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 76.085
+      }
+    },
+    {
+      "page": 3,
+      "variant_id": "TPCA03",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "03 \u00b7 The Plague-Doctor Crow's Apothecary",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 143757,
+      "prompt_id": "b797d3d2-9f98-46ca-a079-3e70fce25647",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_003.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 76.918
+      }
+    },
+    {
+      "page": 4,
+      "variant_id": "SFSH04",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "04 \u00b7 Skeleton's Fireside Story Hour",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 151676,
+      "prompt_id": "e2b86ddd-ea85-42d0-9740-3e38e82d8c09",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_004.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 79.699
+      }
+    },
+    {
+      "page": 5,
+      "variant_id": "MTP05",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "05 \u00b7 Mummy's Tangled Present",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 159595,
+      "prompt_id": "35765639-c48f-47c7-a1ad-df715d0a9664",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_005.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 77.687
+      }
+    },
+    {
+      "page": 6,
+      "variant_id": "TWTP06",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "06 \u00b7 The Witch's Tiny Potion Clinic",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 167514,
+      "prompt_id": "8666ab82-a947-428c-84ef-7d4b52c8d912",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_006.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 69.12
+      }
+    },
+    {
+      "page": 7,
+      "variant_id": "VMB07",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "07 \u00b7 Vampire's Midnight Bakery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 175433,
+      "prompt_id": "91f906c4-780a-4e02-bb04-1894fcbcb289",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_007.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 89.953
+      }
+    },
+    {
+      "page": 8,
+      "variant_id": "GBN08",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "08 \u00b7 Ghost-and-Cat Blanket-Fort Night",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 183352,
+      "prompt_id": "1e86a5a5-6562-4fbd-829e-18f4e854b99b",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_008.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 65.849
+      }
+    },
+    {
+      "page": 9,
+      "variant_id": "TSMS09",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "09 \u00b7 The Skeleton Mermaid's Shell Collection",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 191271,
+      "prompt_id": "37cc5fe7-1a85-4183-8363-90548f6a0489",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_009.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 75.932
+      }
+    },
+    {
+      "page": 10,
+      "variant_id": "ZPS10",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "10 \u00b7 Zombie's Pumpkin-Pie Stand",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 199190,
+      "prompt_id": "db592cc5-4641-47f5-84d6-feda6b3fcba0",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_010.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 75.389
+      }
+    },
+    {
+      "page": 11,
+      "variant_id": "SFPH11",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "11 \u00b7 Scarecrow's First Pumpkin Harvest",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 207109,
+      "prompt_id": "0667c02c-7720-4e1c-ae0b-19b96c2ec8e1",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_011.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 80.088
+      }
+    },
+    {
+      "page": 12,
+      "variant_id": "WPMD12",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "12 \u00b7 Werewolf Pup's Moonlit Doghouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 215028,
+      "prompt_id": "76b3ccc6-76be-4c70-83cf-dc1af8551e04",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_012.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 79.09
+      }
+    },
+    {
+      "page": 13,
+      "variant_id": "LGRF13",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "13 \u00b7 Little Grim Reaper's Flower Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 222947,
+      "prompt_id": "1fc90d6e-70a5-4126-8849-455639301310",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_013.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 72.176
+      }
+    },
+    {
+      "page": 14,
+      "variant_id": "CRTP14",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "14 \u00b7 Cyclops Runs the Pumpkin Ring Toss",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 230866,
+      "prompt_id": "df2b6899-8369-4eac-8ab5-a3455de01cf1",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_014.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 73.57
+      }
+    },
+    {
+      "page": 15,
+      "variant_id": "TBCM15",
+      "family": "art-directed-spooky-neighbors-v1",
+      "label": "15 \u00b7 The Bat Courier's Moonlit Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 238785,
+      "prompt_id": "5c4238c5-b30f-4b8f-89d0-678f51257016",
+      "file": "products\\little-haunts-club-spooky-neighbors-15\\pages\\page_015.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 70.313
+      }
+    }
+  ],
+  "summary": {
+    "requested": 15,
+    "passed": 15,
+    "failed": 0
+  }
+}
