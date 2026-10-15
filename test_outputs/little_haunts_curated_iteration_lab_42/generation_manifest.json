@@ -1,0 +1,774 @@
+{
+  "product_id": "little-haunts-club-curated-iteration-lab-42",
+  "workflow": "workflows\\flux2_coloring_api.json",
+  "reference_image": null,
+  "canvas": {
+    "width": 1536,
+    "height": 1984
+  },
+  "steps": 20,
+  "guidance": 4.0,
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "GHOST-TAILOR-A",
+      "family": null,
+      "label": "S01-A \u00b7 Ghost Tailor Repairs a Bat Cape",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 477919,
+      "prompt_id": "8e533b55-e65c-4293-b23b-e29b8ff02c89",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_001.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 68.826
+      }
+    },
+    {
+      "page": 2,
+      "variant_id": "GHOST-TAILOR-B",
+      "family": null,
+      "label": "S01-B \u00b7 Ghost Tailor Repairs a Bat Cape",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 485838,
+      "prompt_id": "aa634498-5957-4b57-abc7-38352e4a46f8",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_002.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 72.363
+      }
+    },
+    {
+      "page": 3,
+      "variant_id": "GHOST-TAILOR-C",
+      "family": null,
+      "label": "S01-C \u00b7 Ghost Tailor Repairs a Bat Cape",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 493757,
+      "prompt_id": "8b2bfffa-ef2e-4059-b0c3-ec2a3ab280dc",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_003.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 78.688
+      }
+    },
+    {
+      "page": 4,
+      "variant_id": "PATCHWORK-MONSTER-A",
+      "family": null,
+      "label": "S02-A \u00b7 Patchwork Monster Builds a Birdhouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 501676,
+      "prompt_id": "77a9fc87-d354-4e69-8251-43bfc4dd8a7a",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_004.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 85.565
+      }
+    },
+    {
+      "page": 5,
+      "variant_id": "PATCHWORK-MONSTER-B",
+      "family": null,
+      "label": "S02-B \u00b7 Patchwork Monster Builds a Birdhouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 509595,
+      "prompt_id": "b99f4217-bbd4-4ac3-9e16-a6a4efac9bf4",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_005.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 93.692
+      }
+    },
+    {
+      "page": 6,
+      "variant_id": "PATCHWORK-MONSTER-C",
+      "family": null,
+      "label": "S02-C \u00b7 Patchwork Monster Builds a Birdhouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 517514,
+      "prompt_id": "04c39417-e02b-4598-8376-05976b9f81bb",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_006.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 83.878
+      }
+    },
+    {
+      "page": 7,
+      "variant_id": "GARGOYLE-ASTRONOMER-A",
+      "family": null,
+      "label": "S03-A \u00b7 Gargoyle's Little Observatory",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 525433,
+      "prompt_id": "b8e603ca-60c3-4b05-96ef-656168746e7a",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_007.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 90.89
+      }
+    },
+    {
+      "page": 8,
+      "variant_id": "GARGOYLE-ASTRONOMER-B",
+      "family": null,
+      "label": "S03-B \u00b7 Gargoyle's Little Observatory",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 533352,
+      "prompt_id": "8b38c24c-8e3b-46ab-a55d-ef0195ad78ff",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_008.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 77.396
+      }
+    },
+    {
+      "page": 9,
+      "variant_id": "GARGOYLE-ASTRONOMER-C",
+      "family": null,
+      "label": "S03-C \u00b7 Gargoyle's Little Observatory",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 541271,
+      "prompt_id": "b4ea632d-2709-4b29-9d6c-52f3690afab5",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_009.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 75.814
+      }
+    },
+    {
+      "page": 10,
+      "variant_id": "SKELETON-FIRESIDE-A",
+      "family": null,
+      "label": "S04-A \u00b7 Skeleton's Fireside Story Hour",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 549190,
+      "prompt_id": "9664a826-7881-43f5-bb7a-daaa3cd3a8a9",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_010.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 70.191
+      }
+    },
+    {
+      "page": 11,
+      "variant_id": "SKELETON-FIRESIDE-B",
+      "family": null,
+      "label": "S04-B \u00b7 Skeleton's Fireside Story Hour",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 557109,
+      "prompt_id": "519ebb88-de84-4607-a4a5-5f71381a25df",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_011.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 81.239
+      }
+    },
+    {
+      "page": 12,
+      "variant_id": "SKELETON-FIRESIDE-C",
+      "family": null,
+      "label": "S04-C \u00b7 Skeleton's Fireside Story Hour",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 565028,
+      "prompt_id": "8e28ee7c-8b9f-45b4-bac3-d460bafe77eb",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_012.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 79.548
+      }
+    },
+    {
+      "page": 13,
+      "variant_id": "MUMMY-GIFT-A",
+      "family": null,
+      "label": "S05-A \u00b7 Mummy's Tangled Present",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 572947,
+      "prompt_id": "72c22fb2-dc3b-4ef7-9aeb-1e836624a960",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_013.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 94.0
+      }
+    },
+    {
+      "page": 14,
+      "variant_id": "MUMMY-GIFT-B",
+      "family": null,
+      "label": "S05-B \u00b7 Mummy's Tangled Present",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 580866,
+      "prompt_id": "b1464b36-c690-4d8f-8a75-ffbc7deb5b53",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_014.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 80.797
+      }
+    },
+    {
+      "page": 15,
+      "variant_id": "MUMMY-GIFT-C",
+      "family": null,
+      "label": "S05-C \u00b7 Mummy's Tangled Present",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 588785,
+      "prompt_id": "e8be8b34-6782-45fc-a9e3-f86843ee4782",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_015.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 85.782
+      }
+    },
+    {
+      "page": 16,
+      "variant_id": "WITCH-CLINIC-A",
+      "family": null,
+      "label": "S06-A \u00b7 The Witch's Tiny Potion Clinic",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 596704,
+      "prompt_id": "daecebba-983c-4a2f-91f1-57bacc3488b6",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_016.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 82.213
+      }
+    },
+    {
+      "page": 17,
+      "variant_id": "WITCH-CLINIC-B",
+      "family": null,
+      "label": "S06-B \u00b7 The Witch's Tiny Potion Clinic",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 604623,
+      "prompt_id": "31165809-1c3d-40ff-84fc-5621b76b2154",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_017.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 76.634
+      }
+    },
+    {
+      "page": 18,
+      "variant_id": "WITCH-CLINIC-C",
+      "family": null,
+      "label": "S06-C \u00b7 The Witch's Tiny Potion Clinic",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 612542,
+      "prompt_id": "bc5f85bd-240b-4c3e-810a-4a3b8fb9aeeb",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_018.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 88.112
+      }
+    },
+    {
+      "page": 19,
+      "variant_id": "VAMPIRE-BAKERY-A",
+      "family": null,
+      "label": "S07-A \u00b7 Vampire's Midnight Bakery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 620461,
+      "prompt_id": "a98e3a2e-8794-4215-b1b7-1fcfcb46d334",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_019.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 88.191
+      }
+    },
+    {
+      "page": 20,
+      "variant_id": "VAMPIRE-BAKERY-B",
+      "family": null,
+      "label": "S07-B \u00b7 Vampire's Midnight Bakery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 628380,
+      "prompt_id": "dcb8a63f-cd75-45ae-8e1e-a2ee8e1d9ca6",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_020.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 82.227
+      }
+    },
+    {
+      "page": 21,
+      "variant_id": "VAMPIRE-BAKERY-C",
+      "family": null,
+      "label": "S07-C \u00b7 Vampire's Midnight Bakery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 636299,
+      "prompt_id": "90b04c71-5484-44ae-94f2-35a1356a61ee",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_021.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 83.917
+      }
+    },
+    {
+      "page": 22,
+      "variant_id": "BLANKET-FORT-A",
+      "family": null,
+      "label": "S08-A \u00b7 Ghost-and-Cat Blanket-Fort Night",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 644218,
+      "prompt_id": "9801e1bc-a096-4dcf-ac8d-475738c182e6",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_022.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 73.731
+      }
+    },
+    {
+      "page": 23,
+      "variant_id": "BLANKET-FORT-B",
+      "family": null,
+      "label": "S08-B \u00b7 Ghost-and-Cat Blanket-Fort Night",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 652137,
+      "prompt_id": "ce03d351-e6d3-45a8-b9ed-7ad86f06755b",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_023.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 69.751
+      }
+    },
+    {
+      "page": 24,
+      "variant_id": "BLANKET-FORT-C",
+      "family": null,
+      "label": "S08-C \u00b7 Ghost-and-Cat Blanket-Fort Night",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 660056,
+      "prompt_id": "2a27663c-46ab-418c-8361-199e3af5ead9",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_024.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 73.661
+      }
+    },
+    {
+      "page": 25,
+      "variant_id": "ZOMBIE-MUSIC-A",
+      "family": null,
+      "label": "S10-A \u00b7 Zombie's First Piano Recital",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 667975,
+      "prompt_id": "bec9f692-ed74-46bd-ac03-aeaee1b18f0b",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_025.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 82.251
+      }
+    },
+    {
+      "page": 26,
+      "variant_id": "ZOMBIE-MUSIC-B",
+      "family": null,
+      "label": "S10-B \u00b7 Zombie's First Piano Recital",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 675894,
+      "prompt_id": "2333b911-4a40-4117-b71e-585df596c73b",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_026.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 90.431
+      }
+    },
+    {
+      "page": 27,
+      "variant_id": "ZOMBIE-MUSIC-C",
+      "family": null,
+      "label": "S10-C \u00b7 Zombie's First Piano Recital",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 683813,
+      "prompt_id": "ef1ef171-2a25-4767-b2ae-b5a25d50b6e7",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_027.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 80.597
+      }
+    },
+    {
+      "page": 28,
+      "variant_id": "SCARECROW-HARVEST-A",
+      "family": null,
+      "label": "S11-A \u00b7 Scarecrow's First Pumpkin Harvest",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 691732,
+      "prompt_id": "57318ef7-f6a0-4b3b-8013-4daa993f5570",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_028.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 87.924
+      }
+    },
+    {
+      "page": 29,
+      "variant_id": "SCARECROW-HARVEST-B",
+      "family": null,
+      "label": "S11-B \u00b7 Scarecrow's First Pumpkin Harvest",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 699651,
+      "prompt_id": "1cdb7b64-1fe2-4694-8c86-2af4c0ea712f",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_029.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 82.548
+      }
+    },
+    {
+      "page": 30,
+      "variant_id": "SCARECROW-HARVEST-C",
+      "family": null,
+      "label": "S11-C \u00b7 Scarecrow's First Pumpkin Harvest",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 707570,
+      "prompt_id": "c502bf3a-5cc2-4987-943b-b047021bd5c8",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_030.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 87.955
+      }
+    },
+    {
+      "page": 31,
+      "variant_id": "WEREWOLF-PUP-A",
+      "family": null,
+      "label": "S12-A \u00b7 Werewolf Pup's Moonlit Doghouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 715489,
+      "prompt_id": "9337dd87-fe3a-4f2d-af21-295117d85547",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_031.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 77.053
+      }
+    },
+    {
+      "page": 32,
+      "variant_id": "WEREWOLF-PUP-B",
+      "family": null,
+      "label": "S12-B \u00b7 Werewolf Pup's Moonlit Doghouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 723408,
+      "prompt_id": "c2cf8b99-c02f-402c-a92e-05dde4ad432b",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_032.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 71.463
+      }
+    },
+    {
+      "page": 33,
+      "variant_id": "WEREWOLF-PUP-C",
+      "family": null,
+      "label": "S12-C \u00b7 Werewolf Pup's Moonlit Doghouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 731327,
+      "prompt_id": "13920f09-d548-4b4c-b450-60a9460ff0dc",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_033.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 97.142
+      }
+    },
+    {
+      "page": 34,
+      "variant_id": "GRIM-REAPER-A",
+      "family": null,
+      "label": "S13-A \u00b7 Little Grim Reaper's Flower Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 739246,
+      "prompt_id": "f15f94db-e4e7-47af-952a-30af2469f1ed",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_034.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 75.832
+      }
+    },
+    {
+      "page": 35,
+      "variant_id": "GRIM-REAPER-B",
+      "family": null,
+      "label": "S13-B \u00b7 Little Grim Reaper's Flower Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 747165,
+      "prompt_id": "3bc0fbec-5daf-441e-a4e7-dda4346cd876",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_035.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 96.072
+      }
+    },
+    {
+      "page": 36,
+      "variant_id": "GRIM-REAPER-C",
+      "family": null,
+      "label": "S13-C \u00b7 Little Grim Reaper's Flower Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 755084,
+      "prompt_id": "bf84e71f-7d23-4b07-a4a5-15258118de17",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_036.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 70.766
+      }
+    },
+    {
+      "page": 37,
+      "variant_id": "CYCLOPS-PUPPET-A",
+      "family": null,
+      "label": "S14-A \u00b7 Cyclops's Tiny Puppet Theatre",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 763003,
+      "prompt_id": "d6537778-34e0-44ac-a5f3-eef0ac51e423",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_037.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 68.245
+      }
+    },
+    {
+      "page": 38,
+      "variant_id": "CYCLOPS-PUPPET-B",
+      "family": null,
+      "label": "S14-B \u00b7 Cyclops's Tiny Puppet Theatre",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 770922,
+      "prompt_id": "6158862c-d6eb-4ab1-92ee-696da781a5d2",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_038.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 76.535
+      }
+    },
+    {
+      "page": 39,
+      "variant_id": "CYCLOPS-PUPPET-C",
+      "family": null,
+      "label": "S14-C \u00b7 Cyclops's Tiny Puppet Theatre",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 778841,
+      "prompt_id": "03428b97-0c97-4c71-8e25-e7c08c79e075",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_039.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 88.318
+      }
+    },
+    {
+      "page": 40,
+      "variant_id": "BAT-COURIER-A",
+      "family": null,
+      "label": "S15-A \u00b7 The Bat Courier's Moonlit Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 786760,
+      "prompt_id": "4344735d-b312-4cfc-9bf0-7d711567136f",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_040.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 69.856
+      }
+    },
+    {
+      "page": 41,
+      "variant_id": "BAT-COURIER-B",
+      "family": null,
+      "label": "S15-B \u00b7 The Bat Courier's Moonlit Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 794679,
+      "prompt_id": "c4d4ab10-18d6-4aa0-8fdf-06b6186cc757",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_041.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 82.819
+      }
+    },
+    {
+      "page": 42,
+      "variant_id": "BAT-COURIER-C",
+      "family": null,
+      "label": "S15-C \u00b7 The Bat Courier's Moonlit Delivery",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 802598,
+      "prompt_id": "a48fce21-42a8-4e23-a713-1d9593848ba3",
+      "file": "products\\little-haunts-club-curated-iteration-lab-42\\pages\\page_042.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 81.874
+      }
+    }
+  ],
+  "summary": {
+    "requested": 42,
+    "passed": 42,
+    "failed": 0
+  }
+}
