@@ -106,7 +106,7 @@ def main() -> int:
         "white",
     )
     draw = ImageDraw.Draw(overview)
-    draw.text((margin, margin), "Little Haunts Club — 42 candidates (A/B/C per scene)", fill="#24332C", font=font(24, True))
+    draw.text((margin, margin), f"Little Haunts Club — {len(pages)} candidates (A/B/C per scene)", fill="#24332C", font=font(24, True))
     for index, item in enumerate(pages):
         path = product / "pages" / f"page_{int(item['page']):03d}.png"
         if not path.is_file():
@@ -119,7 +119,7 @@ def main() -> int:
         overview.paste(thumb, (x + (thumb_w-thumb.width)//2, y + (thumb_h-thumb.height)//2))
         label = f"{item.get('variant_id','')} | p{int(item['page']):02d}"
         draw.text((x, y + thumb_h + 5), label[:27], fill="#24332C", font=font(11))
-    overview_path = output / "overview_42_candidates.jpg"
+    overview_path = output / f"overview_{len(pages)}_candidates.jpg"
     overview.save(overview_path, "JPEG", quality=90, optimize=True, subsampling=0)
     (output / "INDEX.md").write_text("\n".join(index_rows) + "\n", encoding="utf-8")
 
