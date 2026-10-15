@@ -1,0 +1,141 @@
+{
+  "product_id": "little-haunts-club-targeted-iteration-lab-6",
+  "title": "Little Haunts Club — Six Targeted Alternatives",
+  "purpose": "Solve two specific visual problems from the 42-candidate batch: patchwork monster identity and the scarecrow's solid-black bird/repeated pumpkin clutter. Three candidates are provided for each concept.",
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "visual_bible": "Original cute-spooky cartoon coloring-page art with rounded, expressive storybook shapes. Crisp solid-black outer contours and a few clean inner lines on pure white paper. Large enclosed surfaces stay blank white and ready for coloring; broad white interiors for the character, clothing, feathers, tools, and props. Solid black is limited to tiny accents like pupils, nostrils, and small beak details. Keep a few purposeful background elements, ample breathing room, friendly comedy, clear physical relationships, and a consistent hand-drawn coloring-book finish.",
+  "prompt_strategy": "Shorter composition-focused descriptions, with desired monochrome coloring-page output stated affirmatively. Props and anatomy are described by their physical roles; do not add decorative clutter to fill space.",
+  "candidate_plan": [
+    {
+      "slot": 2,
+      "title": "Patchwork Monster's Birdhouse Workshop",
+      "character": "soft stitched monster",
+      "rationale": "The last A/B/C batch had no ideal winner: A had colored grass and pumpkins; B read like an ordinary human child; C read like a stitched cat. This batch fixes character identity and tests simpler compositions without decorative pumpkin clutter.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "standing at the bench"
+        },
+        {
+          "iteration": "B",
+          "composition": "seated at a shed worktable"
+        },
+        {
+          "iteration": "C",
+          "composition": "showing the finished birdhouse"
+        }
+      ]
+    },
+    {
+      "slot": 11,
+      "title": "The Scarecrow's Bird Friend",
+      "character": "patchwork scarecrow and bird",
+      "rationale": "Previous versions repeated several pumpkins and rendered the crow as a large solid-black silhouette. This set tests a quieter, more charming scarecrow scene with an outlined white bird and varied garden storytelling rather than a repeated pumpkin patch.",
+      "candidates": [
+        {
+          "iteration": "A",
+          "composition": "scarecrow and white-feathered crow"
+        },
+        {
+          "iteration": "B",
+          "composition": "scarecrow making a bird feeder"
+        },
+        {
+          "iteration": "C",
+          "composition": "scarecrow and nesting bird"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster's Birdhouse Workshop",
+      "variant_id": "FIX2-A",
+      "family": "targeted-visual-fix-v1",
+      "iteration": "A",
+      "label": "02-A · Patchwork Monster's Birdhouse Workshop",
+      "character_archetype": "soft stitched monster",
+      "design_rationale": "The last A/B/C batch had no ideal winner: A had colored grass and pumpkins; B read like an ordinary human child; C read like a stitched cat. This batch fixes character identity and tests simpler compositions without decorative pumpkin clutter.",
+      "prompt_format": "text",
+      "seed": 655838,
+      "prompt": "A cute patchwork monster with a rounded fabric head, a visible seam across its forehead, small hand-sewn cheek stitches, two small neck bolts, and soft round eyes builds a simple birdhouse at a sturdy garden workbench. Original cute-spooky cartoon coloring-page art with rounded, expressive storybook shapes. Crisp solid-black outer contours and a few clean inner lines on pure white paper. Large enclosed surfaces stay blank white and ready for coloring; broad white interiors for the character, clothing, feathers, tools, and props. Solid black is limited to tiny accents like pupils, nostrils, and small beak details. Keep a few purposeful background elements, ample breathing room, friendly comedy, clear physical relationships, and a consistent hand-drawn coloring-book finish. Scene details: The monster has a short rounded body in plain overalls, not a robot body or screen face. A wooden hammer and two broad boards rest on the tabletop. One little robin stands on the birdhouse roof. The birdhouse has a white outlined round entrance and stands upright on a single post. A framed flower picture hangs on the garden shed wall, and two broad flowers grow beside the post. Composition option: standing at the bench."
+    },
+    {
+      "page": 2,
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster's Birdhouse Workshop",
+      "variant_id": "FIX2-B",
+      "family": "targeted-visual-fix-v1",
+      "iteration": "B",
+      "label": "02-B · Patchwork Monster's Birdhouse Workshop",
+      "character_archetype": "soft stitched monster",
+      "design_rationale": "The last A/B/C batch had no ideal winner: A had colored grass and pumpkins; B read like an ordinary human child; C read like a stitched cat. This batch fixes character identity and tests simpler compositions without decorative pumpkin clutter.",
+      "prompt_format": "text",
+      "seed": 663757,
+      "prompt": "A friendly stitched monster child with a soft cloth face, visible blanket stitches, two tiny neck bolts, and an easy smile finishes a small birdhouse while seated at a workbench inside a garden shed. Original cute-spooky cartoon coloring-page art with rounded, expressive storybook shapes. Crisp solid-black outer contours and a few clean inner lines on pure white paper. Large enclosed surfaces stay blank white and ready for coloring; broad white interiors for the character, clothing, feathers, tools, and props. Solid black is limited to tiny accents like pupils, nostrils, and small beak details. Keep a few purposeful background elements, ample breathing room, friendly comedy, clear physical relationships, and a consistent hand-drawn coloring-book finish. Scene details: The monster holds one wide roof panel against the birdhouse, which rests flat on the tabletop during assembly. A hammer, two boards and one open toolbox sit on the same table. Through the shed's broad window, a small robin perches on a low fence. A single framed bird picture and one plant pot make the shed cozy. The monster's head is fabric with seams and patches, never a screen or a metal robot face. Composition option: seated at a shed worktable."
+    },
+    {
+      "page": 3,
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster's Birdhouse Workshop",
+      "variant_id": "FIX2-C",
+      "family": "targeted-visual-fix-v1",
+      "iteration": "C",
+      "label": "02-C · Patchwork Monster's Birdhouse Workshop",
+      "character_archetype": "soft stitched monster",
+      "design_rationale": "The last A/B/C batch had no ideal winner: A had colored grass and pumpkins; B read like an ordinary human child; C read like a stitched cat. This batch fixes character identity and tests simpler compositions without decorative pumpkin clutter.",
+      "prompt_format": "text",
+      "seed": 671676,
+      "prompt": "A sweet square-headed patchwork creature proudly holds up a finished wooden birdhouse beside a garden post, with its tiny neck bolts and stitched cloth cheeks clearly visible. Original cute-spooky cartoon coloring-page art with rounded, expressive storybook shapes. Crisp solid-black outer contours and a few clean inner lines on pure white paper. Large enclosed surfaces stay blank white and ready for coloring; broad white interiors for the character, clothing, feathers, tools, and props. Solid black is limited to tiny accents like pupils, nostrils, and small beak details. Keep a few purposeful background elements, ample breathing room, friendly comedy, clear physical relationships, and a consistent hand-drawn coloring-book finish. Scene details: The creature has a round fabric body, soft mitten-like hands and two broad patches on its overalls. The birdhouse has one open white round entrance and a small bird stands on its roof. A low bench supports a hammer and two leftover boards. One flower box sits beneath the window of a little shed. Keep the character clearly monster-like through fabric seams and neck bolts, with a face drawn directly on cloth. Composition option: showing the finished birdhouse."
+    },
+    {
+      "page": 4,
+      "candidate_scene_slot": 11,
+      "candidate_title": "The Scarecrow's Bird Friend",
+      "variant_id": "FIX11-A",
+      "family": "targeted-visual-fix-v1",
+      "iteration": "A",
+      "label": "11-A · The Scarecrow's Bird Friend",
+      "character_archetype": "patchwork scarecrow and bird",
+      "design_rationale": "Previous versions repeated several pumpkins and rendered the crow as a large solid-black silhouette. This set tests a quieter, more charming scarecrow scene with an outlined white bird and varied garden storytelling rather than a repeated pumpkin patch.",
+      "prompt_format": "text",
+      "seed": 679595,
+      "prompt": "A friendly patchwork scarecrow stands beside a short garden fence while a cute crow with broad outlined white feather panels perches on the scarecrow's outstretched sleeve. Original cute-spooky cartoon coloring-page art with rounded, expressive storybook shapes. Crisp solid-black outer contours and a few clean inner lines on pure white paper. Large enclosed surfaces stay blank white and ready for coloring; broad white interiors for the character, clothing, feathers, tools, and props. Solid black is limited to tiny accents like pupils, nostrils, and small beak details. Keep a few purposeful background elements, ample breathing room, friendly comedy, clear physical relationships, and a consistent hand-drawn coloring-book finish. Scene details: The crow has a white body interior, a large white belly patch, three broad outlined feather panels in each wing, and only a small black beak and eyes. The scarecrow wears a floppy hat and simple overalls with two broad patches, with only a few wide straw tufts at the cuffs. A single pumpkin rests near a watering can. Two daisies grow beside the fence and a framed garden picture hangs on the shed wall. No extra pumpkins or dense soil texture. Composition option: scarecrow and white-feathered crow."
+    },
+    {
+      "page": 5,
+      "candidate_scene_slot": 11,
+      "candidate_title": "The Scarecrow's Bird Friend",
+      "variant_id": "FIX11-B",
+      "family": "targeted-visual-fix-v1",
+      "iteration": "B",
+      "label": "11-B · The Scarecrow's Bird Friend",
+      "character_archetype": "patchwork scarecrow and bird",
+      "design_rationale": "Previous versions repeated several pumpkins and rendered the crow as a large solid-black silhouette. This set tests a quieter, more charming scarecrow scene with an outlined white bird and varied garden storytelling rather than a repeated pumpkin patch.",
+      "prompt_format": "text",
+      "seed": 687514,
+      "prompt": "A cheerful patchwork scarecrow carefully hangs a simple wooden bird feeder from a sturdy garden post while a small crow watches from the fence. Original cute-spooky cartoon coloring-page art with rounded, expressive storybook shapes. Crisp solid-black outer contours and a few clean inner lines on pure white paper. Large enclosed surfaces stay blank white and ready for coloring; broad white interiors for the character, clothing, feathers, tools, and props. Solid black is limited to tiny accents like pupils, nostrils, and small beak details. Keep a few purposeful background elements, ample breathing room, friendly comedy, clear physical relationships, and a consistent hand-drawn coloring-book finish. Scene details: The bird feeder is visibly attached by a short loop to the crossbar and has a white open tray with a few large seed shapes. The crow's body and wings are outlined on white paper, with broad feather panels left white and only its small eye and beak black. The scarecrow has a friendly cloth face, a floppy hat, simple patched overalls and a few large straw tufts. A watering can and one flower planter sit on the ground; one framed botanical picture hangs on the garden shed. Composition option: scarecrow making a bird feeder."
+    },
+    {
+      "page": 6,
+      "candidate_scene_slot": 11,
+      "candidate_title": "The Scarecrow's Bird Friend",
+      "variant_id": "FIX11-C",
+      "family": "targeted-visual-fix-v1",
+      "iteration": "C",
+      "label": "11-C · The Scarecrow's Bird Friend",
+      "character_archetype": "patchwork scarecrow and bird",
+      "design_rationale": "Previous versions repeated several pumpkins and rendered the crow as a large solid-black silhouette. This set tests a quieter, more charming scarecrow scene with an outlined white bird and varied garden storytelling rather than a repeated pumpkin patch.",
+      "prompt_format": "text",
+      "seed": 695433,
+      "prompt": "A kind patchwork scarecrow checks a little open bird nest resting securely in a low fork of a garden post while a mother crow watches from a nearby fence rail. Original cute-spooky cartoon coloring-page art with rounded, expressive storybook shapes. Crisp solid-black outer contours and a few clean inner lines on pure white paper. Large enclosed surfaces stay blank white and ready for coloring; broad white interiors for the character, clothing, feathers, tools, and props. Solid black is limited to tiny accents like pupils, nostrils, and small beak details. Keep a few purposeful background elements, ample breathing room, friendly comedy, clear physical relationships, and a consistent hand-drawn coloring-book finish. Scene details: The crow has a white outlined body and broad white feather panels, using black only for its eye, beak and a tiny tail accent. The nest is a simple open bowl shape with two large eggs, held securely in a branch fork. The scarecrow wears broad overalls with two patches and a few wide straw tufts. One watering can and two flowers establish the garden, with a single pumpkin far off to one side rather than dominating the page. Composition option: scarecrow and nesting bird."
+    }
+  ]
+}
