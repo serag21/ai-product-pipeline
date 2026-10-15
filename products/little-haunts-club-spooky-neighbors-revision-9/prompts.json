@@ -111,20 +111,6 @@
     },
     {
       "page": 8,
-      "original_page": 15,
-      "variant_id": "R15",
-      "family": "targeted-revision-v1",
-      "label": "R08 · replaces original page 15 — The Bat Courier's Moonlit Delivery",
-      "scene_title": "The Bat Courier's Moonlit Delivery",
-      "character_archetype": "Bat messenger",
-      "design_rationale": "Make the protagonist unmistakably a bat rather than a cat-bat hybrid, and show the courier action with a visible envelope and satchel.",
-      "qa_focus": "Pointed bat ears, broad wings attached to arms, three open white membrane panels per wing, visible satchel strap, envelope held in feet, mailbox/post and front door grounded.",
-      "seed": 238785,
-      "prompt_format": "text",
-      "prompt": "A tiny round bat courier with pointed bat ears, a small muzzle, two broad wings attached behind its arms, and a little cross-body satchel delivers a large envelope to a cottage mailbox. Original spooky-cute storybook coloring-page art for older children, teens, and adults. Draw crisp black contour lines on pure white paper. Use confident bold outer contours with only a few purposeful inner lines, generous open white coloring regions, clear separation between neighboring objects, and rounded friendly proportions. Reserve solid black for small accents such as pupils and tiny nostrils; large areas of clothing, wings, feathers, furniture, window views, and props remain white inside their outlines. Keep the scene readable at print size, with one focal action and a small number of meaningful supporting details. Any framed art or view through a window has a white background with outlined subjects. Scene details: The bat is the clear central character, with two tiny feet visibly holding one large blank envelope. Both wings extend from the shoulders and each wing has three broad outlined membrane panels that remain white for coloring. A simple strap crosses the bat's chest and connects to a rounded satchel at its hip. The mailbox is attached to a single post beside the cottage path. The cottage has a rounded front door, one simple four-pane window, and a porch lantern visibly attached to the door frame. One jack-o'-lantern and a cluster of two large flowers sit beside the path. The roof has only a few broad shingle panels, with no dense grass or tiny decorative marks."
-    },
-    {
-      "page": 9,
       "original_page": 13,
       "variant_id": "R13",
       "family": "targeted-revision-v1",
@@ -136,6 +122,20 @@
       "seed": 222947,
       "prompt_format": "text",
       "prompt": "A tiny friendly grim reaper in a roomy hooded cloak brings a simple bouquet to a rounded tombstone in a peaceful little cemetery. Original spooky-cute storybook coloring-page art for older children, teens, and adults. Draw crisp black contour lines on pure white paper. Use confident bold outer contours with only a few purposeful inner lines, generous open white coloring regions, clear separation between neighboring objects, and rounded friendly proportions. Reserve solid black for small accents such as pupils and tiny nostrils; large areas of clothing, wings, feathers, furniture, window views, and props remain white inside their outlines. Keep the scene readable at print size, with one focal action and a small number of meaningful supporting details. Any framed art or view through a window has a white background with outlined subjects. Scene details: The reaper holds a bouquet made of exactly three large flowers with broad white petals and clear stems, and both hands visibly wrap around the stems. A small crescent-shaped scythe leans securely against the gate post with its curved blade raised off the path and its handle resting on the ground beside the post. A lantern hangs from a visible hook on the gate. One large pumpkin rests beside the tombstone, and two broad flowers grow from the soil near its base. The tombstone has one simple outlined flower emblem. Two curved bare branches arch overhead and leave wide open white sky around the reaper. The ground is a broad simple area with only a few grass tufts."
+    },
+    {
+      "page": 9,
+      "original_page": 15,
+      "variant_id": "R15",
+      "family": "targeted-revision-v1",
+      "label": "R08 · replaces original page 15 — The Bat Courier's Moonlit Delivery",
+      "scene_title": "The Bat Courier's Moonlit Delivery",
+      "character_archetype": "Bat messenger",
+      "design_rationale": "Make the protagonist unmistakably a bat rather than a cat-bat hybrid, and show the courier action with a visible envelope and satchel.",
+      "qa_focus": "Pointed bat ears, broad wings attached to arms, three open white membrane panels per wing, visible satchel strap, envelope held in feet, mailbox/post and front door grounded.",
+      "seed": 238785,
+      "prompt_format": "text",
+      "prompt": "A tiny round bat courier with pointed bat ears, a small muzzle, two broad wings attached behind its arms, and a little cross-body satchel delivers a large envelope to a cottage mailbox. Original spooky-cute storybook coloring-page art for older children, teens, and adults. Draw crisp black contour lines on pure white paper. Use confident bold outer contours with only a few purposeful inner lines, generous open white coloring regions, clear separation between neighboring objects, and rounded friendly proportions. Reserve solid black for small accents such as pupils and tiny nostrils; large areas of clothing, wings, feathers, furniture, window views, and props remain white inside their outlines. Keep the scene readable at print size, with one focal action and a small number of meaningful supporting details. Any framed art or view through a window has a white background with outlined subjects. Scene details: The bat is the clear central character, with two tiny feet visibly holding one large blank envelope. Both wings extend from the shoulders and each wing has three broad outlined membrane panels that remain white for coloring. A simple strap crosses the bat's chest and connects to a rounded satchel at its hip. The mailbox is attached to a single post beside the cottage path. The cottage has a rounded front door, one simple four-pane window, and a porch lantern visibly attached to the door frame. One jack-o'-lantern and a cluster of two large flowers sit beside the path. The roof has only a few broad shingle panels, with no dense grass or tiny decorative marks."
     }
   ]
 }
