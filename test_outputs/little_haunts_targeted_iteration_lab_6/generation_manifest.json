@@ -1,0 +1,126 @@
+{
+  "product_id": "little-haunts-club-targeted-iteration-lab-6",
+  "workflow": "workflows\\flux2_coloring_api.json",
+  "reference_image": null,
+  "canvas": {
+    "width": 1536,
+    "height": 1984
+  },
+  "steps": 20,
+  "guidance": 4.0,
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "FIX2-A",
+      "family": "targeted-visual-fix-v1",
+      "label": "02-A \u00b7 Patchwork Monster's Birdhouse Workshop",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 655838,
+      "prompt_id": "2830d834-c8a6-4d2c-9c15-b65dbc4ca595",
+      "file": "products\\little-haunts-club-targeted-iteration-lab-6\\pages\\page_001.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 79.964
+      }
+    },
+    {
+      "page": 2,
+      "variant_id": "FIX2-B",
+      "family": "targeted-visual-fix-v1",
+      "label": "02-B \u00b7 Patchwork Monster's Birdhouse Workshop",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 663757,
+      "prompt_id": "b61c9b1b-5217-4a67-8c65-ad8bff9eee7d",
+      "file": "products\\little-haunts-club-targeted-iteration-lab-6\\pages\\page_002.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 78.949
+      }
+    },
+    {
+      "page": 3,
+      "variant_id": "FIX2-C",
+      "family": "targeted-visual-fix-v1",
+      "label": "02-C \u00b7 Patchwork Monster's Birdhouse Workshop",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 671676,
+      "prompt_id": "a6720ad4-8510-4d33-9e63-9fa864ebfd08",
+      "file": "products\\little-haunts-club-targeted-iteration-lab-6\\pages\\page_003.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 78.844
+      }
+    },
+    {
+      "page": 4,
+      "variant_id": "FIX11-A",
+      "family": "targeted-visual-fix-v1",
+      "label": "11-A \u00b7 The Scarecrow's Bird Friend",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 679595,
+      "prompt_id": "1fdb4b73-0424-4f8a-9723-7aeb8f28684a",
+      "file": "products\\little-haunts-club-targeted-iteration-lab-6\\pages\\page_004.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 84.298
+      }
+    },
+    {
+      "page": 5,
+      "variant_id": "FIX11-B",
+      "family": "targeted-visual-fix-v1",
+      "label": "11-B \u00b7 The Scarecrow's Bird Friend",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 687514,
+      "prompt_id": "321923c7-dd47-4f5e-8e9b-eac17197fce0",
+      "file": "products\\little-haunts-club-targeted-iteration-lab-6\\pages\\page_005.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 78.713
+      }
+    },
+    {
+      "page": 6,
+      "variant_id": "FIX11-C",
+      "family": "targeted-visual-fix-v1",
+      "label": "11-C \u00b7 The Scarecrow's Bird Friend",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 695433,
+      "prompt_id": "80b2c53b-a737-4f84-be33-c33dd0635228",
+      "file": "products\\little-haunts-club-targeted-iteration-lab-6\\pages\\page_006.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 86.585
+      }
+    }
+  ],
+  "summary": {
+    "requested": 6,
+    "passed": 6,
+    "failed": 0
+  }
+}
