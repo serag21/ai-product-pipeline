@@ -1,0 +1,77 @@
+{
+  "product_id": "little-haunts-club-monster-workshop-lab-3",
+  "title": "Little Haunts Club — Three Final Patchwork Monster Alternatives",
+  "purpose": "One last focused set of three candidates for the patchwork-monster slot. Previous alternatives failed because one rendered in color, one looked like an ordinary human child, and one became cat-like. These prompts front-load black-and-white output and reinforce a sewn-cloth creature.",
+  "generation": {
+    "width": 1536,
+    "height": 1984,
+    "steps": 20,
+    "guidance": 4
+  },
+  "visual_bible": "Black-and-white cute-spooky cartoon coloring-book line art only: crisp solid-black contours on pure white paper, no colored surfaces. Rounded expressive storybook shapes, bold outer lines, a few clean inner contours, large blank white interiors, and minimal black fill limited to tiny features like pupils. At final printed size the character and props must read clearly, with broad coloring regions and generous white space.",
+  "prompt_strategy": "Style is the opening constraint because the prior candidates rendered unexpected color. The character's material identity is described with positive visual features; each scene minimizes competing background elements.",
+  "candidate_plan": [
+    {
+      "variant_id": "PM-1",
+      "name": "Indoor Birdhouse Workshop",
+      "rationale": "Preserves the original birdhouse action while removing the outdoor color cues that caused the first alternative to render colored grass and orange pumpkins."
+    },
+    {
+      "variant_id": "PM-2",
+      "name": "Monster Repairs Birdhouse on the Bench",
+      "rationale": "Keeps the most successful monster silhouette, but uses a closer composition with fewer environmental surfaces and no pumpkins, so coloring regions remain open."
+    },
+    {
+      "variant_id": "PM-3",
+      "name": "Patchwork Monster Shows Its Finished Birdhouse",
+      "rationale": "Tests a simpler, less mechanically complicated interaction: holding up the completed birdhouse rather than manipulating multiple boards and tools."
+    }
+  ],
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "PM-1",
+      "family": "final-monster-correction-v1",
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster Builds a Birdhouse",
+      "iteration": "A",
+      "label": "Monster final A · Indoor Birdhouse Workshop",
+      "character_archetype": "soft stitched patchwork monster",
+      "design_rationale": "Preserves the original birdhouse action while removing the outdoor color cues that caused the first alternative to render colored grass and orange pumpkins.",
+      "qa_focus": "Must be visibly a sewn cloth monster, not a human child, robot, or stitched cat. Pure black-and-white outlines only; no colored ground; large white birdhouse entrance; birdhouse supported by bench/post; two arms and hands connect coherently; no large black filled areas.",
+      "prompt_format": "text",
+      "seed": 787919,
+      "prompt": "Black-and-white cute-spooky cartoon coloring-book line art only: crisp solid-black contours on pure white paper, no colored surfaces. Rounded expressive storybook shapes, bold outer lines, a few clean inner contours, large blank white interiors, and minimal black fill limited to tiny features like pupils. At final printed size the character and props must read clearly, with broad coloring regions and generous white space. Scene: A friendly patchwork monster builds a birdhouse at a sturdy workbench inside a small cozy garden shed. The monster has a rounded square cloth head, obvious hand-sewn seams around the head and cheeks, two small bolts at the neck, simple round eyes and a gentle smile drawn directly on fabric. Its short body wears plain overalls with two broad patches. The birdhouse rests flat on the workbench during assembly, with a round entrance left white inside its outline. A wooden hammer and two broad boards lie flat on the same table. Through a simple white-paned window, one little robin perches on a fence rail. One framed flower illustration and a two-book shelf decorate the shed wall. Use a straight-on three-quarter view with the monster as the clear focal point."
+    },
+    {
+      "page": 2,
+      "variant_id": "PM-2",
+      "family": "final-monster-correction-v1",
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster Builds a Birdhouse",
+      "iteration": "B",
+      "label": "Monster final B · Monster Repairs Birdhouse on the Bench",
+      "character_archetype": "soft stitched patchwork monster",
+      "design_rationale": "Keeps the most successful monster silhouette, but uses a closer composition with fewer environmental surfaces and no pumpkins, so coloring regions remain open.",
+      "qa_focus": "Must be visibly a sewn cloth monster, not a human child, robot, or stitched cat. Pure black-and-white outlines only; no colored ground; large white birdhouse entrance; birdhouse supported by bench/post; two arms and hands connect coherently; no large black filled areas.",
+      "prompt_format": "text",
+      "seed": 795838,
+      "prompt": "Black-and-white cute-spooky cartoon coloring-book line art only: crisp solid-black contours on pure white paper, no colored surfaces. Rounded expressive storybook shapes, bold outer lines, a few clean inner contours, large blank white interiors, and minimal black fill limited to tiny features like pupils. At final printed size the character and props must read clearly, with broad coloring regions and generous white space. Scene: A cute stitched patchwork creature carefully repairs the roof of a small birdhouse on a sturdy waist-high workbench. The creature is unmistakably sewn from cloth: a soft square linen head, visible black stitch marks around the edge, two short neck bolts, button-free round eyes, and a small stitched smile. Its head is fabric, not a screen, and it has a round cloth torso with simple overalls. The birdhouse sits directly on the tabletop while the creature holds one broad roof panel against it. A hammer, two boards and one toolbox rest flat on the bench. One robin stands on a small wall-mounted perch with visible brackets. A framed bird drawing hangs on the wall. Keep the composition close and simple, with the face, hands, roof panel and birdhouse all clearly separated."
+    },
+    {
+      "page": 3,
+      "variant_id": "PM-3",
+      "family": "final-monster-correction-v1",
+      "candidate_scene_slot": 2,
+      "candidate_title": "Patchwork Monster Builds a Birdhouse",
+      "iteration": "C",
+      "label": "Monster final C · Patchwork Monster Shows Its Finished Birdhouse",
+      "character_archetype": "soft stitched patchwork monster",
+      "design_rationale": "Tests a simpler, less mechanically complicated interaction: holding up the completed birdhouse rather than manipulating multiple boards and tools.",
+      "qa_focus": "Must be visibly a sewn cloth monster, not a human child, robot, or stitched cat. Pure black-and-white outlines only; no colored ground; large white birdhouse entrance; birdhouse supported by bench/post; two arms and hands connect coherently; no large black filled areas.",
+      "prompt_format": "text",
+      "seed": 803757,
+      "prompt": "Black-and-white cute-spooky cartoon coloring-book line art only: crisp solid-black contours on pure white paper, no colored surfaces. Rounded expressive storybook shapes, bold outer lines, a few clean inner contours, large blank white interiors, and minimal black fill limited to tiny features like pupils. At final printed size the character and props must read clearly, with broad coloring regions and generous white space. Scene: A friendly patchwork monster proudly presents a finished small birdhouse in a cozy garden shed. The monster has a soft rounded square cloth head with visible sewn seams, two small neck bolts, round gentle eyes, a stitched smile, a short rounded body and plain overalls with two large fabric patches. It holds the birdhouse at chest height with both hands beneath its solid wooden base. The birdhouse entrance is a simple outlined circle with a clean white interior, and one tiny robin stands on the roof. A sturdy workbench behind the monster supports a hammer and two boards. One framed flower picture hangs on the wall and one small plant rests on a shelf with visible brackets. The wall, window panes and all other surfaces remain white inside black outlines; no ground or decorative fill is needed."
+    }
+  ]
+}
