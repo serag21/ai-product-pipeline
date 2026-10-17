@@ -1,0 +1,72 @@
+{
+  "product_id": "little-haunts-club-monster-workshop-lab-3",
+  "workflow": "workflows\\flux2_coloring_api.json",
+  "reference_image": null,
+  "canvas": {
+    "width": 1536,
+    "height": 1984
+  },
+  "steps": 20,
+  "guidance": 4.0,
+  "pages": [
+    {
+      "page": 1,
+      "variant_id": "PM-1",
+      "family": "final-monster-correction-v1",
+      "label": "Monster final A \u00b7 Indoor Birdhouse Workshop",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 787919,
+      "prompt_id": "c5b9896a-59d0-451c-b142-8783b3e535f3",
+      "file": "products\\little-haunts-club-monster-workshop-lab-3\\pages\\page_001.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 71.866
+      }
+    },
+    {
+      "page": 2,
+      "variant_id": "PM-2",
+      "family": "final-monster-correction-v1",
+      "label": "Monster final B \u00b7 Monster Repairs Birdhouse on the Bench",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 795838,
+      "prompt_id": "4d8242b2-fb96-4851-bbe2-d56b49165935",
+      "file": "products\\little-haunts-club-monster-workshop-lab-3\\pages\\page_002.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 70.528
+      }
+    },
+    {
+      "page": 3,
+      "variant_id": "PM-3",
+      "family": "final-monster-correction-v1",
+      "label": "Monster final C \u00b7 Patchwork Monster Shows Its Finished Birdhouse",
+      "prompt_format": "text",
+      "scene_id": null,
+      "style_variant": null,
+      "seed": 803757,
+      "prompt_id": "3e50405c-d9ab-4d10-b7dc-4f9e9dafea04",
+      "file": "products\\little-haunts-club-monster-workshop-lab-3\\pages\\page_003.png",
+      "qa": {
+        "pass": true,
+        "width": 1536,
+        "height": 1984,
+        "grayscale_stddev": 73.61
+      }
+    }
+  ],
+  "summary": {
+    "requested": 3,
+    "passed": 3,
+    "failed": 0
+  }
+}
