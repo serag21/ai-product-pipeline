@@ -191,9 +191,14 @@ def load_font(size: int, bold: bool = False):
     return ImageFont.load_default()
 
 
-def create_review_sheet(product_root: Path, destination: Path, title: str) -> list[dict[str, Any]]:
+def create_review_sheet(
+    product_root: Path,
+    destination: Path,
+    title: str,
+    page_specs: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     manifest = load_json(product_root / "prompts.json")
-    pages = manifest["pages"]
+    pages = page_specs if page_specs is not None else manifest["pages"]
     labels = {
         int(item["page"]): str(item.get("label", f"Page {int(item['page']):02d}"))
         for item in pages
@@ -494,21 +499,15 @@ def process_job(
         review_dir = ROOT / "test_outputs" / "automated_reviews" / job_id
         review_dir.mkdir(parents=True, exist_ok=True)
         title = str(product.get("title") or product.get("product_id") or request["product_id"])
+        expected = [int(item["page"]) for item in product["pages"][start - 1:start - 1 + count]]
         metrics = create_review_sheet(
             product_root,
             review_dir / "contact_sheet.jpg",
             title,
+            product["pages"][start - 1:start - 1 + count],
         )
-        expected = [int(item["page"]) for item in product["pages"][start - 1:start - 1 + count]]
-        if [item["page"] for item in metrics] != [int(item["page"]) for item in product["pages"]]:
-            # The book-level sheet intentionally represents the entire current manifest.
-            # Generation must still have completed for every required page.
-            missing = [
-                page for page in expected
-                if not (product_root / "pages" / f"page_{page:03d}.png").is_file()
-            ]
-            if missing:
-                raise RuntimeError(f"Required generated pages are missing: {missing}")
+        if [item["page"] for item in metrics] != expected:
+            raise RuntimeError("Review sheet page IDs do not match the generated page selection.")
 
         report = {
             "schema_version": 1,
@@ -556,9 +555,13 @@ def process_job(
         atomic_json(state_path, state)
         logging.info("Job %s ready for visual review: %s", job_id, report["contact_sheet_url"])
     except Exception as exc:
-        record.update({"status": "failed", "failed_at": utc_now(), "last_error": str(exc)})
+        if record.get("status") == "push_pending":
+            # Keep the generated artifacts and retry the Git push on the next poll.
+            record.update({"last_error": str(exc), "last_push_error_at": utc_now()})
+        else:
+            record.update({"status": "failed", "failed_at": utc_now(), "last_error": str(exc)})
         atomic_json(state_path, state)
-        logging.exception("Job %s failed (attempt %d/%d).", job_id, record["attempts"], MAX_ATTEMPTS)
+        logging.exception("Job %s failed or needs recovery (attempt %d/%d).", job_id, record["attempts"], MAX_ATTEMPTS)
 
 
 def setup_logging(state_dir: Path) -> None:
