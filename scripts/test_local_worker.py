@@ -22,6 +22,11 @@ class LocalWorkerTests(unittest.TestCase):
             "generate_review_set",
         )
 
+    def test_worker_health_check_needs_no_product_or_gpu(self):
+        job = local_worker.validate_job({"type": "worker_health_check"})
+        self.assertEqual(job["type"], "worker_health_check")
+        self.assertEqual(job["server"], "http://127.0.0.1:8188")
+
     def test_extract_job_rejects_missing_markers(self):
         with self.assertRaises(ValueError):
             local_worker.extract_job('{"type": "generate_review_set"}')
