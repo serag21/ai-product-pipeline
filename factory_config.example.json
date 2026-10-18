@@ -1,0 +1,15 @@
+{
+  "vision": {
+    "endpoint": "http://127.0.0.1:1234/v1",
+    "model": "replace-with-a-multimodal-model-id",
+    "api_key_env": "VISION_API_KEY"
+  },
+  "generation": {
+    "max_attempts": 3,
+    "accept_score": 80
+  },
+  "supervisor": {
+    "poll_seconds": 20,
+    "service_retry_limit": 3
+  }
+}

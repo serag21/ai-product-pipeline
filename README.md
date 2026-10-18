@@ -12,6 +12,16 @@ The repository contains the proven FLUX.2 Dev workflow at `workflows/flux2_color
 
 ## Product generation
 
+## Unattended Little Haunts factory
+
+The Windows-local factory can resume vision review, regenerate only rejected pages, assemble print-ready files, and wait for final human approval. Install and start its persistent per-user service with:
+
+```powershell
+.\start_product_factory.ps1 -InstallAtLogon
+```
+
+On first run it waits for a multimodal vision provider configuration in `products/little-haunts-club-spooky-neighbors-15/factory_config.json`. Copy `factory_config.example.json` there, select a vision model supported by an OpenAI-compatible `/chat/completions` API, and keep any API key in the user environment rather than the config file. The service detects the saved configuration and continues. See [docs/local-product-factory.md](docs/local-product-factory.md) for configuration, status, cancellation, and recovery commands. The final package is written under `products/little-haunts-club-spooky-neighbors-15/review_runs/factory-main/final_deliverables/`; the factory never uploads or publishes it.
+
 The generator is now product-manifest driven. Each product lives under:
 
 `products/<product-id>/prompts.json`

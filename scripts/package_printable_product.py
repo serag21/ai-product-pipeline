@@ -11,15 +11,18 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import shutil
 import textwrap
 import zipfile
+from io import BytesIO
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageChops, ImageDraw, ImageFont, ImageOps, ImageStat
 from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+import pymupdf as fitz
 
 ROOT = Path(__file__).resolve().parents[1]
 ETSY_LIMIT = 20 * 1024 * 1024
@@ -95,6 +98,80 @@ def make_pdf(pages: list[Path], output: Path, page_size, title: str) -> None:
         doc.drawImage(ImageReader(str(path)), x, y, width=draw_w, height=draw_h)
         doc.showPage()
     doc.save()
+
+
+def render_and_check_pdfs(pdf_paths: list[Path], source_pages: list[Path], output_dir: Path) -> list[dict]:
+    """Render representative PDF pages and validate ordering/count/page size/raster output."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    results = []
+    for pdf_path in pdf_paths:
+        document = fitz.open(pdf_path)
+        expected_pages = len(source_pages)
+        if len(document) != expected_pages:
+            document.close()
+            raise SystemExit(f"PDF page count mismatch for {pdf_path.name}: {len(document)} != {expected_pages}")
+        width, height = document[0].rect.width, document[0].rect.height
+        expected_size = (612.0, 792.0) if "Letter" in pdf_path.name else (595.28, 841.89)
+        if abs(width - expected_size[0]) > 1.5 or abs(height - expected_size[1]) > 1.5:
+            document.close()
+            raise SystemExit(f"Unexpected PDF page size for {pdf_path.name}: {width:.2f}x{height:.2f} pt")
+        samples = sorted({0, expected_pages // 2, expected_pages - 1})
+        thumbnails = []
+        embedded_images_verified = 0
+        for index in range(expected_pages):
+            page = document[index]
+            pixmap = page.get_pixmap(matrix=fitz.Matrix(1.2, 1.2), alpha=False)
+            actual = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples).convert("L")
+            if index in samples:
+                output = output_dir / f"{pdf_path.stem}_page_{index + 1:03d}.png"
+                actual.save(output)
+                thumbnails.append(ImageOps.contain(actual.convert("RGB"), (250, 330)))
+            stat = ImageStat.Stat(actual)
+            histogram = actual.histogram()
+            ink_percent = 100 * sum(histogram[:245]) / (actual.width * actual.height)
+            if actual.width < 500 or actual.height < 650 or stat.stddev[0] < 2 or ink_percent < 0.2:
+                document.close()
+                raise SystemExit(f"Rendered PDF sample appears blank or invalid: {pdf_path.name}, page {index + 1}")
+            # ReportLab embeds each print-ready page as a raster image. Compare
+            # that embedded payload to the expected source page directly; this
+            # verifies ordering without sensitivity to the PDF paper size or
+            # rasterization antialiasing.
+            page_images = page.get_images(full=True)
+            if len(page_images) != 1:
+                document.close()
+                raise SystemExit(f"Expected one embedded page image in {pdf_path.name}, page {index + 1}; found {len(page_images)}")
+            embedded = document.extract_image(page_images[0][0])
+            with Image.open(BytesIO(embedded["image"])) as embedded_image, Image.open(source_pages[index]) as source:
+                embedded_gray = ImageOps.grayscale(embedded_image)
+                source_gray = ImageOps.grayscale(source)
+                if embedded_gray.size != source_gray.size or ImageChops.difference(embedded_gray, source_gray).getbbox():
+                    document.close()
+                    raise SystemExit(f"PDF page order/content mismatch in {pdf_path.name}, page {index + 1}")
+            embedded_images_verified += 1
+        document.close()
+        sheet = Image.new("RGB", (len(thumbnails) * 260 + 20, 360), "white")
+        for idx, thumbnail in enumerate(thumbnails):
+            sheet.paste(thumbnail, (10 + idx * 260 + (250 - thumbnail.width) // 2, 10))
+        sheet.save(output_dir / f"{pdf_path.stem}_render_check.jpg", quality=92)
+        results.append({"file": pdf_path.name, "page_count": expected_pages,
+                        "page_size_points": [round(width, 2), round(height, 2)],
+                        "ordered_pages_verified": expected_pages, "rendered_sample_pages": [i + 1 for i in samples],
+                        "embedded_page_images_verified": embedded_images_verified, "render_samples_pass": True})
+    return results
+
+
+def difference_hash(source: Path | Image.Image) -> int:
+    if isinstance(source, Image.Image):
+        image = source
+        pixels = list(ImageOps.grayscale(image).resize((9, 8), Image.Resampling.LANCZOS).getdata())
+    else:
+        with Image.open(source) as image:
+            pixels = list(ImageOps.grayscale(image).resize((9, 8), Image.Resampling.LANCZOS).getdata())
+    bits = 0
+    for y in range(8):
+        for x in range(8):
+            bits = (bits << 1) | int(pixels[y * 9 + x] > pixels[y * 9 + x + 1])
+    return bits
 
 
 def make_contact_sheet(
@@ -248,6 +325,7 @@ def main() -> int:
     parser.add_argument("--product", default="products/little-worlds-whimsical-fantasy-homes-30")
     parser.add_argument("--threshold", type=int, default=150)
     parser.add_argument("--etsy-limit-mb", type=int, default=20)
+    parser.add_argument("--output", help="Optional isolated package output directory (defaults to product/final)")
     args = parser.parse_args()
     if not 1 <= args.threshold <= 254:
         raise SystemExit("--threshold must be between 1 and 254.")
@@ -273,7 +351,7 @@ def main() -> int:
         if gm.get("summary", {}).get("passed") != expected or gm.get("summary", {}).get("failed") != 0:
             raise SystemExit(f"Generation QA is not fully green: {gm.get('summary')}")
 
-    final_root = product_root / "final"
+    final_root = resolve(args.output) if args.output else product_root / "final"
     # Rebuild deterministically so stale archives from a previous run cannot leak into delivery.
     shutil.rmtree(final_root, ignore_errors=True)
     pages_out = final_root / "pages"
@@ -297,6 +375,17 @@ def main() -> int:
             raise SystemExit(f"Page {page_num} is below print resolution: {metric['size']}")
         page_metrics.append(metric)
         output_pages.append(output)
+
+    hashes = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in output_pages}
+    if len(set(hashes.values())) != len(hashes):
+        raise SystemExit("Duplicate output pages detected by SHA-256; review the source candidates before packaging.")
+    dhashes = {path.name: difference_hash(path) for path in output_pages}
+    near_duplicates = []
+    for left_index, left in enumerate(output_pages):
+        for right in output_pages[left_index + 1:]:
+            distance = (dhashes[left.name] ^ dhashes[right.name]).bit_count()
+            if distance <= 3:
+                near_duplicates.append({"left": left.name, "right": right.name, "dhash_distance": distance})
 
     file_prefix = str(manifest.get("file_prefix", "Little-Worlds"))
     letter_pdf = upload_root / f"{file_prefix}-Letter.pdf"
@@ -367,6 +456,11 @@ def main() -> int:
         "cute coloring pages", "adult coloring", "kids coloring pages",
         "printable PDF"
     ])
+    invalid_tags = [str(tag) for tag in tags if len(str(tag)) > 20 or not re.fullmatch(r"[\w '\-]+", str(tag), flags=re.UNICODE)]
+    if len(tags) > 13 or invalid_tags:
+        raise SystemExit(f"Etsy listing tags exceed current limits (max 13 tags, 20 characters each): {invalid_tags}")
+    if len(listing_title) > 140:
+        raise SystemExit(f"Etsy listing title exceeds 140 characters: {len(listing_title)}")
     price_text = str(listing.get(
         "price_test",
         "Start with a competitive launch price and adjust based on views, clicks, favorites, and purchases."
@@ -382,10 +476,15 @@ def main() -> int:
     (final_root / "etsy_listing_draft.md").write_text(listing_draft, encoding="utf-8")
 
     upload_files = [letter_pdf, a4_pdf, *png_archives]
+    pdf_render_checks = render_and_check_pdfs(
+        [letter_pdf, a4_pdf], output_pages, final_root / "pdf_render_qa"
+    )
     limit_bytes = args.etsy_limit_mb * 1024 * 1024
     file_entries = []
     for path in upload_files:
         size = path.stat().st_size
+        if len(path.name) > 70 or not re.fullmatch(r"[A-Za-z0-9._-]+", path.name):
+            raise SystemExit(f"Upload filename is invalid for Etsy: {path.name}")
         file_entries.append({
             "name": path.name,
             "path": str(path),
@@ -404,6 +503,14 @@ def main() -> int:
             + ", ".join(f"{f['name']}={f['megabytes']}MB" for f in too_large)
         )
 
+    listing_image_entries = []
+    for preview in previews:
+        with Image.open(preview) as image:
+            dimensions = list(image.size)
+        if dimensions[0] < 2000:
+            raise SystemExit(f"Listing preview is below the recommended 2000 px width: {preview.name} {dimensions}")
+        listing_image_entries.append({"name": preview.name, "bytes": preview.stat().st_size, "dimensions": dimensions})
+
     qa = {
         "product_id": manifest["product_id"],
         "title": manifest.get("title"),
@@ -415,7 +522,11 @@ def main() -> int:
         "etsy_upload_files": file_entries,
         "etsy_file_count": len(upload_files),
         "etsy_size_limit_mb": args.etsy_limit_mb,
-        "listing_images": [{"name": p.name, "bytes": p.stat().st_size} for p in previews],
+        "listing_title_characters": len(listing_title),
+        "listing_tag_count": len(tags),
+        "listing_images": listing_image_entries,
+        "pdf_render_checks": pdf_render_checks,
+        "duplicate_check": {"exact_duplicates": [], "near_duplicate_pairs_for_human_review": near_duplicates},
         "artwork_note": "Thresholding removes gray tones but does not correct malformed illustration details or all solid-black regions. Human review is still required.",
         "status": "PACKAGE_BUILT_REVIEW_REQUIRED",
     }

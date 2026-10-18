@@ -13,6 +13,15 @@ products/*/qa/
 products/*/final/
 products/*/previews/
 products/worker-runs/
+products/*/review_runs/
+products/*/factory_config.json
+products/*/factory_status.json
+products/*/factory.log
+products/*/factory-service.log
+products/*/factory-service-error.log
+products/*/factory.pid
+products/*/factory.lock
+products/*/cancel.request
 
 # Local test outputs
 output/
