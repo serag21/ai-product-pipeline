@@ -1,8 +1,9 @@
 {
   "vision": {
-    "endpoint": "http://127.0.0.1:1234/v1",
-    "model": "replace-with-a-multimodal-model-id",
-    "api_key_env": "VISION_API_KEY"
+    "endpoint": "http://127.0.0.1:11434/v1",
+    "model": "qwen3-vl:30b",
+    "api_key_env": "VISION_API_KEY",
+    "unload_endpoint": "http://127.0.0.1:11434/api/generate"
   },
   "generation": {
     "max_attempts": 3,

@@ -36,6 +36,33 @@ class ComfyUIClient:
         response.raise_for_status()
         return response.json()
 
+    def free_memory(self, timeout: int = 90, minimum_free_vram: int = 22 * 1024**3) -> None:
+        """Unload ComfyUI models and wait for VRAM headroom before vision inference."""
+        last_error: Exception | None = None
+        for path in ("/free", "/api/free"):
+            response = requests.post(f"{self.server_url}{path}",
+                                     json={"unload_models": True, "free_memory": True}, timeout=15)
+            if response.status_code == 404:
+                last_error = ComfyUIError(f"ComfyUI does not expose {path}.")
+                continue
+            response.raise_for_status()
+            break
+        else:
+            raise last_error or ComfyUIError("ComfyUI has no supported model-unload endpoint.")
+
+        deadline = time.monotonic() + timeout
+        while True:
+            devices = self.health().get("devices", [])
+            gpu_devices = [device for device in devices if isinstance(device, dict)
+                           and (device.get("type") == "cuda" or device.get("vram_total"))]
+            if not gpu_devices or max(int(device.get("vram_free", 0)) for device in gpu_devices) >= minimum_free_vram:
+                return
+            if time.monotonic() >= deadline:
+                free = max(int(device.get("vram_free", 0)) for device in gpu_devices)
+                raise ComfyUIError(f"ComfyUI did not release enough VRAM for vision review: "
+                                   f"{free / (1024**3):.1f} GiB free, need {minimum_free_vram / (1024**3):.1f} GiB.")
+            time.sleep(2)
+
     @staticmethod
     def load_workflow(path: Path) -> dict[str, Any]:
         with path.open("r", encoding="utf-8") as handle:

@@ -10,7 +10,14 @@ The one-page-batch launcher remains useful for experiments. For a full unattende
 
 It creates a per-user Windows logon task and starts a persistent supervisor for the 15-page manifest. It first waits for a real multimodal vision provider, reviews the existing page candidates, retries only weak pages through the repository's FLUX.2 ComfyUI API workflow, then creates final deliverables after every page meets the configured vision threshold. It records progress/ETA in `products/little-haunts-club-spooky-neighbors-15/factory_status.json` and logs in `factory.log`. Use `.\start_product_factory.ps1 -Foreground` to run visibly while debugging, `.\cancel_product_factory.ps1` to cancel, and `.\retry_product_factory.ps1` after fixing a `needs_attention` condition.
 
-The supervisor starts in `waiting_for_configuration` until `products/little-haunts-club-spooky-neighbors-15/factory_config.json` exists. Copy `factory_config.example.json` there and set a provider endpoint and model. For a local OpenAI-compatible multimodal server, update the example model ID and URL. For OpenAI, set `endpoint` to `https://api.openai.com/v1`, select a vision-capable model, set `api_key_env` to `OPENAI_API_KEY`, then store that key in the current user's environment (not the JSON file):
+The supervisor starts in `waiting_for_configuration` until `products/little-haunts-club-spooky-neighbors-15/factory_config.json` exists. Copy `factory_config.example.json` there and set a provider endpoint and model. The default example targets Ollama at `http://127.0.0.1:11434/v1` with `qwen3-vl:30b`. On Windows install Ollama and download the model:
+
+```powershell
+winget install --id Ollama.Ollama --exact
+ollama pull qwen3-vl:30b
+```
+
+Use `scripts/test_vision.py` to verify the endpoint against a real coloring-page image before relying on it. `unload_endpoint` calls Ollama's native API to unload Qwen3-VL after each vision request, releasing VRAM before ComfyUI generates a retry. The worker also asks ComfyUI to unload FLUX models and checks that at least 22 GiB of VRAM is free before vision inference. For another local OpenAI-compatible multimodal server, update the model ID and endpoint and remove `unload_endpoint` if it does not implement Ollama's native API. For OpenAI, set `endpoint` to `https://api.openai.com/v1`, select a vision-capable model, set `api_key_env` to `OPENAI_API_KEY`, then store that key in the current user's environment (not the JSON file):
 
 ```powershell
 $secure = Read-Host 'OpenAI API key' -AsSecureString
@@ -19,6 +26,12 @@ try { $key = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr); [Environm
 finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr); Remove-Variable key -ErrorAction SilentlyContinue }
 Copy-Item .\factory_config.example.json .\products\little-haunts-club-spooky-neighbors-15\factory_config.json
 # Edit factory_config.json: endpoint=https://api.openai.com/v1, model=<vision-capable model>, api_key_env=OPENAI_API_KEY
+```
+
+To test a local Ollama setup against page 1 before the persistent service begins review:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\test_vision.py --page 1
 ```
 
 The supervisor polls the config and Windows user environment, verifies the model list, and runs a synthetic image-input probe before product review. It continues automatically when the configuration is saved. Provider failures are logged and surfaced in status; after a bounded retry exhaustion it waits for a config fix and `.\retry_product_factory.ps1` instead of looping against a broken service. To authorize another bounded generation round after a page exhausts its attempts, raise `generation.max_attempts` (up to 5) in the local config, then request a retry.

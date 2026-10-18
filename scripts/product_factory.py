@@ -52,6 +52,7 @@ def read_config(product_root: Path) -> dict[str, Any]:
     return {"ready": True, "endpoint": str(endpoint).rstrip("/"), "model": str(model), "api_key": api_key,
             "key_env": key_name, "max_attempts": int(config.get("generation", {}).get("max_attempts", 3)),
             "accept_score": int(config.get("generation", {}).get("accept_score", 80)),
+            "unload_endpoint": config.get("vision", {}).get("unload_endpoint"),
             "poll_seconds": max(5, int(config.get("supervisor", {}).get("poll_seconds", 20))),
             "service_retry_limit": max(1, int(config.get("supervisor", {}).get("service_retry_limit", 3)))}
 
@@ -154,7 +155,8 @@ def run_supervisor(args: argparse.Namespace) -> int:
             write_status(status_path, "configuration_error", args.run_id,
                          message="max_attempts must be 1..5 and accept_score 1..100")
             return 2
-        reviewer = OpenAICompatibleReviewer(config["endpoint"], config["model"], config["api_key"])
+        reviewer = OpenAICompatibleReviewer(config["endpoint"], config["model"], config["api_key"],
+                                            unload_endpoint=config["unload_endpoint"])
         try:
             reviewer.check()
         except Exception as exc:
@@ -178,6 +180,8 @@ def run_supervisor(args: argparse.Namespace) -> int:
         command = [sys.executable, "scripts/product_review_worker.py", "--product", str(product_root), "--run-id", args.run_id,
                    "--review-existing", "--max-attempts", str(config["max_attempts"]), "--accept-score", str(config["accept_score"]),
                    "--vision-endpoint", config["endpoint"], "--vision-model", config["model"]]
+        if config["unload_endpoint"]:
+            command.extend(["--vision-unload-endpoint", str(config["unload_endpoint"])])
         if retry_exhausted_requested:
             command.append("--retry-exhausted")
             retry_exhausted_requested = False

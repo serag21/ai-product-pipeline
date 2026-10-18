@@ -34,13 +34,24 @@ class VisionReviewer(Protocol):
 
 class OpenAICompatibleReviewer:
     """Adapter for local or remote OpenAI-compatible multimodal chat endpoints."""
-    def __init__(self, endpoint: str, model: str, api_key: str | None = None, timeout: int = 180) -> None:
+    def __init__(self, endpoint: str, model: str, api_key: str | None = None, timeout: int = 180,
+                 unload_endpoint: str | None = None) -> None:
         self.endpoint = endpoint.rstrip("/")
         if self.endpoint.endswith("/chat/completions"):
             self.url = self.endpoint
         else:
             self.url = self.endpoint + "/chat/completions"
         self.model, self.api_key, self.timeout = model, api_key, timeout
+        self.unload_endpoint = unload_endpoint.rstrip("/") if unload_endpoint else None
+
+    def unload(self) -> None:
+        """Free a local inference model before ComfyUI is allowed to generate."""
+        if not self.unload_endpoint:
+            return
+        response = requests.post(self.unload_endpoint, timeout=self.timeout, json={
+            "model": self.model, "prompt": "", "stream": False, "keep_alive": 0,
+        })
+        response.raise_for_status()
 
     def check(self) -> None:
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
@@ -64,12 +75,15 @@ class OpenAICompatibleReviewer:
                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
             ]}], "response_format": {"type": "json_object"},
         })
-        probe.raise_for_status()
-        probe_content = probe.json()["choices"][0]["message"]["content"]
-        if isinstance(probe_content, list):
-            probe_content = "".join(part.get("text", "") for part in probe_content)
-        if not json.loads(probe_content).get("vision_ok"):
-            raise RuntimeError(f"Configured model {self.model!r} did not confirm the image input probe.")
+        try:
+            probe.raise_for_status()
+            probe_content = probe.json()["choices"][0]["message"]["content"]
+            if isinstance(probe_content, list):
+                probe_content = "".join(part.get("text", "") for part in probe_content)
+            if not json.loads(probe_content).get("vision_ok"):
+                raise RuntimeError(f"Configured model {self.model!r} did not confirm the image input probe.")
+        finally:
+            self.unload()
 
     def review(self, image: Path, criteria: str, prior_feedback: str = "") -> dict[str, Any]:
         encoded = base64.b64encode(image.read_bytes()).decode("ascii")
@@ -90,12 +104,15 @@ class OpenAICompatibleReviewer:
             ]}],
             "response_format": {"type": "json_object"},
         })
-        response.raise_for_status()
-        payload = response.json()
-        content = payload["choices"][0]["message"]["content"]
-        if isinstance(content, list):
-            content = "".join(part.get("text", "") for part in content)
-        result = json.loads(content)
+        try:
+            response.raise_for_status()
+            payload = response.json()
+            content = payload["choices"][0]["message"]["content"]
+            if isinstance(content, list):
+                content = "".join(part.get("text", "") for part in content)
+            result = json.loads(content)
+        finally:
+            self.unload()
         return validate_review(result)
 
 
@@ -305,6 +322,10 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
                         "summary": "Vision provider not configured; no visual review was performed.", "defects": [], "retry_prompt": ""}
                     record["status"] = "manual_review"
                     break
+                if hasattr(client, "free_memory"):
+                    # Do not run Qwen-VL alongside the FLUX checkpoint. Ollama
+                    # is unloaded again by the reviewer before any retry.
+                    client.free_memory()
                 review = validate_review(reviewer.review(destination, criteria_for(product, item), prior_feedback))
                 if review["decision"] == "accept" and review["score"] < args.accept_score:
                     review["decision"] = "retry"
@@ -364,6 +385,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--vision-endpoint", default=os.getenv("VISION_API_BASE_URL"))
     parser.add_argument("--vision-model", default=os.getenv("VISION_MODEL"))
     parser.add_argument("--vision-api-key", default=os.getenv("VISION_API_KEY"))
+    parser.add_argument("--vision-unload-endpoint", default=os.getenv("VISION_UNLOAD_ENDPOINT"))
     args = parser.parse_args(argv)
     if args.max_attempts < 1 or args.max_attempts > 5:
         parser.error("--max-attempts must be between 1 and 5")
@@ -393,7 +415,8 @@ def main(argv: list[str] | None = None) -> int:
         create_manual_bundle(state_path.parent, state)
         print(f"Human approval recorded for pages: {', '.join(map(str, args.approve))}")
         return 0
-    reviewer = OpenAICompatibleReviewer(args.vision_endpoint, args.vision_model, args.vision_api_key) if args.vision_endpoint else None
+    reviewer = OpenAICompatibleReviewer(args.vision_endpoint, args.vision_model, args.vision_api_key,
+                                        unload_endpoint=args.vision_unload_endpoint) if args.vision_endpoint else None
     try:
         return run(args, reviewer=reviewer)
     except Exception as exc:
