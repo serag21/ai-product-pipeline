@@ -132,17 +132,20 @@ def safe_product_path(value: Any) -> tuple[str, Path]:
 
 def validate_job(payload: dict[str, Any]) -> dict[str, Any]:
     job_type = payload.get("type")
-    if job_type not in {"generate_review_set", "package_approved_product"}:
+    if job_type not in {"worker_health_check", "generate_review_set", "package_approved_product"}:
         raise ValueError(
-            "Unsupported job type. Allowed: generate_review_set, package_approved_product."
+            "Unsupported job type. Allowed: worker_health_check, generate_review_set, package_approved_product."
         )
-    product_rel, product_path = safe_product_path(payload.get("product"))
     job = dict(payload)
     server = job.get("server", DEFAULT_SERVER)
     parsed_server = urlparse(server if isinstance(server, str) else "")
     if parsed_server.scheme != "http" or parsed_server.hostname not in {"127.0.0.1", "localhost"}:
         raise ValueError("server must point to local ComfyUI at 127.0.0.1 or localhost.")
     job["server"] = server
+    if job_type == "worker_health_check":
+        return job
+
+    product_rel, product_path = safe_product_path(payload.get("product"))
     job["_product_rel"] = product_rel
     job["_product_path"] = str(product_path)
 
@@ -490,13 +493,50 @@ def run_package_job(issue: dict[str, Any], job: dict[str, Any],
     commit_review_artifacts(number, out_dir)
 
 
+def run_worker_health_check(issue: dict[str, Any], job: dict[str, Any],
+                           state_path: Path, state: dict[str, Any]) -> None:
+    number = int(issue["number"])
+    out_dir = ROOT / "test_outputs" / "automation_jobs" / f"job-{number:06d}"
+    if out_dir.exists():
+        shutil.rmtree(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    state["jobs"][str(number)] = {
+        "status": "running", "started_at": utc_now(), "type": "worker_health_check",
+    }
+    save_state(state_path, state)
+    remote = run_command(["git", "remote", "get-url", "origin"], cwd=ROOT).stdout.strip()
+    summary = {
+        "issue_number": number,
+        "type": "worker_health_check",
+        "status": "worker_health_check_passed",
+        "checked_at": utc_now(),
+        "repository_remote": remote,
+        "python_version": sys.version.split()[0],
+        "comfyui_server": job.get("server", DEFAULT_SERVER),
+        "comfyui_healthy": comfy_is_healthy(job.get("server", DEFAULT_SERVER)),
+        "worker_clone": str(ROOT),
+        "note": "This proves issue polling, local job execution, and a GitHub artifact push. It does not yet prove image generation or Etsy publishing.",
+        "artifact_url": f"https://github.com/{REPO}/tree/main/test_outputs/automation_jobs/job-{number:06d}",
+    }
+    write_json(out_dir / "result.json", summary)
+    commit_review_artifacts(number, out_dir)
+    state["jobs"][str(number)] = {
+        "status": "worker_health_check_passed",
+        "completed_at": summary["checked_at"],
+        "result": summary["artifact_url"],
+    }
+    save_state(state_path, state)
+    logging.info("Worker health check #%s passed: %s", number, summary["artifact_url"])
+
+
 def process_issue(issue: dict[str, Any], state_path: Path,
                   state: dict[str, Any], server: str) -> None:
     number = int(issue["number"])
     key = str(number)
     existing = state["jobs"].get(key, {})
     if existing.get("status") in {
-        "ready_for_visual_review", "needs_attention", "package_ready_locally", "rejected", "failed"
+        "worker_health_check_passed", "ready_for_visual_review", "needs_attention",
+        "package_ready_locally", "rejected", "failed"
     }:
         return
 
@@ -509,7 +549,7 @@ def process_issue(issue: dict[str, Any], state_path: Path,
         try:
             stored = json.loads(remote_result.read_text(encoding="utf-8"))
             status = stored.get("status")
-            if status in {"ready_for_visual_review", "needs_attention", "package_ready_locally"}:
+            if status in {"worker_health_check_passed", "ready_for_visual_review", "needs_attention", "package_ready_locally"}:
                 state["jobs"][key] = {"status": status, "result": stored.get("artifact_url"), "recovered": True}
                 save_state(state_path, state)
                 return
@@ -532,7 +572,9 @@ def process_issue(issue: dict[str, Any], state_path: Path,
             logging.info("ComfyUI unavailable; leaving job #%s queued.", number)
             return
     try:
-        if job["type"] == "generate_review_set":
+        if job["type"] == "worker_health_check":
+            run_worker_health_check(issue, job, state_path, state)
+        elif job["type"] == "generate_review_set":
             run_review_job(issue, job, state_path, state)
         else:
             run_package_job(issue, job, state_path, state)
