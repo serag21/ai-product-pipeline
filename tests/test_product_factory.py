@@ -7,6 +7,15 @@ from scripts import product_factory
 
 
 class ProductFactoryTests(unittest.TestCase):
+    def test_completion_is_review_only_and_never_published(self):
+        report = product_factory.build_completion_report(
+            {"product_id": "fixture", "pages": [{"page": 1}]}, "run", "qwen3-vl:30b",
+            {"candidates": {"1": {"attempts": [{"file": "page.png"}]}}},
+            Path("deliverables"), {"etsy_upload_files": [{"name": "print.pdf"}], "pdf_render_checks": []})
+        self.assertEqual(report["status"], "READY_FOR_FINAL_HUMAN_REVIEW")
+        self.assertTrue(report["human_approval_required"])
+        self.assertFalse(report["published"])
+
     def test_assembly_rejects_unreviewed_pages_and_preserves_source(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

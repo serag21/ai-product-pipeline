@@ -63,6 +63,16 @@ def write_status(path: Path, status: str, run_id: str, **extra: Any) -> None:
     atomic_json(path, {"run_id": run_id, "status": status, "updated_at": now(), **extra})
 
 
+def build_completion_report(product: dict[str, Any], run_id: str, model: str, state: dict[str, Any],
+                           package_dir: Path, qa: dict[str, Any]) -> dict[str, Any]:
+    return {"product_id": product["product_id"], "run_id": run_id, "completed_at": now(),
+        "status": "READY_FOR_FINAL_HUMAN_REVIEW", "vision_provider": model,
+        "reviewed_pages": len(product["pages"]),
+        "attempts": sum(len(record.get("attempts", [])) for record in state["candidates"].values()),
+        "deliverables_directory": str(package_dir), "upload_files": [f["name"] for f in qa["etsy_upload_files"]],
+        "pdf_render_checks": qa["pdf_render_checks"], "human_approval_required": True, "published": False}
+
+
 def make_assembly(product_root: Path, run_dir: Path, source_product: dict[str, Any], state: dict[str, Any]) -> Path:
     assembly = run_dir / "assembly_source"
     (assembly / "pages").mkdir(parents=True, exist_ok=True)
@@ -242,11 +252,7 @@ def run_supervisor(args: argparse.Namespace) -> int:
     if qa.get("prepared_pages") != len(product["pages"]) or len(qa.get("pdf_render_checks", [])) != 2:
         write_status(status_path, "package_error", args.run_id, error="PDF/page package QA incomplete")
         return 3
-    completion = {"product_id": product["product_id"], "run_id": args.run_id, "completed_at": now(),
-        "status": "READY_FOR_FINAL_HUMAN_REVIEW", "vision_provider": config["model"],
-        "reviewed_pages": len(product["pages"]), "attempts": sum(len(r.get("attempts", [])) for r in state["candidates"].values()),
-        "deliverables_directory": str(package_dir), "upload_files": [f["name"] for f in qa["etsy_upload_files"]],
-        "pdf_render_checks": qa["pdf_render_checks"], "human_approval_required": True, "published": False}
+    completion = build_completion_report(product, args.run_id, config["model"], state, package_dir, qa)
     atomic_json(package_dir / "COMPLETION_REPORT.json", completion)
     (package_dir / "COMPLETION_REPORT.md").write_text(
         f"# Product package ready for final review\n\n{product.get('title', product['product_id'])}\n\n"
