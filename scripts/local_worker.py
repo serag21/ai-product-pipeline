@@ -514,7 +514,6 @@ def run_worker_health_check(issue: dict[str, Any], job: dict[str, Any],
         "python_version": sys.version.split()[0],
         "comfyui_server": job.get("server", DEFAULT_SERVER),
         "comfyui_healthy": comfy_is_healthy(job.get("server", DEFAULT_SERVER)),
-        "worker_clone": str(ROOT),
         "note": "This proves issue polling, local job execution, and a GitHub artifact push. It does not yet prove image generation or Etsy publishing.",
         "artifact_url": f"https://github.com/{REPO}/tree/main/test_outputs/automation_jobs/job-{number:06d}",
     }
