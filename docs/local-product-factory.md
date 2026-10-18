@@ -17,6 +17,14 @@ winget install --id Ollama.Ollama --exact
 ollama pull qwen3-vl:30b
 ```
 
+On Windows, ComfyUI can fail while streaming FLUX weights with `HostBuffer.read_file_slice failed` when pinned host memory exhausts system commit. Stop its empty/idle queue and restart ComfyUI with `--disable-pinned-memory` added to its existing launch arguments, then verify `http://127.0.0.1:8188/system_stats` responds before requesting a factory retry. For example, the portable NVIDIA launcher can be run from its installation directory with:
+
+```powershell
+.\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --fp8_e4m3fn-text-enc --disable-pinned-memory
+```
+
+This leaves the existing workflow and model precision settings intact while bypassing the failing pinned-memory transfer path. ComfyUI documents this option as disabling pinned memory; it can trade transfer speed for more reliable generations on memory-constrained Windows runs.
+
 Use `scripts/test_vision.py` to verify the endpoint against a real coloring-page image before relying on it. `unload_endpoint` calls Ollama's native API to unload Qwen3-VL after each vision request, releasing VRAM before ComfyUI generates a retry. The worker also asks ComfyUI to unload FLUX models and checks that at least 22 GiB of VRAM is free before vision inference. For another local OpenAI-compatible multimodal server, update the model ID and endpoint and remove `unload_endpoint` if it does not implement Ollama's native API. For OpenAI, set `endpoint` to `https://api.openai.com/v1`, select a vision-capable model, set `api_key_env` to `OPENAI_API_KEY`, then store that key in the current user's environment (not the JSON file):
 
 ```powershell
