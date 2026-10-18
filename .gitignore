@@ -12,6 +12,7 @@ products/*/pages/
 products/*/qa/
 products/*/final/
 products/*/previews/
+products/worker-runs/
 
 # Local test outputs
 output/
