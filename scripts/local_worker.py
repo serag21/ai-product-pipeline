@@ -209,7 +209,11 @@ def read_issues() -> list[dict[str, Any]]:
 
 def run_python(script: str, arguments: list[str], timeout: int = DEFAULT_TIMEOUT_SECONDS,
                check: bool = True) -> subprocess.CompletedProcess[str]:
-    python = Path(sys.executable)
+    # The resident worker may use pythonw.exe to avoid a console window, but CLI
+    # child scripts need python.exe so their output streams and exit codes work normally.
+    python = Path(sys.executable).with_name("python.exe")
+    if not python.exists():
+        python = Path(sys.executable)
     return run_command(
         [str(python), str(ROOT / "scripts" / script), *arguments],
         cwd=ROOT, timeout=timeout, check=check,
@@ -531,10 +535,9 @@ def process_issue(issue: dict[str, Any], state_path: Path,
 def configure_logging(state_dir: Path) -> None:
     state_dir.mkdir(parents=True, exist_ok=True)
     log_path = state_dir / "worker.log"
-    handlers: list[logging.Handler] = [
-        logging.FileHandler(log_path, encoding="utf-8"),
-        logging.StreamHandler(sys.stdout),
-    ]
+    handlers: list[logging.Handler] = [logging.FileHandler(log_path, encoding="utf-8")]
+    if sys.stdout is not None:
+        handlers.append(logging.StreamHandler(sys.stdout))
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",
