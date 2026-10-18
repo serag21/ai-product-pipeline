@@ -19,6 +19,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -137,6 +138,11 @@ def validate_job(payload: dict[str, Any]) -> dict[str, Any]:
         )
     product_rel, product_path = safe_product_path(payload.get("product"))
     job = dict(payload)
+    server = job.get("server", DEFAULT_SERVER)
+    parsed_server = urlparse(server if isinstance(server, str) else "")
+    if parsed_server.scheme != "http" or parsed_server.hostname not in {"127.0.0.1", "localhost"}:
+        raise ValueError("server must point to local ComfyUI at 127.0.0.1 or localhost.")
+    job["server"] = server
     job["_product_rel"] = product_rel
     job["_product_path"] = str(product_path)
 
@@ -270,11 +276,16 @@ def make_review_sheets(job: dict[str, Any], temp_rel: str, out_dir: Path,
     return files
 
 
+def sync_worker_main() -> None:
+    # Sync only this dedicated worker clone. Generated pages and state live in ignored/out-of-repo paths.
+    run_command(["git", "fetch", "origin", "main"], cwd=ROOT, timeout=120)
+    run_command(["git", "checkout", "-B", "main", "origin/main"], cwd=ROOT)
+
+
 def commit_review_artifacts(issue_number: int, out_dir: Path) -> None:
     relative = out_dir.relative_to(ROOT).as_posix()
     # The worker clone is isolated on purpose; it never resets the user's working copy.
-    run_command(["git", "fetch", "origin", "main"], cwd=ROOT, timeout=120)
-    run_command(["git", "checkout", "-B", "main", "origin/main"], cwd=ROOT)
+    sync_worker_main()
     run_command(
         ["git", "config", "user.name", "AI Product Pipeline Worker"], cwd=ROOT
     )
@@ -469,10 +480,12 @@ def process_issue(issue: dict[str, Any], state_path: Path,
     key = str(number)
     existing = state["jobs"].get(key, {})
     if existing.get("status") in {
-        "ready_for_visual_review", "needs_attention", "package_ready_locally", "rejected"
+        "ready_for_visual_review", "needs_attention", "package_ready_locally", "rejected", "failed"
     }:
         return
 
+    # Sync before reading manifests or checking result files. Only the dedicated worker clone is reset.
+    sync_worker_main()
     # A result in the public repository is the durable idempotency check if the
     # local state file was lost or the worker was reinstalled.
     remote_result = ROOT / "test_outputs" / "automation_jobs" / f"job-{number:06d}" / "result.json"
