@@ -12,6 +12,8 @@ The installer does not need ComfyUI to be running. Keep the PC logged in and sta
 
 The task runs as your Windows user. Git needs to be able to push to this repository without an interactive password prompt; normal authenticated pushes from this PC should already satisfy this.
 
+A no-GPU health check is already queued as [issue #2](https://github.com/serag21/ai-product-pipeline/issues/2). Once the worker starts, it should process that issue automatically and commit its result under test_outputs/automation_jobs/job-000002/. You do not need to create this test job yourself.
+
 ## Daily use
 
 After setup, queue work by asking ChatGPT to create an issue in this repository with the exact job schema. You should not create the issue or copy the JSON yourself. Example request to ChatGPT:
