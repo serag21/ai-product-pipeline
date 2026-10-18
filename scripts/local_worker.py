@@ -450,6 +450,16 @@ def run_package_job(issue: dict[str, Any], job: dict[str, Any],
     }
     save_state(state_path, state)
 
+    # Apply the owner-approved title/brand in this isolated worker checkout before packaging.
+    # The source repo manifest is never pushed as part of the result commit.
+    manifest_path = product_path / "prompts.json"
+    package_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    package_manifest["title"] = job["title"].strip()
+    package_manifest["brand"] = job.get("brand", package_manifest.get("brand", "Little Haunts Club"))
+    if job.get("listing_title"):
+        package_manifest.setdefault("listing", {})["title"] = str(job["listing_title"]).strip()
+    write_json(manifest_path, package_manifest)
+
     run_python("package_printable_product.py", ["--product", product_rel], timeout=3600)
     final_root = product_path / "final"
     qa_path = final_root / "package_qa.json"
