@@ -167,9 +167,9 @@ def validate_job(payload: dict[str, Any]) -> dict[str, Any]:
             raise ValueError("sheet_mode must be auto, contact, or variants.")
         job["sheet_mode"] = mode
     else:
-        if payload.get("owner_approved") is not True:
+        if payload.get("owner_approved") is not True or payload.get("selection_confirmed") is not True:
             raise ValueError(
-                "Packaging requires owner_approved=true after the visual review checkpoint."
+                "Packaging requires owner_approved=true and selection_confirmed=true after visual review."
             )
         if not isinstance(payload.get("title"), str) or not payload["title"].strip():
             raise ValueError("package_approved_product requires a final title.")
@@ -179,6 +179,8 @@ def validate_job(payload: dict[str, Any]) -> dict[str, Any]:
         pages = manifest.get("pages", [])
         if not pages or len(pages) > MAX_PAGES:
             raise ValueError(f"Product must have 1..{MAX_PAGES} pages.")
+        if "worker-runs" in product_path.parts or any("candidate_scene_slot" in item for item in pages):
+            raise ValueError("Refusing to package a candidate/variant lab. Build a curated final manifest with one approved illustration per scene first.")
         missing = [
             item.get("page")
             for item in pages
