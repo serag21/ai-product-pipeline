@@ -78,6 +78,10 @@ Run it from the repository root:
 
 The generator uploads the reference image to the local ComfyUI input folder, then uses the separate reference-conditioned API workflow. The regular text-to-image path remains unchanged when `--reference` is omitted.
 
+## Quick automation setup
+
+For the one-time Windows background-worker setup and ChatGPT-triggered review jobs, see [docs/automation-quickstart.md](docs/automation-quickstart.md). This is a local-worker pilot: it automates queue-triggered generation and review artifacts, but Etsy publishing and the complete autonomous business cycle are not yet implemented.
+
 ## Design principles
 
 - Reuse existing tools, APIs, and open-source implementations before writing custom infrastructure.
