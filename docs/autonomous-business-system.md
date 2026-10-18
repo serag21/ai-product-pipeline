@@ -8,7 +8,7 @@ Routine operation must not depend on Serag manually running command chains, copy
 
 ## Chosen architecture
 
-1. **Persistent operator:** pilot the self-hosted M.U.S.E (Multi-Use Synaptic Entity) agent as the scheduler, task-graph orchestrator, researcher, and approval notifier. Keep the product pipeline useful without M.U.S.E; the agent is not the source of truth for generated artifacts. Pin and smoke-test an inspected version before relying on it. Its own Windows bridge guide calls native Windows early beta and recommends WSL2 as the more battle-tested Windows path. Do not run it with broad permission-bypass flags.
+1. **Persistent operator:** start with the lightweight local worker in scripts/local_worker.py, triggered by owner-created GitHub issues and run as a Windows scheduled task. It is intentionally narrower and faster to set up than M.U.S.E. Reconsider M.U.S.E only if research planning, multi-agent coordination, or richer notifications prove to be the bottleneck; do not make it a prerequisite for the first product.
 2. **Deterministic production engine:** retain the local Python + ComfyUI workflow under this repository. Agent tasks may prepare validated manifests and call a narrow set of scripts; they should not freestyle arbitrary shell commands for routine production. Keep seeds, manifests, QA reports, package hashes, run logs, and state transitions.
 3. **Computer-local execution:** run the operator/worker persistently on the Windows PC, start it at login/startup, health-check ComfyUI, resume incomplete jobs, serialize GPU work, and retry transient failures with bounded attempts. No public inbound port is required. The PC must be powered on and the GPU/server available for image generation.
 4. **Marketplace:** use Etsy's official Open API for digital listings and files. Do not screen-scrape Etsy. Create drafts automatically; publish only after the user gives the final go-ahead. Use a Seller App scoped to the owner's shop, with tokens kept in Windows Credential Manager or an environment file outside Git.
@@ -39,6 +39,6 @@ Routine operation must not depend on Serag manually running command chains, copy
 
 ## Current work vs. target
 
-Already present: ComfyUI API generation, image dimensions/contrast checks, contact sheets, detailed quadrant sheets, thresholded print candidates, Etsy-oriented PDFs/ZIPs/previews, listing-copy draft, upload-size checks.
+Already present: ComfyUI API generation, image dimensions/contrast checks, contact sheets, detailed quadrant sheets, thresholded print candidates, Etsy-oriented PDFs/ZIPs/previews, listing-copy draft, upload-size checks, plus a first version of a local worker with owner-filtered GitHub issue triggers, a restricted job schema, scheduled startup, local state/logs, bounded generation retries, and review artifact commits.
 
-Still to build and verify: persistent job scheduler/operator, evidence-backed research workflow, image-semantic QA, approval/resume state machine, Etsy OAuth/API publisher and metrics reader, automated health/recovery/alerts, and repeatable end-to-end acceptance tests.
+Not yet proven: the worker has not yet run on the owner's Windows PC against the live ComfyUI server and authenticated git push. The full business is not yet autonomous. Still to build/verify: an end-to-end Windows run, final candidate selection/assembly, evidence-backed marketplace research, image-semantic QA/repair, Etsy OAuth/API draft uploader and performance metrics, promotion workflow, and three recovery/idempotency acceptance runs.
