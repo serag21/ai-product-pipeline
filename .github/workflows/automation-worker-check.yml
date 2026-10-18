@@ -19,9 +19,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install project requirements
-        run: python -m pip install -r requirements.txt
       - name: Compile automation worker
         run: python -m py_compile scripts/local_worker.py
       - name: Run worker safety tests
-        run: python -m unittest scripts/test_local_worker.py
+        run: python scripts/test_local_worker.py
