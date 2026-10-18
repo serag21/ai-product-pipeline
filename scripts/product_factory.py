@@ -17,6 +17,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "src"))
+from comfy.client import ComfyUIClient
 from product_review_worker import OpenAICompatibleReviewer, atomic_json, load_product, read_state, resolve_product_root
 
 
@@ -157,6 +159,15 @@ def run_supervisor(args: argparse.Namespace) -> int:
             return 2
         reviewer = OpenAICompatibleReviewer(config["endpoint"], config["model"], config["api_key"],
                                             unload_endpoint=config["unload_endpoint"])
+        try:
+            write_status(status_path, "freeing_comfy_vram", args.run_id,
+                         message="Unloading FLUX models before loading the vision reviewer.")
+            ComfyUIClient().free_memory()
+        except Exception as exc:
+            write_status(status_path, "waiting_for_comfyui", args.run_id, error=str(exc),
+                         message="ComfyUI must be reachable and release VRAM before vision inference.")
+            time.sleep(config["poll_seconds"])
+            continue
         try:
             reviewer.check()
         except Exception as exc:

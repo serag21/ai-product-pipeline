@@ -12,6 +12,8 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "src"))
+from comfy.client import ComfyUIClient  # noqa: E402
 from product_review_worker import OpenAICompatibleReviewer, criteria_for, load_product, resolve_product_root  # noqa: E402
 
 
@@ -35,6 +37,7 @@ def main() -> int:
 
     reviewer = OpenAICompatibleReviewer(args.endpoint, args.model, timeout=600,
                                         unload_endpoint=args.unload_endpoint)
+    ComfyUIClient().free_memory()
     reviewer.check()
     result = reviewer.review(image, criteria_for(product, item))
     print(json.dumps({"image": str(image), "model": args.model, "review": result}, indent=2))
