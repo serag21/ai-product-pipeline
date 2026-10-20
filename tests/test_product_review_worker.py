@@ -134,6 +134,33 @@ class LocalWorkerTests(unittest.TestCase):
         self.assertTrue(all(Path(candidate["file"]).is_file() for candidate in record["attempts"]))
         self.assertEqual(client.calls, 2)
 
+    def test_increasing_attempt_bound_resumes_exhausted_page(self):
+        run = self.product / "review_runs/test-run"
+        run.mkdir(parents=True)
+        product_id = json.loads((self.product / "prompts.json").read_text(encoding="utf-8"))["product_id"]
+        local_worker.atomic_json(run / "state.json", {
+            "schema_version": 1,
+            "product_id": product_id,
+            "candidates": {"1": {
+                "page": 1,
+                "status": "exhausted",
+                "best_candidate": "previous-best.png",
+                "attempts": [
+                    {"attempt": 1, "file": "attempt-1.png", "review": {"decision": "retry", "summary": "first"}},
+                    {"attempt": 2, "file": "attempt-2.png", "review": {"decision": "retry", "summary": "second"}},
+                ],
+            }},
+        })
+        client = FakeClient()
+        reviewer = FakeReviewer([{"decision": "accept", "score": 92, "summary": "Resolved."}])
+
+        self.assertEqual(local_worker.run(self.args("--max-attempts", "3"), client=client, reviewer=reviewer), 0)
+
+        record = json.loads((run / "state.json").read_text(encoding="utf-8"))["candidates"]["1"]
+        self.assertEqual(record["status"], "accepted_by_vision")
+        self.assertEqual([candidate["attempt"] for candidate in record["attempts"]], [1, 2, 3])
+        self.assertEqual(client.calls, 1)
+
     def test_low_accept_score_is_retried_and_malformed_provider_fails_closed(self):
         reviewer = FakeReviewer([
             {"decision": "accept", "score": 65, "summary": "Several scene issues."},

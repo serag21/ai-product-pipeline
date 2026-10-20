@@ -255,7 +255,10 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
         if record["status"] in {"accepted_by_vision", "accepted_by_human", "manual_review"}:
             continue
         if record["status"] == "exhausted":
-            if not args.retry_exhausted:
+            # A larger configured attempt bound can resume an exhausted page
+            # automatically without discarding its prior candidates. The flag
+            # still permits an explicit same-bound retry when requested.
+            if not args.retry_exhausted and len(record["attempts"]) >= args.max_attempts:
                 continue
             record["status"] = "pending"
         if record["status"] == "paused":
