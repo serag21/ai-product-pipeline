@@ -2,6 +2,8 @@
   "vision": {
     "endpoint": "http://127.0.0.1:11434/v1",
     "model": "qwen3-vl:30b",
+    "max_tokens": 1024,
+    "reasoning_effort": "none",
     "api_key_env": "VISION_API_KEY",
     "unload_endpoint": "http://127.0.0.1:11434/api/generate"
   },

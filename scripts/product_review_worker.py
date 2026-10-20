@@ -35,7 +35,8 @@ class VisionReviewer(Protocol):
 class OpenAICompatibleReviewer:
     """Adapter for local or remote OpenAI-compatible multimodal chat endpoints."""
     def __init__(self, endpoint: str, model: str, api_key: str | None = None, timeout: int = 180,
-                 unload_endpoint: str | None = None) -> None:
+                 unload_endpoint: str | None = None, max_tokens: int = 1024,
+                 reasoning_effort: str | None = None) -> None:
         self.endpoint = endpoint.rstrip("/")
         if self.endpoint.endswith("/chat/completions"):
             self.url = self.endpoint
@@ -43,6 +44,14 @@ class OpenAICompatibleReviewer:
             self.url = self.endpoint + "/chat/completions"
         self.model, self.api_key, self.timeout = model, api_key, timeout
         self.unload_endpoint = unload_endpoint.rstrip("/") if unload_endpoint else None
+        self.max_tokens = max(1, int(max_tokens))
+        self.reasoning_effort = reasoning_effort
+
+    def completion_options(self, max_tokens: int | None = None) -> dict[str, Any]:
+        options: dict[str, Any] = {"max_tokens": max_tokens or self.max_tokens}
+        if self.reasoning_effort:
+            options["reasoning_effort"] = self.reasoning_effort
+        return options
 
     def unload(self) -> None:
         """Free a local inference model before ComfyUI is allowed to generate."""
@@ -71,9 +80,10 @@ class OpenAICompatibleReviewer:
         probe = requests.post(self.url, headers={**headers, "Content-Type": "application/json"}, timeout=self.timeout, json={
             "model": self.model, "temperature": 0,
             "messages": [{"role": "user", "content": [
-                {"type": "text", "text": "Inspect the image. Return JSON only: {\"vision_ok\": true} if you can see a black square centered on white."},
+                {"type": "text", "text": "Look at this image. If you see a black square centered on a white background, return exactly {\"vision_ok\": true}; otherwise return {\"vision_ok\": false}. JSON only. /no_think"},
                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
             ]}], "response_format": {"type": "json_object"},
+            **self.completion_options(max_tokens=min(256, self.max_tokens)),
         })
         try:
             probe.raise_for_status()
@@ -88,10 +98,12 @@ class OpenAICompatibleReviewer:
     def review(self, image: Path, criteria: str, prior_feedback: str = "") -> dict[str, Any]:
         encoded = base64.b64encode(image.read_bytes()).decode("ascii")
         instruction = (
-            "Review this coloring-page candidate against the art direction. Return only JSON with keys "
-            "decision (accept|retry|manual), score (0-100), summary, defects (array of strings), "
-            "retry_prompt (string). Accept only when it meets the criteria. If uncertain choose manual.\n"
-            f"Criteria: {criteria}\nPrevious review feedback to address: {prior_feedback or 'none'}"
+            "Review candidate against these art-direction criteria and perform visual QA: "
+            f"{criteria}\n\n"
+            "Return a single compact JSON object with decision (accept|retry|manual), score 0-100 "
+            "(0 unusable, 100 fully compliant), summary, defects, retry_prompt. No chain-of-thought. "
+            "Answer immediately with final JSON only. Limit response to 150 tokens. /no_think\n"
+            f"Previous review feedback to address: {prior_feedback or 'none'}"
         )
         headers = {"Content-Type": "application/json"}
         if self.api_key:
@@ -103,6 +115,7 @@ class OpenAICompatibleReviewer:
                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
             ]}],
             "response_format": {"type": "json_object"},
+            **self.completion_options(),
         })
         try:
             response.raise_for_status()
@@ -125,6 +138,8 @@ def validate_review(review: dict[str, Any]) -> dict[str, Any]:
     except (TypeError, ValueError):
         score = 0
     defects = review.get("defects", [])
+    if isinstance(defects, str):
+        defects = [defects] if defects else []
     return {
         "decision": decision, "score": score,
         "summary": str(review.get("summary", "")),
@@ -389,6 +404,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--vision-model", default=os.getenv("VISION_MODEL"))
     parser.add_argument("--vision-api-key", default=os.getenv("VISION_API_KEY"))
     parser.add_argument("--vision-unload-endpoint", default=os.getenv("VISION_UNLOAD_ENDPOINT"))
+    parser.add_argument("--vision-max-tokens", type=int, default=int(os.getenv("VISION_MAX_TOKENS", "1024")))
+    parser.add_argument("--vision-reasoning-effort", default=os.getenv("VISION_REASONING_EFFORT"))
     args = parser.parse_args(argv)
     if args.max_attempts < 1 or args.max_attempts > 5:
         parser.error("--max-attempts must be between 1 and 5")
@@ -396,6 +413,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         parser.error("--accept-score must be between 1 and 100")
     if bool(args.vision_endpoint) != bool(args.vision_model):
         parser.error("Configure both --vision-endpoint and --vision-model, or neither")
+    if args.vision_max_tokens < 1:
+        parser.error("--vision-max-tokens must be positive")
     return args
 
 
@@ -419,7 +438,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Human approval recorded for pages: {', '.join(map(str, args.approve))}")
         return 0
     reviewer = OpenAICompatibleReviewer(args.vision_endpoint, args.vision_model, args.vision_api_key,
-                                        unload_endpoint=args.vision_unload_endpoint) if args.vision_endpoint else None
+        unload_endpoint=args.vision_unload_endpoint, max_tokens=args.vision_max_tokens,
+        reasoning_effort=args.vision_reasoning_effort) if args.vision_endpoint else None
     try:
         return run(args, reviewer=reviewer)
     except Exception as exc:

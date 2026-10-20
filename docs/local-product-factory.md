@@ -17,6 +17,8 @@ winget install --id Ollama.Ollama --exact
 ollama pull qwen3-vl:30b
 ```
 
+For Ollama thinking models, set `vision.reasoning_effort` to `"none"` and bound `vision.max_tokens` (the example uses 1024) so JSON reviews return promptly instead of spending the full context on internal reasoning. The supervisor's provider probe uses a 256-token cap and the same reasoning setting.
+
 On Windows, ComfyUI can fail while streaming FLUX weights with `HostBuffer.read_file_slice failed` when pinned host memory exhausts system commit. Stop its empty/idle queue and restart ComfyUI with `--disable-pinned-memory` added to its existing launch arguments, then verify `http://127.0.0.1:8188/system_stats` responds before requesting a factory retry. For example, the portable NVIDIA launcher can be run from its installation directory with:
 
 ```powershell

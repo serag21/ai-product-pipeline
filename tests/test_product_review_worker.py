@@ -177,6 +177,10 @@ class LocalWorkerTests(unittest.TestCase):
                 local_worker.OpenAICompatibleReviewer("http://localhost:1234/v1", "vision").review(
                     Path(state["candidates"]["1"]["attempts"][0]["file"]), "criteria")
 
+    def test_review_validator_preserves_a_single_defect_string(self):
+        review = local_worker.validate_review({"decision": "retry", "score": 60, "defects": "prop is unsupported"})
+        self.assertEqual(review["defects"], ["prop is unsupported"])
+
     def test_ollama_model_is_unloaded_after_real_vision_review(self):
         image_path = self.product / "sample.png"
         Image.new("RGB", (32, 32), "white").save(image_path)
@@ -188,10 +192,13 @@ class LocalWorkerTests(unittest.TestCase):
         with patch.object(local_worker.requests, "post", side_effect=[response, unload]) as post:
             reviewer = local_worker.OpenAICompatibleReviewer(
                 "http://127.0.0.1:11434/v1", "qwen3-vl:30b",
-                unload_endpoint="http://127.0.0.1:11434/api/generate")
+                unload_endpoint="http://127.0.0.1:11434/api/generate",
+                max_tokens=512, reasoning_effort="none")
             result = reviewer.review(image_path, "test criteria")
         self.assertEqual(result["decision"], "accept")
         self.assertEqual(post.call_count, 2)
+        self.assertEqual(post.call_args_list[0].kwargs["json"]["max_tokens"], 512)
+        self.assertEqual(post.call_args_list[0].kwargs["json"]["reasoning_effort"], "none")
         self.assertEqual(post.call_args.args[0], "http://127.0.0.1:11434/api/generate")
         self.assertEqual(post.call_args.kwargs["json"]["keep_alive"], 0)
 

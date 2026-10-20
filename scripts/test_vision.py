@@ -24,6 +24,8 @@ def main() -> int:
     parser.add_argument("--endpoint", default="http://127.0.0.1:11434/v1")
     parser.add_argument("--model", default="qwen3-vl:30b")
     parser.add_argument("--unload-endpoint", default="http://127.0.0.1:11434/api/generate")
+    parser.add_argument("--max-tokens", type=int, default=1024)
+    parser.add_argument("--reasoning-effort", default="none")
     args = parser.parse_args()
 
     product_root = resolve_product_root(args.product)
@@ -36,7 +38,8 @@ def main() -> int:
         parser.error(f"Page image is missing: {image}")
 
     reviewer = OpenAICompatibleReviewer(args.endpoint, args.model, timeout=600,
-                                        unload_endpoint=args.unload_endpoint)
+        unload_endpoint=args.unload_endpoint, max_tokens=args.max_tokens,
+        reasoning_effort=args.reasoning_effort)
     ComfyUIClient().free_memory()
     reviewer.check()
     result = reviewer.review(image, criteria_for(product, item))
