@@ -15,10 +15,23 @@ from datetime import datetime, timezone
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Protocol
+from urllib.parse import urlsplit
 
 import requests
 
 ROOT = Path(__file__).resolve().parents[1]
+REVIEW_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "decision": {"type": "string", "enum": ["accept", "retry", "manual"]},
+        "score": {"type": "integer", "minimum": 0, "maximum": 100},
+        "summary": {"type": "string"},
+        "defects": {"type": "array", "items": {"type": "string"}},
+        "retry_prompt": {"type": "string"},
+    },
+    "required": ["decision", "score", "summary", "defects", "retry_prompt"],
+    "additionalProperties": False,
+}
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 from comfy.client import ComfyUIClient, ComfyUIError
@@ -45,6 +58,11 @@ class OpenAICompatibleReviewer:
             self.url = self.endpoint + "/chat/completions"
         self.model, self.api_key, self.timeout = model, api_key, timeout
         self.unload_endpoint = unload_endpoint.rstrip("/") if unload_endpoint else None
+        endpoint_parts = urlsplit(self.endpoint)
+        unload_path = urlsplit(self.unload_endpoint).path.rstrip("/") if self.unload_endpoint else ""
+        is_loopback = endpoint_parts.hostname in {"127.0.0.1", "localhost", "::1"}
+        self.ollama_chat_url = (f"{endpoint_parts.scheme}://{endpoint_parts.netloc}/api/chat"
+                                if is_loopback and unload_path == "/api/generate" else None)
         self.max_tokens = max(1, int(max_tokens))
         self.reasoning_effort = reasoning_effort
 
@@ -78,17 +96,29 @@ class OpenAICompatibleReviewer:
         buffer = BytesIO()
         image.save(buffer, format="PNG")
         encoded = base64.b64encode(buffer.getvalue()).decode("ascii")
-        probe = requests.post(self.url, headers={**headers, "Content-Type": "application/json"}, timeout=self.timeout, json={
-            "model": self.model, "temperature": 0,
-            "messages": [{"role": "user", "content": [
-                {"type": "text", "text": "Look at this image. If you see a black square centered on a white background, return exactly {\"vision_ok\": true}; otherwise return {\"vision_ok\": false}. JSON only. /no_think"},
-                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
-            ]}], "response_format": {"type": "json_object"},
-            **self.completion_options(max_tokens=min(256, self.max_tokens)),
-        })
+        if self.ollama_chat_url:
+            probe = requests.post(self.ollama_chat_url, timeout=self.timeout, json={
+                "model": self.model, "think": False, "stream": False,
+                "messages": [{"role": "user", "content": "If this image contains a black square centered on white, set vision_ok true. /no_think",
+                              "images": [encoded]}],
+                "format": {"type": "object", "properties": {"vision_ok": {"type": "boolean"}},
+                           "required": ["vision_ok"], "additionalProperties": False},
+                "options": {"num_predict": min(256, self.max_tokens), "temperature": 0},
+            })
+        else:
+            probe = requests.post(self.url, headers={**headers, "Content-Type": "application/json"}, timeout=self.timeout, json={
+                "model": self.model, "temperature": 0,
+                "messages": [{"role": "user", "content": [
+                    {"type": "text", "text": "Look at this image. If you see a black square centered on a white background, return exactly {\"vision_ok\": true}; otherwise return {\"vision_ok\": false}. JSON only. /no_think"},
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
+                ]}], "response_format": {"type": "json_object"},
+                **self.completion_options(max_tokens=min(256, self.max_tokens)),
+            })
         try:
             probe.raise_for_status()
-            probe_content = probe.json()["choices"][0]["message"]["content"]
+            probe_payload = probe.json()
+            probe_content = (probe_payload["message"]["content"] if self.ollama_chat_url
+                             else probe_payload["choices"][0]["message"]["content"])
             if isinstance(probe_content, list):
                 probe_content = "".join(part.get("text", "") for part in probe_content)
             if not json.loads(probe_content).get("vision_ok"):
@@ -113,18 +143,27 @@ class OpenAICompatibleReviewer:
         last_error: Exception | None = None
         for attempt in range(3):
             try:
-                response = requests.post(self.url, headers=headers, timeout=self.timeout, json={
-                    "model": self.model, "temperature": 0,
-                    "messages": [{"role": "user", "content": [
-                        {"type": "text", "text": instruction},
-                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
-                    ]}],
-                    "response_format": {"type": "json_object"},
-                    **self.completion_options(),
-                })
+                if self.ollama_chat_url:
+                    response = requests.post(self.ollama_chat_url, timeout=self.timeout, json={
+                        "model": self.model, "think": False, "stream": False,
+                        "messages": [{"role": "user", "content": instruction, "images": [encoded]}],
+                        "format": REVIEW_JSON_SCHEMA,
+                        "options": {"num_predict": self.max_tokens, "temperature": 0},
+                    })
+                else:
+                    response = requests.post(self.url, headers=headers, timeout=self.timeout, json={
+                        "model": self.model, "temperature": 0,
+                        "messages": [{"role": "user", "content": [
+                            {"type": "text", "text": instruction},
+                            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
+                        ]}],
+                        "response_format": {"type": "json_object"},
+                        **self.completion_options(),
+                    })
                 response.raise_for_status()
                 payload = response.json()
-                content = payload["choices"][0]["message"]["content"]
+                content = (payload["message"]["content"] if self.ollama_chat_url
+                           else payload["choices"][0]["message"]["content"])
                 if isinstance(content, list):
                     content = "".join(part.get("text", "") for part in content)
                 result = json.loads(content)
