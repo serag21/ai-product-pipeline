@@ -408,8 +408,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--vision-max-tokens", type=int, default=int(os.getenv("VISION_MAX_TOKENS", "1024")))
     parser.add_argument("--vision-reasoning-effort", default=os.getenv("VISION_REASONING_EFFORT"))
     args = parser.parse_args(argv)
-    if args.max_attempts < 1 or args.max_attempts > 8:
-        parser.error("--max-attempts must be between 1 and 8")
+    if args.max_attempts < 1 or args.max_attempts > 10:
+        parser.error("--max-attempts must be between 1 and 10")
     if not 1 <= args.accept_score <= 100:
         parser.error("--accept-score must be between 1 and 100")
     if bool(args.vision_endpoint) != bool(args.vision_model):

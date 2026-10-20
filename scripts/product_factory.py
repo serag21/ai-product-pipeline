@@ -171,9 +171,9 @@ def run_supervisor(args: argparse.Namespace) -> int:
             print(message, flush=True)
             time.sleep(args.poll_seconds or 20)
             continue
-        if not 1 <= config["max_attempts"] <= 8 or not 1 <= config["accept_score"] <= 100:
+        if not 1 <= config["max_attempts"] <= 10 or not 1 <= config["accept_score"] <= 100:
             write_status(status_path, "configuration_error", args.run_id,
-                         message="max_attempts must be 1..8 and accept_score 1..100")
+                         message="max_attempts must be 1..10 and accept_score 1..100")
             return 2
         reviewer = OpenAICompatibleReviewer(config["endpoint"], config["model"], config["api_key"],
             unload_endpoint=config["unload_endpoint"], max_tokens=config["max_tokens"],
