@@ -112,7 +112,7 @@ def monitor_worker(command: list[str], state_path: Path, status_path: Path, run_
         log.flush()
         process = subprocess.Popen(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
                                    creationflags=flags, env=child_env)
-        last_done, started = -1, time.monotonic()
+        last_done, initial_done, started = None, None, time.monotonic()
         while process.poll() is None:
             cancel_path = status_path.with_name("cancel.request")
             if cancel_path.exists():
@@ -126,9 +126,14 @@ def monitor_worker(command: list[str], state_path: Path, status_path: Path, run_
                 records = state.get("candidates", {}).values()
                 done = sum(r.get("status") == "accepted_by_vision" for r in records)
                 total = total_pages
-                if done != last_done:
+                if last_done is None:
+                    last_done = initial_done = done
+                    write_status(status_path, "reviewing", run_id, completed_pages=done, total_pages=total,
+                                 eta_seconds=None, last_progress_at=now())
+                elif done != last_done:
                     elapsed = max(1, time.monotonic() - started)
-                    rate = done / elapsed
+                    newly_completed = done - initial_done
+                    rate = newly_completed / elapsed
                     eta = int((total - done) / rate) if rate else None
                     write_status(status_path, "reviewing", run_id, completed_pages=done, total_pages=total,
                                  eta_seconds=eta, last_progress_at=now())
