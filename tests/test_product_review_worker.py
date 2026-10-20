@@ -173,9 +173,29 @@ class LocalWorkerTests(unittest.TestCase):
         response = type("Response", (), {"raise_for_status": lambda self: None,
             "json": lambda self: {"choices": [{"message": {"content": "not json"}}]}})()
         with patch.object(local_worker.requests, "post", return_value=response):
-            with self.assertRaises(json.JSONDecodeError):
-                local_worker.OpenAICompatibleReviewer("http://localhost:1234/v1", "vision").review(
-                    Path(state["candidates"]["1"]["attempts"][0]["file"]), "criteria")
+            with patch.object(local_worker.time, "sleep"):
+                with self.assertRaisesRegex(RuntimeError, "no valid JSON after 3 attempts"):
+                    local_worker.OpenAICompatibleReviewer("http://localhost:1234/v1", "vision").review(
+                        Path(state["candidates"]["1"]["attempts"][0]["file"]), "criteria")
+
+    def test_vision_retries_transient_empty_reply(self):
+        image_path = self.product / "sample.png"
+        Image.new("RGB", (32, 32), "white").save(image_path)
+        empty = type("Response", (), {"raise_for_status": lambda self: None,
+            "json": lambda self: {"choices": [{"message": {"content": ""}}]}})()
+        valid = type("Response", (), {"raise_for_status": lambda self: None,
+            "json": lambda self: {"choices": [{"message": {"content": json.dumps({
+                "decision": "accept", "score": 92, "summary": "clear line art", "defects": [],
+            })}}]}})()
+        unload = type("Response", (), {"raise_for_status": lambda self: None})()
+        with patch.object(local_worker.requests, "post", side_effect=[empty, unload, valid, unload]) as post, \
+             patch.object(local_worker.time, "sleep"):
+            reviewer = local_worker.OpenAICompatibleReviewer(
+                "http://127.0.0.1:11434/v1", "qwen3-vl:30b",
+                unload_endpoint="http://127.0.0.1:11434/api/generate")
+            result = reviewer.review(image_path, "test criteria")
+        self.assertEqual(result["decision"], "accept")
+        self.assertEqual(post.call_count, 4)
 
     def test_review_validator_preserves_a_single_defect_string(self):
         review = local_worker.validate_review({"decision": "retry", "score": 60, "defects": "prop is unsupported"})

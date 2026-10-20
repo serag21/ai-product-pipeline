@@ -109,24 +109,34 @@ class OpenAICompatibleReviewer:
         headers = {"Content-Type": "application/json"}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
-        response = requests.post(self.url, headers=headers, timeout=self.timeout, json={
-            "model": self.model, "temperature": 0,
-            "messages": [{"role": "user", "content": [
-                {"type": "text", "text": instruction},
-                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
-            ]}],
-            "response_format": {"type": "json_object"},
-            **self.completion_options(),
-        })
-        try:
-            response.raise_for_status()
-            payload = response.json()
-            content = payload["choices"][0]["message"]["content"]
-            if isinstance(content, list):
-                content = "".join(part.get("text", "") for part in content)
-            result = json.loads(content)
-        finally:
-            self.unload()
+        result = None
+        last_error: Exception | None = None
+        for attempt in range(3):
+            try:
+                response = requests.post(self.url, headers=headers, timeout=self.timeout, json={
+                    "model": self.model, "temperature": 0,
+                    "messages": [{"role": "user", "content": [
+                        {"type": "text", "text": instruction},
+                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{encoded}"}},
+                    ]}],
+                    "response_format": {"type": "json_object"},
+                    **self.completion_options(),
+                })
+                response.raise_for_status()
+                payload = response.json()
+                content = payload["choices"][0]["message"]["content"]
+                if isinstance(content, list):
+                    content = "".join(part.get("text", "") for part in content)
+                result = json.loads(content)
+                break
+            except (requests.RequestException, json.JSONDecodeError, KeyError, IndexError, TypeError) as exc:
+                last_error = exc
+                if attempt < 2:
+                    time.sleep(1 + attempt)
+            finally:
+                self.unload()
+        if result is None:
+            raise RuntimeError(f"Vision review returned no valid JSON after 3 attempts: {last_error}") from last_error
         return validate_review(result)
 
 
