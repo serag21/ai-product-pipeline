@@ -181,10 +181,15 @@ class LocalWorkerTests(unittest.TestCase):
         review = local_worker.validate_review({"decision": "retry", "score": 60, "defects": "prop is unsupported"})
         self.assertEqual(review["defects"], ["prop is unsupported"])
 
-    def test_retry_limit_is_bounded_at_ten(self):
-        self.assertEqual(self.args("--max-attempts", "10").max_attempts, 10)
+    def test_retry_limit_is_bounded_at_twelve(self):
+        self.assertEqual(self.args("--max-attempts", "12").max_attempts, 12)
         with self.assertRaises(SystemExit):
-            self.args("--max-attempts", "11")
+            self.args("--max-attempts", "13")
+
+    def test_current_scene_plan_overrides_conflicting_retry_feedback(self):
+        result = local_worker.add_review_feedback("Draw a white plaque, not a hole.", "The hole was filled black.")
+        self.assertIn("hole was filled black", result)
+        self.assertIn("current scene prompt and QA focus are authoritative", result)
 
     def test_ollama_model_is_unloaded_after_real_vision_review(self):
         image_path = self.product / "sample.png"
@@ -209,7 +214,7 @@ class LocalWorkerTests(unittest.TestCase):
 
     def test_retry_bound_and_bad_configuration(self):
         with self.assertRaises(SystemExit):
-            local_worker.parse_args(["--max-attempts", "11"])
+            local_worker.parse_args(["--max-attempts", "13"])
         with self.assertRaises(SystemExit):
             local_worker.parse_args(["--vision-endpoint", "http://localhost:1234/v1"])
 

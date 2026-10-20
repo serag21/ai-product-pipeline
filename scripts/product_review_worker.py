@@ -181,6 +181,14 @@ def criteria_for(product: dict[str, Any], item: dict[str, Any]) -> str:
     ])
 
 
+def add_review_feedback(prompt: str, feedback: str) -> str:
+    if not feedback:
+        return prompt
+    return (f"{prompt}\n\nPrevious review feedback to address: {feedback}. "
+            "The current scene prompt and QA focus are authoritative and supersede conflicting earlier notes. "
+            "Follow the current scene direction exactly while correcting compatible defects.")
+
+
 def make_workflow(item: dict[str, Any], product: dict[str, Any], workflow: dict[str, Any],
                   width: int, height: int, steps: int, guidance: float, prompt: str,
                   seed: int, page_no: int, attempt: int, run_id: str) -> dict[str, Any]:
@@ -317,8 +325,7 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
                     attempt += 1
                     destination = run_dir / "candidates" / f"page_{page_no:03d}_attempt_{attempt:02d}_resume_{int(time.time())}.png"
                 prompt = build_prompt(product, item)
-                if prior_feedback:
-                    prompt += f"\n\nPrevious review feedback to fix: {prior_feedback}. Make a new composition that directly corrects these issues."
+                prompt = add_review_feedback(prompt, prior_feedback)
                 base_seed = int(item["seed"]) if item.get("seed") is not None else 120000 + page_no * 7919
                 seed = (base_seed + attempt - 1) % (2**32)
                 generated = generate_one(client, item, product, workflow, destination, page_no, attempt,
@@ -408,8 +415,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--vision-max-tokens", type=int, default=int(os.getenv("VISION_MAX_TOKENS", "1024")))
     parser.add_argument("--vision-reasoning-effort", default=os.getenv("VISION_REASONING_EFFORT"))
     args = parser.parse_args(argv)
-    if args.max_attempts < 1 or args.max_attempts > 10:
-        parser.error("--max-attempts must be between 1 and 10")
+    if args.max_attempts < 1 or args.max_attempts > 12:
+        parser.error("--max-attempts must be between 1 and 12")
     if not 1 <= args.accept_score <= 100:
         parser.error("--accept-score must be between 1 and 100")
     if bool(args.vision_endpoint) != bool(args.vision_model):
