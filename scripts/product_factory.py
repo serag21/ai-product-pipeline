@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import atexit
+import hashlib
 import json
 import os
 import shutil
@@ -165,9 +166,9 @@ def run_supervisor(args: argparse.Namespace) -> int:
             print(message, flush=True)
             time.sleep(args.poll_seconds or 20)
             continue
-        if not 1 <= config["max_attempts"] <= 5 or not 1 <= config["accept_score"] <= 100:
+        if not 1 <= config["max_attempts"] <= 8 or not 1 <= config["accept_score"] <= 100:
             write_status(status_path, "configuration_error", args.run_id,
-                         message="max_attempts must be 1..5 and accept_score 1..100")
+                         message="max_attempts must be 1..8 and accept_score 1..100")
             return 2
         reviewer = OpenAICompatibleReviewer(config["endpoint"], config["model"], config["api_key"],
             unload_endpoint=config["unload_endpoint"], max_tokens=config["max_tokens"],
@@ -288,18 +289,28 @@ def main() -> int:
     signal.signal(signal.SIGINT, lambda *_: (resolve_product_root(args.product) / "cancel.request").write_text("signal", encoding="utf-8"))
     product_root = resolve_product_root(args.product)
     product_root.mkdir(parents=True, exist_ok=True)
-    lock_handle = (product_root / "factory.lock").open("a+b")
+    mutex_handle = None
+    lock_handle = None
     try:
         if os.name == "nt":
-            import msvcrt
-            lock_handle.seek(0)
-            if lock_handle.read(1) == b"":
-                lock_handle.seek(0)
-                lock_handle.write(b"\0")
-                lock_handle.flush()
-            lock_handle.seek(0)
-            msvcrt.locking(lock_handle.fileno(), msvcrt.LK_NBLCK, 1)
+            import ctypes
+            from ctypes import wintypes
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            kernel32.CreateMutexW.argtypes = [wintypes.LPVOID, wintypes.BOOL, wintypes.LPCWSTR]
+            kernel32.CreateMutexW.restype = wintypes.HANDLE
+            kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+            kernel32.WaitForSingleObject.restype = wintypes.DWORD
+            mutex_name = "Local\\AIProductFactory-" + hashlib.sha256(
+                str(product_root.resolve()).casefold().encode("utf-8")).hexdigest()[:24]
+            mutex_handle = kernel32.CreateMutexW(None, False, mutex_name)
+            if not mutex_handle:
+                raise ctypes.WinError(ctypes.get_last_error())
+            wait_result = kernel32.WaitForSingleObject(mutex_handle, 0)
+            if wait_result not in (0, 0x80):  # WAIT_OBJECT_0 or WAIT_ABANDONED
+                print("A supervisor for this product is already running.", flush=True)
+                return 0
         else:
+            lock_handle = (product_root / "factory.lock").open("a+b")
             import fcntl
             fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
@@ -318,7 +329,12 @@ def main() -> int:
         print(f"FATAL: {exc}", file=sys.stderr, flush=True)
         return 1
     finally:
-        lock_handle.close()
+        if mutex_handle:
+            import ctypes
+            ctypes.windll.kernel32.ReleaseMutex(mutex_handle)
+            ctypes.windll.kernel32.CloseHandle(mutex_handle)
+        if lock_handle:
+            lock_handle.close()
 
 
 if __name__ == "__main__":

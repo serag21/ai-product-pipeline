@@ -181,6 +181,11 @@ class LocalWorkerTests(unittest.TestCase):
         review = local_worker.validate_review({"decision": "retry", "score": 60, "defects": "prop is unsupported"})
         self.assertEqual(review["defects"], ["prop is unsupported"])
 
+    def test_retry_limit_is_bounded_at_eight(self):
+        self.assertEqual(self.args("--max-attempts", "8").max_attempts, 8)
+        with self.assertRaises(SystemExit):
+            self.args("--max-attempts", "9")
+
     def test_ollama_model_is_unloaded_after_real_vision_review(self):
         image_path = self.product / "sample.png"
         Image.new("RGB", (32, 32), "white").save(image_path)
@@ -204,7 +209,7 @@ class LocalWorkerTests(unittest.TestCase):
 
     def test_retry_bound_and_bad_configuration(self):
         with self.assertRaises(SystemExit):
-            local_worker.parse_args(["--max-attempts", "6"])
+            local_worker.parse_args(["--max-attempts", "9"])
         with self.assertRaises(SystemExit):
             local_worker.parse_args(["--vision-endpoint", "http://localhost:1234/v1"])
 

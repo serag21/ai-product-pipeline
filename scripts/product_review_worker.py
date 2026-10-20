@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import base64
 import copy
 import json
@@ -407,8 +408,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--vision-max-tokens", type=int, default=int(os.getenv("VISION_MAX_TOKENS", "1024")))
     parser.add_argument("--vision-reasoning-effort", default=os.getenv("VISION_REASONING_EFFORT"))
     args = parser.parse_args(argv)
-    if args.max_attempts < 1 or args.max_attempts > 5:
-        parser.error("--max-attempts must be between 1 and 5")
+    if args.max_attempts < 1 or args.max_attempts > 8:
+        parser.error("--max-attempts must be between 1 and 8")
     if not 1 <= args.accept_score <= 100:
         parser.error("--accept-score must be between 1 and 100")
     if bool(args.vision_endpoint) != bool(args.vision_model):
@@ -440,11 +441,35 @@ def main(argv: list[str] | None = None) -> int:
     reviewer = OpenAICompatibleReviewer(args.vision_endpoint, args.vision_model, args.vision_api_key,
         unload_endpoint=args.vision_unload_endpoint, max_tokens=args.vision_max_tokens,
         reasoning_effort=args.vision_reasoning_effort) if args.vision_endpoint else None
+    mutex_handle = None
     try:
+        if os.name == "nt":
+            import ctypes
+            from ctypes import wintypes
+            kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+            kernel32.CreateMutexW.argtypes = [wintypes.LPVOID, wintypes.BOOL, wintypes.LPCWSTR]
+            kernel32.CreateMutexW.restype = wintypes.HANDLE
+            kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+            kernel32.WaitForSingleObject.restype = wintypes.DWORD
+            product_root = resolve_product_root(args.product)
+            lock_key = f"{product_root.resolve()}|{args.run_id}".casefold().encode("utf-8")
+            name = "Local\\AIProductReview-" + hashlib.sha256(lock_key).hexdigest()[:24]
+            mutex_handle = kernel32.CreateMutexW(None, False, name)
+            if not mutex_handle:
+                raise ctypes.WinError(ctypes.get_last_error())
+            result = kernel32.WaitForSingleObject(mutex_handle, 0)
+            if result not in (0, 0x80):
+                print("A review worker for this product run is already active.", flush=True)
+                return 0
         return run(args, reviewer=reviewer)
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
+    finally:
+        if mutex_handle:
+            import ctypes
+            ctypes.windll.kernel32.ReleaseMutex(mutex_handle)
+            ctypes.windll.kernel32.CloseHandle(mutex_handle)
 
 
 if __name__ == "__main__":
