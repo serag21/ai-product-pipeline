@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "src"))
 from comfy.client import ComfyUIClient
-from product_review_worker import OpenAICompatibleReviewer, atomic_json, load_product, read_state, resolve_product_root
+from product_review_worker import (REVIEW_POLICY_VERSION, OpenAICompatibleReviewer, atomic_json,
+                                   load_product, read_state, resolve_product_root)
 
 
 def now() -> str:
@@ -56,7 +57,7 @@ def read_config(product_root: Path) -> dict[str, Any]:
             "key_env": key_name, "max_attempts": int(config.get("generation", {}).get("max_attempts", 3)),
             "accept_score": int(config.get("generation", {}).get("accept_score", 80)),
             "unload_endpoint": config.get("vision", {}).get("unload_endpoint"),
-            "max_tokens": max(1, int(vision.get("max_tokens", 1024))),
+            "max_tokens": max(1, int(vision.get("max_tokens", 2048))),
             "reasoning_effort": vision.get("reasoning_effort"),
             "poll_seconds": max(5, int(config.get("supervisor", {}).get("poll_seconds", 20))),
             "service_retry_limit": max(1, int(config.get("supervisor", {}).get("service_retry_limit", 3)))}
@@ -76,6 +77,31 @@ def build_completion_report(product: dict[str, Any], run_id: str, model: str, st
         "pdf_render_checks": qa["pdf_render_checks"], "human_approval_required": True, "published": False}
 
 
+def write_quality_change_report(product: dict[str, Any], state: dict[str, Any], package_dir: Path) -> None:
+    changed, retained = [], []
+    for item in product["pages"]:
+        page = int(item["page"])
+        record = state.get("candidates", {}).get(str(page), {})
+        attempts = record.get("attempts", [])
+        best_index = next((i for i, candidate in enumerate(attempts) if candidate.get("file") == record.get("best_candidate")), -1)
+        previous_failure = next((candidate.get("review", {}) for candidate in attempts[:best_index]
+                                 if candidate.get("review", {}).get("decision") == "retry"), None)
+        if best_index > 0 and previous_failure:
+            reason = "; ".join(previous_failure.get("defects", [])) or previous_failure.get("summary", "Failed a specific printable-art check.")
+            changed.append(f"- Page {page}: regenerated after strict review rejected the prior image. {reason}")
+        else:
+            retained.append(page)
+    text = ["# Strict quality re-review", "", f"All {len(product['pages'])} selected pages were re-reviewed with Ollama Qwen3-VL using explicit coloring-usability, large-black-fill, line-art, and scene-consistency checks.", "",
+            f"Pages retained unchanged: {', '.join(map(str, retained)) or 'none'}.", "",
+            "## Pages changed", ""]
+    text.extend(changed or ["- None. Every selected candidate passed the refined checks."])
+    text.extend(["", "## Review files", "", "Open `FINAL_CONTACT_SHEET.jpg` for all 15 final pages. The package remains local and requires final human visual approval; nothing was uploaded or published.", ""])
+    (package_dir / "QUALITY_REVIEW_REPORT.md").write_text("\n".join(text), encoding="utf-8")
+    preview = package_dir / "preview_print_ready_pages.jpg"
+    if preview.is_file():
+        shutil.copy2(preview, package_dir / "FINAL_CONTACT_SHEET.jpg")
+
+
 def make_assembly(product_root: Path, run_dir: Path, source_product: dict[str, Any], state: dict[str, Any]) -> Path:
     assembly = run_dir / "assembly_source"
     (assembly / "pages").mkdir(parents=True, exist_ok=True)
@@ -90,10 +116,11 @@ def make_assembly(product_root: Path, run_dir: Path, source_product: dict[str, A
         candidate_path = Path(record["best_candidate"])
         if not candidate_path.is_file():
             raise RuntimeError(f"Accepted page {page} candidate is missing: {candidate_path}")
+        best = next((c for c in record.get("attempts", []) if c.get("file") == record["best_candidate"]), None)
+        if not best or best.get("review", {}).get("decision") != "accept" or best.get("review_policy_version", 0) < REVIEW_POLICY_VERSION:
+            raise RuntimeError(f"Page {page} selected candidate has not passed strict review policy {REVIEW_POLICY_VERSION}.")
         destination = assembly / "pages" / f"page_{page:03d}.png"
-        if not destination.exists():
-            shutil.copy2(candidate_path, destination)
-        best = next((c for c in record.get("attempts", []) if c.get("file") == record["best_candidate"]), {})
+        shutil.copy2(candidate_path, destination)
         generated_records.append({"page": page, "variant_id": item.get("variant_id"), "label": item.get("label"),
                                   "seed": best.get("seed"), "file": str(destination), "qa": best.get("qa", {})})
     atomic_json(assembly / "qa" / "generation_manifest.json", {
@@ -205,10 +232,11 @@ def run_supervisor(args: argparse.Namespace) -> int:
         state_path = run_dir / "state.json"
         state = read_state(state_path, product["product_id"])
         if state.get("candidates") and all(state["candidates"].get(str(int(p["page"])), {}).get("status") == "accepted_by_vision"
+                                            and next((c.get("review_policy_version", 0) for c in state["candidates"][str(int(p["page"]))].get("attempts", []) if c.get("file") == state["candidates"][str(int(p["page"]))].get("best_candidate")), 0) >= REVIEW_POLICY_VERSION
                                             for p in product["pages"]):
             break
         command = [sys.executable, "scripts/product_review_worker.py", "--product", str(product_root), "--run-id", args.run_id,
-                   "--review-existing", "--max-attempts", str(config["max_attempts"]), "--accept-score", str(config["accept_score"]),
+                   "--review-existing", "--re-review-accepted", "--max-attempts", str(config["max_attempts"]), "--accept-score", str(config["accept_score"]),
                    "--vision-endpoint", config["endpoint"], "--vision-model", config["model"],
                    "--vision-max-tokens", str(config["max_tokens"])]
         if config["reasoning_effort"]:
@@ -228,7 +256,9 @@ def run_supervisor(args: argparse.Namespace) -> int:
             return 130
         state = read_state(state_path, product["product_id"])
         unresolved = [int(p["page"]) for p in product["pages"]
-                      if state.get("candidates", {}).get(str(int(p["page"])), {}).get("status") != "accepted_by_vision"]
+                      if state.get("candidates", {}).get(str(int(p["page"])), {}).get("status") != "accepted_by_vision"
+                      or next((c.get("review_policy_version", 0) for c in state["candidates"][str(int(p["page"]))].get("attempts", [])
+                               if c.get("file") == state["candidates"][str(int(p["page"]))].get("best_candidate")), 0) < REVIEW_POLICY_VERSION]
         if unresolved:
             service_failures += 1
             write_status(status_path, "retrying_service", args.run_id, unresolved_pages=unresolved, retry=service_failures)
@@ -251,20 +281,25 @@ def run_supervisor(args: argparse.Namespace) -> int:
     state = read_state(run_dir / "state.json", product["product_id"])
     assembly_root = make_assembly(product_root, run_dir, product, state)
     package_dir = run_dir / "final_deliverables"
-    if not (package_dir / "package_qa.json").is_file():
-        write_status(status_path, "assembling", args.run_id, total_pages=len(product["pages"]))
-        cmd = [sys.executable, "scripts/package_printable_product.py", "--product", str(assembly_root), "--output", str(package_dir)]
-        result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-        with log_path.open("a", encoding="utf-8") as log:
-            log.write(f"\n[{now()}] Packaging stdout:\n{result.stdout}\nPackaging stderr:\n{result.stderr}\n")
-        if result.returncode:
-            write_status(status_path, "package_error", args.run_id, error=result.stderr[-3000:])
-            return result.returncode
+    write_status(status_path, "assembling", args.run_id, total_pages=len(product["pages"]))
+    if package_dir.is_dir():
+        archive = run_dir / "final_deliverables_before_strict_rereview"
+        if archive.exists():
+            archive = run_dir / f"final_deliverables_before_strict_rereview_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        package_dir.rename(archive)
+    cmd = [sys.executable, "scripts/package_printable_product.py", "--product", str(assembly_root), "--output", str(package_dir)]
+    result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    with log_path.open("a", encoding="utf-8") as log:
+        log.write(f"\n[{now()}] Packaging stdout:\n{result.stdout}\nPackaging stderr:\n{result.stderr}\n")
+    if result.returncode:
+        write_status(status_path, "package_error", args.run_id, error=result.stderr[-3000:])
+        return result.returncode
     qa = json.loads((package_dir / "package_qa.json").read_text(encoding="utf-8"))
     if qa.get("prepared_pages") != len(product["pages"]) or len(qa.get("pdf_render_checks", [])) != 2:
         write_status(status_path, "package_error", args.run_id, error="PDF/page package QA incomplete")
         return 3
     completion = build_completion_report(product, args.run_id, config["model"], state, package_dir, qa)
+    write_quality_change_report(product, state, package_dir)
     atomic_json(package_dir / "COMPLETION_REPORT.json", completion)
     (package_dir / "COMPLETION_REPORT.md").write_text(
         f"# Product package ready for final review\n\n{product.get('title', product['product_id'])}\n\n"

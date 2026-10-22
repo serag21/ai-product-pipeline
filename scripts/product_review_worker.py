@@ -11,6 +11,7 @@ import os
 import shutil
 import sys
 import time
+from collections import deque
 from datetime import datetime, timezone
 from io import BytesIO
 from pathlib import Path
@@ -20,6 +21,7 @@ from urllib.parse import urlsplit
 import requests
 
 ROOT = Path(__file__).resolve().parents[1]
+REVIEW_POLICY_VERSION = 8
 REVIEW_JSON_SCHEMA = {
     "type": "object",
     "properties": {
@@ -28,8 +30,14 @@ REVIEW_JSON_SCHEMA = {
         "summary": {"type": "string"},
         "defects": {"type": "array", "items": {"type": "string"}},
         "retry_prompt": {"type": "string"},
+        "checks": {"type": "object", "properties": {
+            "no_large_solid_black_regions": {"type": "boolean"},
+            "coloring_areas_open": {"type": "boolean"},
+            "line_art_clean": {"type": "boolean"},
+            "scene_readable_and_consistent": {"type": "boolean"},
+        }, "required": ["no_large_solid_black_regions", "coloring_areas_open", "line_art_clean", "scene_readable_and_consistent"], "additionalProperties": False},
     },
-    "required": ["decision", "score", "summary", "defects", "retry_prompt"],
+    "required": ["decision", "score", "summary", "defects", "retry_prompt", "checks"],
     "additionalProperties": False,
 }
 sys.path.insert(0, str(ROOT / "src"))
@@ -129,12 +137,16 @@ class OpenAICompatibleReviewer:
     def review(self, image: Path, criteria: str, prior_feedback: str = "") -> dict[str, Any]:
         encoded = base64.b64encode(image.read_bytes()).decode("ascii")
         instruction = (
-            "Review candidate against these art-direction criteria and perform visual QA: "
-            f"{criteria}\n\n"
-            "Return a single compact JSON object with decision (accept|retry|manual), score 0-100 "
-            "(0 unusable, 100 fully compliant), summary, defects, retry_prompt. No chain-of-thought. "
-            "Answer immediately with final JSON only. Limit response to 150 tokens. /no_think\n"
-            f"Previous review feedback to address: {prior_feedback or 'none'}"
+            f"Visually inspect this printable coloring page independently. Criteria: {criteria}\n"
+            "Judge only what is visible in this image; do not assume any defect from a prior attempt or prompt. "
+            "Return only the required JSON fields. Hard gate: broad solid-black regions that remove a colorable "
+            "surface (doorway, window, tray, clothing, wing, hair, animal body, or prop) require retry, regardless "
+            "of score. Localized eyes, pupils, noses, and mouth details may be black. Broad black-filled costume, "
+            "wing, hair, fur, bird body, or major prop surfaces are uncolorable and must fail coloring_areas_open, "
+            "including when fragmented into smaller patches. Large surfaces should be white inside clean outlines. "
+            "Set each check honestly. Give named "
+            "defects and a concrete retry_prompt. Check scene QA, coloring usability, line cleanliness, and consistency. "
+            "/no_think\nPrevious defects to correct: " + (prior_feedback or "none")
         )
         headers = {"Content-Type": "application/json"}
         if self.api_key:
@@ -166,14 +178,19 @@ class OpenAICompatibleReviewer:
                            else payload["choices"][0]["message"]["content"])
                 if isinstance(content, list):
                     content = "".join(part.get("text", "") for part in content)
+                if not content or not str(content).strip():
+                    raise ValueError(f"Vision endpoint returned empty content (HTTP {getattr(response, 'status_code', 'unknown')}).")
                 result = json.loads(content)
                 break
-            except (requests.RequestException, json.JSONDecodeError, KeyError, IndexError, TypeError) as exc:
+            except (requests.RequestException, json.JSONDecodeError, KeyError, IndexError, TypeError, ValueError) as exc:
                 last_error = exc
                 if attempt < 2:
                     time.sleep(1 + attempt)
             finally:
-                self.unload()
+                # Keep the reviewer loaded across transient retries. Unloading
+                # between retries repeatedly cold-starts a large local model.
+                if result is not None or attempt == 2:
+                    self.unload()
         if result is None:
             raise RuntimeError(f"Vision review returned no valid JSON after 3 attempts: {last_error}") from last_error
         return validate_review(result)
@@ -190,12 +207,109 @@ def validate_review(review: dict[str, Any]) -> dict[str, Any]:
     defects = review.get("defects", [])
     if isinstance(defects, str):
         defects = [defects] if defects else []
+    check_names = ("no_large_solid_black_regions", "coloring_areas_open", "line_art_clean", "scene_readable_and_consistent")
+    raw_checks = review.get("checks", {})
+    checks = {name: raw_checks.get(name) for name in check_names} if isinstance(raw_checks, dict) else {name: None for name in check_names}
+    failed = [name for name, value in checks.items() if value is not True]
+    if decision == "accept" and failed:
+        decision = "retry"
+        reason = "Specific visual checks failed or were missing: " + ", ".join(failed)
+        defects = list(defects) if isinstance(defects, list) else []
+        defects.extend(f"Required printable-art check failed: {name.replace('_', ' ')}." for name in failed)
+        summary = str(review.get("summary", ""))
+        review = {**review, "summary": reason + (" " + summary if summary else "")}
     return {
         "decision": decision, "score": score,
         "summary": str(review.get("summary", "")),
         "defects": [str(v) for v in defects] if isinstance(defects, list) else [],
         "retry_prompt": str(review.get("retry_prompt", "")),
+        "checks": checks,
     }
+
+
+def find_large_solid_black_region(image_path: Path) -> dict[str, Any] | None:
+    """Find broad near-black connected fills while ignoring thin line art."""
+    from PIL import Image
+    with Image.open(image_path) as source:
+        gray = source.convert("L")
+        gray.thumbnail((384, 512), Image.Resampling.BILINEAR)
+        width, height = gray.size
+        pixels = gray.load()
+        visited = bytearray(width * height)
+        best: tuple[int, int, int, int, int, int] | None = None
+        for start_y in range(height):
+            for start_x in range(width):
+                start = start_y * width + start_x
+                if visited[start] or pixels[start_x, start_y] >= 48:
+                    continue
+                visited[start] = 1
+                pending = deque([start])
+                area = 0
+                min_x = max_x = start_x
+                min_y = max_y = start_y
+                while pending:
+                    index = pending.pop()
+                    x, y = index % width, index // width
+                    area += 1
+                    min_x, max_x = min(min_x, x), max(max_x, x)
+                    min_y, max_y = min(min_y, y), max(max_y, y)
+                    for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                        if 0 <= nx < width and 0 <= ny < height:
+                            neighbor = ny * width + nx
+                            if not visited[neighbor] and pixels[nx, ny] < 48:
+                                visited[neighbor] = 1
+                                pending.append(neighbor)
+                box_area = (max_x - min_x + 1) * (max_y - min_y + 1)
+                if best is None or area > best[0]:
+                    best = (area, box_area, min_x, min_y, max_x - min_x + 1, max_y - min_y + 1)
+        if best is None:
+            return None
+        area, box_area, x, y, box_width, box_height = best
+        fill_ratio = area / max(1, box_area)
+        area_ratio = area / (width * height)
+        if area_ratio >= 0.004 and fill_ratio >= 0.34 and box_width >= 24:
+            return {"area_ratio": round(area_ratio, 5), "fill_ratio": round(fill_ratio, 3),
+                    "bbox": [x, y, box_width, box_height]}
+        # Closed outlines can connect a filled object to the rest of the line art,
+        # making its whole-page component sparse. Also look for broad dense patches
+        # and horizontal/vertical bands; smaller 24px windows confuse large pupils
+        # with uncolorable fills.
+        windows = ((48, 80, 0.42), (80, 48, 0.42), (64, 64, 0.40),
+                   (32, 32, 0.76), (48, 16, 0.78), (16, 48, 0.78))
+        stride = 4
+        integral = [0] * ((width + 1) * (height + 1))
+        for row in range(height):
+            row_sum = 0
+            for column in range(width):
+                row_sum += int(pixels[column, row] < 48)
+                integral[(row + 1) * (width + 1) + column + 1] = integral[row * (width + 1) + column + 1] + row_sum
+        for block_width, block_height, density in windows:
+            minimum = block_width * block_height * density
+            for top in range(0, height - block_height + 1, stride):
+                for left in range(0, width - block_width + 1, stride):
+                    right, bottom = left + block_width, top + block_height
+                    black = (integral[bottom * (width + 1) + right] - integral[top * (width + 1) + right]
+                             - integral[bottom * (width + 1) + left] + integral[top * (width + 1) + left])
+                    if black >= minimum:
+                        return {"area_ratio": round(black / (width * height), 5), "fill_ratio": round(black / (block_width * block_height), 3),
+                                "bbox": [left, top, block_width, block_height], "check": "dense_local_fill"}
+    return None
+
+
+def enforce_image_checks(review: dict[str, Any], image_path: Path) -> dict[str, Any]:
+    region = find_large_solid_black_region(image_path)
+    if not region:
+        return review
+    result = dict(review)
+    result["checks"] = {**result.get("checks", {}), "no_large_solid_black_regions": False}
+    result["decision"] = "retry"
+    defect = ("Automated pixel check found a broad near-solid-black region that removes coloring space "
+              f"(area {region['area_ratio']:.1%}, fill {region['fill_ratio']:.0%}); redraw it as white paper inside clean outlines.")
+    result["defects"] = list(result.get("defects", [])) + [defect]
+    result["summary"] = defect + " " + result.get("summary", "")
+    result["retry_prompt"] = (result.get("retry_prompt", "") + " Keep every broad surface, doorway, sky panel, and prop interior white and colorable; do not fill regions with solid black.").strip()
+    result["pixel_check"] = region
+    return result
 
 
 def utc_now() -> str:
@@ -220,14 +334,19 @@ def read_state(path: Path, product_id: str) -> dict[str, Any]:
 
 
 def criteria_for(product: dict[str, Any], item: dict[str, Any]) -> str:
-    return "\n".join([
-        f"Product: {product.get('title', product['product_id'])}",
-        f"Scene: {item.get('candidate_title', item.get('label', item.get('variant_id', 'candidate')))}",
-        f"Art direction: {product.get('visual_bible', '')}",
-        f"Scene rationale: {item.get('design_rationale', '')}",
-        f"Specific QA focus: {item.get('qa_focus', '')}",
-        "Check concept readability, anatomy, physical logic, open coloring areas, clean linework, clutter, and unintended color or filled areas.",
-    ])
+    scene = item.get("candidate_title", item.get("scene_title", item.get("label", item.get("variant_id", "candidate"))))
+    focus = str(item.get("qa_focus", ""))
+    special = []
+    if "doghouse" in focus.lower() or "doorway" in focus.lower():
+        special.append("Doghouse doorway must stay white inside a thin outline; no black cavity.")
+    if "feeder" in str(scene).lower():
+        special.append("Bird feeder is an open tray with a visible white interior; no dark aperture or seed fill.")
+    return " ".join(filter(None, [
+        f"Product: {product.get('title', product['product_id'])}.", f"Scene: {scene}.",
+        "Style: crisp monochrome line art, clean contours, consistent weight, broad white colorable surfaces, framed portrait scene.",
+        f"Scene checks: {focus}", "Review anatomy, physical logic, scene readability/variety, clutter, line cleanliness, and coloring usability.",
+        "Large solid-black uncolorable regions are a hard rejection, regardless of score. Localized eyes and facial details may be black; reject black-filled clothing, wings, fur, hair, whole animals, or major props even if fragmented across patches.", *special,
+    ]))
 
 
 def add_review_feedback(prompt: str, feedback: str) -> str:
@@ -325,7 +444,50 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
         key = str(page_no)
         record = state["candidates"].setdefault(key, {"page": page_no, "variant_id": item.get("variant_id"),
             "status": "pending", "attempts": [], "best_candidate": None})
-        if record["status"] in {"accepted_by_vision", "accepted_by_human", "manual_review"}:
+        if args.re_review_accepted and (record["status"] == "accepted_by_vision" or record.get("re_review_pending")):
+            best = next((c for c in record.get("attempts", []) if c.get("file") == record.get("best_candidate")), None)
+            if best and best.get("review_policy_version", 0) >= REVIEW_POLICY_VERSION and not record.get("re_review_pending"):
+                continue
+            if best and best.get("review_policy_version", 0) < REVIEW_POLICY_VERSION:
+                destination = Path(best["file"])
+                if not destination.is_file():
+                    raise RuntimeError(f"Accepted candidate is missing: {destination}")
+                if reviewer is None:
+                    raise RuntimeError("Re-review requires the configured vision provider.")
+                if hasattr(client, "free_memory"):
+                    client.free_memory()
+                old_review = best.get("review")
+                if old_review:
+                    best.setdefault("review_history", []).append(old_review)
+                try:
+                    review = enforce_image_checks(validate_review(reviewer.review(destination, criteria_for(product, item), "")), destination)
+                except Exception as exc:
+                    record["status"] = "paused"
+                    record["re_review_pending"] = True
+                    record["last_error"] = str(exc)
+                    state["updated_at"] = utc_now()
+                    atomic_json(state_path, state)
+                    create_manual_bundle(run_dir, state)
+                    raise
+                if review["decision"] == "accept" and review["score"] < args.accept_score and review["defects"]:
+                    review["decision"] = "retry"
+                    review["summary"] = f"Score {review['score']} is below acceptance threshold {args.accept_score}. " + review["summary"]
+                best["review"] = review
+                best["review_policy_version"] = REVIEW_POLICY_VERSION
+                record.pop("re_review_pending", None)
+                record["last_quality_review"] = {"policy_version": REVIEW_POLICY_VERSION, "reviewed_at": utc_now(), "candidate": best["file"]}
+                if review["decision"] == "accept":
+                    record["status"] = "accepted_by_vision"
+                    atomic_json(state_path, state)
+                    continue
+                if review["decision"] == "manual":
+                    record["status"] = "manual_review"
+                    atomic_json(state_path, state)
+                    continue
+                prior_feedback = "; ".join(filter(None, [review["summary"], "; ".join(review["defects"]), review["retry_prompt"]]))
+                record["status"] = "pending"
+                atomic_json(state_path, state)
+        elif record["status"] in {"accepted_by_vision", "accepted_by_human", "manual_review"}:
             continue
         if record["status"] == "exhausted":
             # A larger configured attempt bound can resume an exhausted page
@@ -401,11 +563,13 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
                     # Do not run Qwen-VL alongside the FLUX checkpoint. Ollama
                     # is unloaded again by the reviewer before any retry.
                     client.free_memory()
-                review = validate_review(reviewer.review(destination, criteria_for(product, item), prior_feedback))
-                if review["decision"] == "accept" and review["score"] < args.accept_score:
+                # Keep generation feedback out of the visual judgment to avoid anchoring the reviewer on an old defect.
+                review = enforce_image_checks(validate_review(reviewer.review(destination, criteria_for(product, item), "")), destination)
+                if review["decision"] == "accept" and review["score"] < args.accept_score and review["defects"]:
                     review["decision"] = "retry"
                     review["summary"] = f"Score {review['score']} is below acceptance threshold {args.accept_score}. " + review["summary"]
                 candidate["review"] = review
+                candidate["review_policy_version"] = REVIEW_POLICY_VERSION if args.re_review_accepted else candidate.get("review_policy_version", 1)
                 if review["decision"] == "accept":
                     record["status"] = "accepted_by_vision"
                     record["best_candidate"] = candidate["file"]
@@ -413,6 +577,7 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
                 if review["decision"] == "manual":
                     record["status"] = "manual_review"
                     break
+                record["status"] = "pending"
                 prior_feedback = "; ".join(filter(None, [review["summary"], "; ".join(review["defects"]), review["retry_prompt"]]))
                 current_best = next((c for c in record["attempts"] if c["file"] == record["best_candidate"]), None)
                 if current_best is None or review["score"] > current_best.get("review", {}).get("score", -1):
@@ -449,6 +614,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--product", default="products/little-haunts-club-targeted-iteration-lab-6")
     parser.add_argument("--pages", type=int, nargs="*", help="Manifest page numbers; defaults to all pages")
     parser.add_argument("--review-existing", action="store_true", help="Review and preserve existing pages before generating replacements")
+    parser.add_argument("--re-review-accepted", action="store_true", help="Re-review accepted winners under strict printable-art checks; retries only failed pages")
     parser.add_argument("--retry-exhausted", action="store_true", help="Continue exhausted scenes after raising --max-attempts")
     parser.add_argument("--approve", type=int, nargs="+", help="Record human approval for generated candidate pages and exit")
     parser.add_argument("--run-id", default="targeted-review")

@@ -54,7 +54,10 @@ class FakeReviewer:
         if self.events is not None:
             self.events.append("vision_review")
         self.prompts.append(prior_feedback)
-        return next(self.reviews)
+        result = dict(next(self.reviews))
+        result.setdefault("checks", {"no_large_solid_black_regions": True, "coloring_areas_open": True,
+            "line_art_clean": True, "scene_readable_and_consistent": True})
+        return result
 
 
 class LocalWorkerTests(unittest.TestCase):
@@ -95,7 +98,7 @@ class LocalWorkerTests(unittest.TestCase):
         self.assertEqual(record["status"], "accepted_by_vision")
         self.assertEqual(len(record["attempts"]), 2)
         self.assertNotEqual(record["attempts"][0]["file"], record["attempts"][1]["file"])
-        self.assertIn("black-filled", reviewer.prompts[1])
+        self.assertEqual(reviewer.prompts[1], "")
         self.assertTrue(all(Path(c["file"]).is_file() for c in record["attempts"]))
 
     def test_state_resume_skips_completed_candidate(self):
@@ -163,7 +166,8 @@ class LocalWorkerTests(unittest.TestCase):
 
     def test_low_accept_score_is_retried_and_malformed_provider_fails_closed(self):
         reviewer = FakeReviewer([
-            {"decision": "accept", "score": 65, "summary": "Several scene issues."},
+            {"decision": "accept", "score": 65, "summary": "Present rests on cushion.",
+             "defects": ["Present should stand directly on the floor."]},
             {"decision": "accept", "score": 90, "summary": "Resolved."},
         ])
         local_worker.run(self.args("--max-attempts", "2", "--accept-score", "80"), client=FakeClient(), reviewer=reviewer)
@@ -178,6 +182,21 @@ class LocalWorkerTests(unittest.TestCase):
                     local_worker.OpenAICompatibleReviewer("http://localhost:1234/v1", "vision").review(
                         Path(state["candidates"]["1"]["attempts"][0]["file"]), "criteria")
 
+    def test_low_numeric_score_without_named_defect_does_not_reject_clear_checks(self):
+        (self.product / "pages").mkdir(parents=True, exist_ok=True)
+        sample_page = Image.new("RGB", (1536, 1984), "white")
+        from PIL import ImageDraw
+        ImageDraw.Draw(sample_page).rectangle((300, 300, 1200, 1600), outline="black", width=8)
+        sample_page.save(self.product / "pages/page_001.png")
+        reviewer = FakeReviewer([{"decision": "accept", "score": 5,
+            "summary": "All specific checks pass; no defects found.", "defects": [], "retry_prompt": ""}])
+        local_worker.run(self.args("--review-existing", "--max-attempts", "1", "--accept-score", "80"),
+                         client=FakeClient(), reviewer=reviewer)
+        state = json.loads((self.product / "review_runs/test-run/state.json").read_text())
+        candidate = state["candidates"]["1"]["attempts"][0]
+        self.assertEqual(state["candidates"]["1"]["status"], "accepted_by_vision")
+        self.assertEqual(candidate["review"]["decision"], "accept")
+
     def test_vision_retries_transient_empty_reply(self):
         image_path = self.product / "sample.png"
         Image.new("RGB", (32, 32), "white").save(image_path)
@@ -186,23 +205,81 @@ class LocalWorkerTests(unittest.TestCase):
         valid = type("Response", (), {"raise_for_status": lambda self: None,
             "json": lambda self: {"message": {"content": json.dumps({
                 "decision": "accept", "score": 92, "summary": "clear line art", "defects": [],
-                "retry_prompt": "",
+                "retry_prompt": "", "checks": {"no_large_solid_black_regions": True,
+                "coloring_areas_open": True, "line_art_clean": True, "scene_readable_and_consistent": True},
             })}}})()
         unload = type("Response", (), {"raise_for_status": lambda self: None})()
-        with patch.object(local_worker.requests, "post", side_effect=[empty, unload, valid, unload]) as post, \
+        with patch.object(local_worker.requests, "post", side_effect=[empty, valid, unload]) as post, \
              patch.object(local_worker.time, "sleep"):
             reviewer = local_worker.OpenAICompatibleReviewer(
                 "http://127.0.0.1:11434/v1", "qwen3-vl:30b",
                 unload_endpoint="http://127.0.0.1:11434/api/generate")
             result = reviewer.review(image_path, "test criteria")
         self.assertEqual(result["decision"], "accept")
-        self.assertEqual(post.call_count, 4)
+        self.assertEqual(post.call_count, 3)
         self.assertEqual(post.call_args_list[0].args[0], "http://127.0.0.1:11434/api/chat")
         self.assertFalse(post.call_args_list[0].kwargs["json"]["think"])
 
     def test_review_validator_preserves_a_single_defect_string(self):
         review = local_worker.validate_review({"decision": "retry", "score": 60, "defects": "prop is unsupported"})
         self.assertEqual(review["defects"], ["prop is unsupported"])
+
+    def test_failed_specific_check_overrides_high_numerical_score(self):
+        review = local_worker.validate_review({"decision": "accept", "score": 99, "summary": "Looks good.",
+            "defects": [], "retry_prompt": "", "checks": {"no_large_solid_black_regions": False,
+            "coloring_areas_open": True, "line_art_clean": True, "scene_readable_and_consistent": True}})
+        self.assertEqual(review["decision"], "retry")
+        self.assertTrue(any("large solid black" in defect for defect in review["defects"]))
+        self.assertIn("Specific visual checks failed", review["summary"])
+
+    def test_policy_rereview_preserves_acceptable_winner_without_generation(self):
+        source = self.product / "pages/page_001.png"
+        source.parent.mkdir(parents=True)
+        Image.new("RGB", (1536, 1984), "white").save(source)
+        from PIL import ImageDraw
+        with Image.open(source) as image:
+            ImageDraw.Draw(image).rectangle((100, 100, 900, 1700), outline="black", width=30)
+            image.save(source)
+        client, reviewer = FakeClient(), FakeReviewer([{"decision": "accept", "score": 93,
+            "summary": "Clear and colorable.", "checks": {"no_large_solid_black_regions": True,
+            "coloring_areas_open": True, "line_art_clean": True, "scene_readable_and_consistent": True}}])
+        local_worker.run(self.args("--review-existing", "--re-review-accepted"), client=client, reviewer=reviewer)
+        state_path = self.product / "review_runs/test-run/state.json"
+        state = json.loads(state_path.read_text())
+        # Simulate a previously accepted winner, then re-review it under policy 2.
+        record = state["candidates"]["1"]
+        record["attempts"][0]["review_policy_version"] = 1
+        local_worker.atomic_json(state_path, state)
+        reviewer = FakeReviewer([{"decision": "accept", "score": 97, "summary": "Passes strict checks.",
+            "checks": {"no_large_solid_black_regions": True, "coloring_areas_open": True,
+            "line_art_clean": True, "scene_readable_and_consistent": True}}])
+        self.assertEqual(local_worker.run(self.args("--re-review-accepted"), client=client, reviewer=reviewer), 0)
+        state = json.loads(state_path.read_text())
+        record = state["candidates"]["1"]
+        self.assertEqual(client.calls, 0)
+        self.assertEqual(record["status"], "accepted_by_vision")
+        self.assertEqual(record["attempts"][0]["review_policy_version"], local_worker.REVIEW_POLICY_VERSION)
+        self.assertEqual(record["attempts"][0]["review_history"][0]["decision"], "accept")
+        review_calls = len(reviewer.prompts)
+        self.assertEqual(local_worker.run(self.args("--re-review-accepted"), client=client, reviewer=reviewer), 0)
+        self.assertEqual(len(reviewer.prompts), review_calls)
+        self.assertEqual(client.calls, 0)
+
+    def test_pixel_gate_finds_a_large_solid_black_fill(self):
+        image_path = self.product / "black-doorway.png"
+        image = Image.new("RGB", (1536, 1984), "white")
+        from PIL import ImageDraw
+        ImageDraw.Draw(image).rectangle((500, 500, 1000, 1100), fill="black")
+        image.save(image_path)
+        region = local_worker.find_large_solid_black_region(image_path)
+        self.assertIsNotNone(region)
+        checked = local_worker.enforce_image_checks(local_worker.validate_review({
+            "decision": "accept", "score": 100, "summary": "Perfect.", "defects": [], "retry_prompt": "",
+            "checks": {"no_large_solid_black_regions": True, "coloring_areas_open": True,
+                "line_art_clean": True, "scene_readable_and_consistent": True},
+        }), image_path)
+        self.assertEqual(checked["decision"], "retry")
+        self.assertFalse(checked["checks"]["no_large_solid_black_regions"])
 
     def test_retry_limit_is_bounded_at_fourteen(self):
         self.assertEqual(self.args("--max-attempts", "14").max_attempts, 14)
@@ -220,6 +297,8 @@ class LocalWorkerTests(unittest.TestCase):
         response = type("Response", (), {"raise_for_status": lambda self: None,
             "json": lambda self: {"message": {"content": json.dumps({
                 "decision": "accept", "score": 91, "summary": "clear line art", "defects": [], "retry_prompt": "",
+                "checks": {"no_large_solid_black_regions": True, "coloring_areas_open": True,
+                    "line_art_clean": True, "scene_readable_and_consistent": True},
             })}}})()
         unload = type("Response", (), {"raise_for_status": lambda self: None})()
         with patch.object(local_worker.requests, "post", side_effect=[response, unload]) as post:
