@@ -154,7 +154,13 @@ def run(args):
         feedback=""
         if retry and prior.get("review"):
             rr=prior["review"]; feedback="Correct these specific observed issues: "+"; ".join([rr.get("summary","")]+rr.get("defects",[])+[rr.get("retry_prompt","")])
-        item={"page":plan.get("page",100+allplans.index(plan)),"variant_id":plan["id"],"scene_title":plan["title"],"label":plan["title"],"qa_focus":f"Check appealing original composition, physically supported props, clear anatomy, large colorable open surfaces, clean line art and distinct scene layout. Intended activity: {plan['hero']} Layout: {plan['layout']}"}
+        page_number=plan.get("page")
+        if page_number is None:
+            base_id=plan.get("retry_of") or plan["id"]
+            plan_index=next((i for i,p in enumerate(allplans) if p.get("id")==base_id),None)
+            if plan_index is None: raise RuntimeError(f"Retry scene {base_id} is missing from the production plan.")
+            page_number=100+plan_index
+        item={"page":page_number,"variant_id":plan["id"],"scene_title":plan["title"],"label":plan["title"],"qa_focus":f"Check appealing original composition, physically supported props, clear anatomy, large colorable open surfaces, clean line art and distinct scene layout. Intended activity: {plan['hero']} Layout: {plan['layout']}"}
         prompt=f"{plan['hero']} {plan['layout']} {STYLE}"
         if plan.get("page") is not None:
             latest_human=json.loads((run_dir/"dashboard_state.json").read_text(encoding="utf-8"))
