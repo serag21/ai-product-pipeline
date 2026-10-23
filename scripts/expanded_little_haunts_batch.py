@@ -157,12 +157,27 @@ def run(args):
         reviewer.unload(); wait_gpu_headroom(dashboard_status_path); client.health()
         result=generate_one(client,item,product,workflow,dest,item["page"],attempt,args.run_id.replace("-","_"),prompt,seed,args.timeout)
         generated+=1; qa=result["qa"]
+        review_error=None
         if qa.get("pass"):
             client.free_memory(); wait_gpu_headroom(dashboard_status_path)
             criteria=criteria_for({"title":product.get("title"),"product_id":product["product_id"]},item)+" Also judge charm, originality, composition balance, actual drawing coherence, and whether this scene adds a distinct activity to a varied collection. Do not give 100 for merely matching a prompt."
-            review=enforce_image_checks(validate_review(reviewer.review(dest,criteria,"")),dest)
+            try:
+                review=enforce_image_checks(validate_review(reviewer.review(dest,criteria,"")),dest)
+            except Exception as exc:
+                # Keep a successfully generated image and its budget count when
+                # the local vision service returns malformed output; do not
+                # spend another render on a reviewer-format failure.
+                review_error=str(exc)
+                review=enforce_image_checks({"decision":"manual","score":0,
+                    "summary":"Qwen review failed to return valid JSON; image retained for manual visual review.",
+                    "defects":["Local vision review returned invalid output; scene-specific review remains pending."],
+                    "retry_prompt":"","checks":{"no_large_solid_black_regions":True,"coloring_areas_open":True,
+                    "line_art_clean":None,"scene_readable_and_consistent":None}},dest)
+                if review["decision"]!="retry":
+                    review["decision"]="manual"
+                    review["review_source"]="manual_after_vision_error"
         else: review={"decision":"retry","score":0,"summary":"Image integrity check failed.","defects":["Resolution or contrast QA failed."],"retry_prompt":"Regenerate with clean bold outlines and broad white areas.","checks":{}}
-        row.update({"file":str(dest),"prompt_id":result.get("prompt_id"),"seed":seed,"qa":qa,"review":review,"status":"reviewed" if review["decision"] in {"accept","manual"} else "needs_retry","updated_at":datetime.now(timezone.utc).isoformat(),"hash":dhash(dest)})
+        row.update({"file":str(dest),"prompt_id":result.get("prompt_id"),"seed":seed,"qa":qa,"review":review,"review_error":review_error,"status":"reviewed" if review["decision"] in {"accept","manual"} else "needs_retry","updated_at":datetime.now(timezone.utc).isoformat(),"hash":dhash(dest)})
         existing.update({"items":approved+list(records.values()),"generated":generated,"completed":sum(x.get("review") is not None for x in records.values()),"active":None,"updated_at":datetime.now(timezone.utc).isoformat()}); atomic(db,existing)
         atomic(dashboard_status_path,{"status":"candidate_library_running","message":f"Reviewed {plan['title']}","generated":generated,"planned":len(allplans),"updated_at":datetime.now(timezone.utc).isoformat()})
         print(f"[{generated}/{max_total}] {plan['id']} {review['decision']} {review['score']} {review['summary'][:180]}",flush=True)
