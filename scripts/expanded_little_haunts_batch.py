@@ -203,23 +203,23 @@ def run(args):
             one(plan)
             if generated>=max_total: break
         # At most one defect-directed second look for up to nine weakest scenes.
-        retried_successfully={r.get("retry_of") for r in records.values() if r.get("retry_of") and r.get("review",{}).get("decision")=="accept"}
-        candidates=[r for r in records.values() if r.get("id") not in retried_successfully and r.get("retry_of") not in retried_successfully and r.get("review",{}).get("decision")=="retry" and r.get("generation_count",0)<2]
+        retried_successfully={r.get("retry_of") for r in records.values() if r.get("retry_of") and (r.get("review") or {}).get("decision")=="accept"}
+        candidates=[r for r in records.values() if r.get("id") not in retried_successfully and r.get("retry_of") not in retried_successfully and (r.get("review") or {}).get("decision")=="retry" and r.get("generation_count",0)<2]
         # Restore the human-rejected page options first, then spend remaining
         # retries on weak new-scene concepts, including visual QA overrides.
-        candidates.sort(key=lambda r:(r.get("category")!="replacement",r.get("review",{}).get("score",0),r["id"]))
+        candidates.sort(key=lambda r:(r.get("category")!="replacement",(r.get("review") or {}).get("score",0),r["id"]))
         for row in candidates[:max_retries]:
             if generated>=max_total: break
             one(row,True)
         # Rank with explicit printable QA and Qwen, plus a visual near-duplicate penalty.
-        ranked=sorted(records.values(),key=lambda r:(r.get("review",{}).get("decision")=="accept",r.get("qa",{}).get("pass",False),r.get("review",{}).get("score",0)),reverse=True)
+        ranked=sorted(records.values(),key=lambda r:((r.get("review") or {}).get("decision")=="accept",(r.get("qa") or {}).get("pass",False),(r.get("review") or {}).get("score",0)),reverse=True)
         selected=[]; used=set()
         for row in ranked:
             if not row.get("file") or not row.get("qa",{}).get("pass"): continue
-            score=int(row.get("review",{}).get("score",0)); dist=min(((int(row.get("hash",0))^int(x.get("hash",0))).bit_count() for x in selected),default=64)
-            row["diversity_score"]=dist; row["rank"]=round(score+min(10,dist/4)+(8 if row.get("review",{}).get("decision")=="accept" else 0),2)
+            score=int((row.get("review") or {}).get("score",0)); dist=min(((int(row.get("hash",0))^int(x.get("hash",0))).bit_count() for x in selected),default=64)
+            row["diversity_score"]=dist; row["rank"]=round(score+min(10,dist/4)+(8 if (row.get("review") or {}).get("decision")=="accept" else 0),2)
             if dist<5 and selected: row["surface"]=False
-            elif row.get("review",{}).get("decision")=="accept": row["surface"]=True; selected.append(row)
+            elif (row.get("review") or {}).get("decision")=="accept": row["surface"]=True; selected.append(row)
             else: row["surface"]=False
             row["status"]="strong_candidate" if row["surface"] else row.get("status","archive")
         # Ensure approved source pages remain visible and immutable in the candidate library.
