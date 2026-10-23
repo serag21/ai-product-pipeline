@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from comfy.client import ComfyUIClient
 from product_review_worker import (REVIEW_POLICY_VERSION, OpenAICompatibleReviewer, atomic_json,
                                    load_product, read_state, resolve_product_root)
+from local_services import DEFAULT_COMFY, ensure_comfy, ensure_ollama
 
 
 def now() -> str:
@@ -59,6 +60,8 @@ def read_config(product_root: Path) -> dict[str, Any]:
             "unload_endpoint": config.get("vision", {}).get("unload_endpoint"),
             "max_tokens": max(1, int(vision.get("max_tokens", 2048))),
             "reasoning_effort": vision.get("reasoning_effort"),
+            "comfy_server": config.get("comfy", {}).get("server", "http://127.0.0.1:8188"),
+            "comfy_install": config.get("comfy", {}).get("install", str(DEFAULT_COMFY)),
             "poll_seconds": max(5, int(config.get("supervisor", {}).get("poll_seconds", 20))),
             "service_retry_limit": max(1, int(config.get("supervisor", {}).get("service_retry_limit", 3)))}
 
@@ -197,6 +200,16 @@ def run_supervisor(args: argparse.Namespace) -> int:
                          config_file=config["config_path"])
             print(message, flush=True)
             time.sleep(args.poll_seconds or 20)
+            continue
+        try:
+            services = {"comfy": ensure_comfy(config["comfy_server"], config["comfy_install"]),
+                        "ollama": ensure_ollama(config["endpoint"], config["model"])}
+            write_status(status_path, "services_ready", args.run_id, services=services,
+                         message="Existing ComfyUI and Ollama installations are healthy; continuing the saved run.")
+        except Exception as exc:
+            service_failures += 1
+            write_status(status_path, "waiting_for_local_services", args.run_id, error=str(exc), retry=service_failures)
+            time.sleep(config["poll_seconds"])
             continue
         if not 1 <= config["max_attempts"] <= 14 or not 1 <= config["accept_score"] <= 100:
             write_status(status_path, "configuration_error", args.run_id,

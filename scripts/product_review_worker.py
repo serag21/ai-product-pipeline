@@ -416,6 +416,12 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
         raise RuntimeError("Run path escapes the product directory.")
     state_path = run_dir / "state.json"
     state = read_state(state_path, product["product_id"])
+    cycle_limits = {}
+    for page in selected:
+        key = str(int(page["page"]))
+        historical = len(state.get("candidates", {}).get(key, {}).get("attempts", []))
+        cycle_limits[key] = (min(args.cumulative_safety_ceiling, historical + args.cycle_attempts)
+                             if args.cycle_attempts else args.max_attempts)
     state["vision_configured"] = reviewer is not None
     state["max_attempts"] = args.max_attempts
     state["updated_at"] = utc_now()
@@ -493,7 +499,7 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
             # A larger configured attempt bound can resume an exhausted page
             # automatically without discarding its prior candidates. The flag
             # still permits an explicit same-bound retry when requested.
-            if not args.retry_exhausted and len(record["attempts"]) >= args.max_attempts:
+            if not args.retry_exhausted and len(record["attempts"]) >= cycle_limits[key]:
                 continue
             record["status"] = "pending"
         if record["status"] == "paused":
@@ -527,7 +533,7 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
                 generated = {"prompt_id": pending_candidate.get("prompt_id"), "qa": pending_candidate.get("qa", quality_check(destination))}
                 candidate = pending_candidate
             else:
-                if len(record["attempts"]) >= args.max_attempts:
+                if len(record["attempts"]) >= cycle_limits[key]:
                     record["status"] = "exhausted"
                     break
                 attempt = len(record["attempts"]) + 1
@@ -536,6 +542,13 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
                     attempt += 1
                     destination = run_dir / "candidates" / f"page_{page_no:03d}_attempt_{attempt:02d}_resume_{int(time.time())}.png"
                 prompt = build_prompt(product, item)
+                dashboard_state_path = run_dir / "dashboard_state.json"
+                if dashboard_state_path.is_file():
+                    human_state = json.loads(dashboard_state_path.read_text(encoding="utf-8"))
+                    human_note = str(human_state.get("pages", {}).get(key, {}).get("note", "")).strip()
+                    if human_note:
+                        prompt += (f"\n\nHuman art-direction instruction for this rejected page: {human_note}. "
+                                   "Treat this as a hard constraint; fix the named defect and change the layout meaningfully.")
                 prompt = add_review_feedback(prompt, prior_feedback)
                 base_seed = int(item["seed"]) if item.get("seed") is not None else 120000 + page_no * 7919
                 seed = (base_seed + attempt - 1) % (2**32)
@@ -616,6 +629,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--review-existing", action="store_true", help="Review and preserve existing pages before generating replacements")
     parser.add_argument("--re-review-accepted", action="store_true", help="Re-review accepted winners under strict printable-art checks; retries only failed pages")
     parser.add_argument("--retry-exhausted", action="store_true", help="Continue exhausted scenes after raising --max-attempts")
+    parser.add_argument("--cycle-attempts", type=int, help="Per-page new-attempt budget for this human regeneration cycle")
+    parser.add_argument("--cumulative-safety-ceiling", type=int, default=60, help="Lifetime attempt ceiling per page, including prior cycles")
     parser.add_argument("--approve", type=int, nargs="+", help="Record human approval for generated candidate pages and exit")
     parser.add_argument("--run-id", default="targeted-review")
     parser.add_argument("--server", default=os.getenv("COMFYUI_URL", "http://127.0.0.1:8188"))
@@ -632,6 +647,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     args = parser.parse_args(argv)
     if args.max_attempts < 1 or args.max_attempts > 14:
         parser.error("--max-attempts must be between 1 and 14")
+    if args.cycle_attempts is not None and not 1 <= args.cycle_attempts <= 14:
+        parser.error("--cycle-attempts must be between 1 and 14")
+    if args.cumulative_safety_ceiling < 1 or args.cumulative_safety_ceiling > 120:
+        parser.error("--cumulative-safety-ceiling must be between 1 and 120")
     if not 1 <= args.accept_score <= 100:
         parser.error("--accept-score must be between 1 and 100")
     if bool(args.vision_endpoint) != bool(args.vision_model):

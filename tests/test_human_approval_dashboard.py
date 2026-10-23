@@ -70,6 +70,28 @@ class DashboardTests(unittest.TestCase):
         self.assertIsNone(human["product_approval"])
         self.assertEqual(human["pages"]["1"]["status"], "needs_changes")
 
+    def test_save_note_does_not_change_human_decision(self):
+        self.dashboard.decide(1, "keep")
+        result = self.dashboard.save_note(1, "Keep the character; simplify the shelf.")
+        saved = self.dashboard.human()["pages"]["1"]
+        self.assertEqual(saved["status"], "approved")
+        self.assertEqual(saved["note"], "Keep the character; simplify the shelf.")
+        self.assertIn("saved_at", result)
+
+    def test_reviewed_library_candidate_can_be_selected_for_any_slot(self):
+        library = self.run / "candidate_library"
+        library.mkdir()
+        image = library / "new-scene.png"
+        shutil.copy2(self.candidates["1"]["attempts"][0]["file"], image)
+        self.dashboard.library_path.write_text(json.dumps({"items": [{"id": "new-scene", "file": str(image),
+            "qa": {"pass": True}, "review": {"decision": "accept", "score": 93, "summary": "Clear and charming."}}]}), encoding="utf-8")
+        self.dashboard.decide(1, "keep")
+        self.dashboard.replace_from_library(1, str(image))
+        human = self.dashboard.human()["pages"]["1"]
+        self.assertEqual(human["status"], "needs_review")
+        self.assertEqual(human["candidate_file"], str(image))
+        self.assertTrue(self.dashboard.data()["pages"][0]["image"])
+
     def test_promote_candidate_requires_current_vision_acceptance_and_invalidates_qa(self):
         alternative = self.run / "candidates" / "page_001_attempt_02.png"
         shutil.copy2(self.candidates["1"]["attempts"][0]["file"], alternative)
@@ -119,7 +141,36 @@ class DashboardTests(unittest.TestCase):
         self.assertNotIn("1", saved["pages"])
         self.assertEqual(result["pages"], [2])
 
+    def test_regeneration_uses_per_cycle_budget_after_thirteen_historical_attempts(self):
+        self.dashboard.decide(2, "reject", "Please change the composition")
+        state = self.dashboard.load_json(self.dashboard.state_path)
+        record = state["candidates"]["2"]
+        record["attempts"] = [dict(record["attempts"][0], attempt=n) for n in range(1, 14)]
+        self.dashboard.state_path.write_text(json.dumps(state), encoding="utf-8")
+
+        class FakeProcess:
+            pid = 124
+            def poll(self): return None
+
+        with patch("scripts.local_services.ensure_comfy", return_value={"status": "reused"}), \
+             patch("scripts.local_services.ensure_ollama", return_value={"status": "reused"}), \
+             patch("scripts.human_approval_dashboard.subprocess.Popen", return_value=FakeProcess()) as popen, \
+             patch("scripts.human_approval_dashboard.threading.Thread"):
+            self.dashboard.regenerate()
+        command = popen.call_args.args[0]
+        self.assertEqual(command[command.index("--max-attempts") + 1], "14")
+        self.assertEqual(command[command.index("--cycle-attempts") + 1], "3")
+        self.assertEqual(command[command.index("--cumulative-safety-ceiling") + 1], "60")
+        self.assertEqual(len(self.dashboard.load_json(self.dashboard.state_path)["candidates"]["2"]["attempts"]), 13)
+
     def test_rebuild_package_creates_new_qa_validated_output_without_touching_factory_package(self):
+        library_dir = self.run / "candidate_library"
+        library_dir.mkdir()
+        library_candidate = library_dir / "new-scene.png"
+        shutil.copy2(self.candidates["1"]["attempts"][0]["file"], library_candidate)
+        self.dashboard.library_path.write_text(json.dumps({"items": [{"id": "new-scene", "file": str(library_candidate),
+            "qa": {"pass": True}, "review": {"decision": "accept", "score": 92, "summary": "Reviewed new scene."}}]}), encoding="utf-8")
+        self.dashboard.replace_from_library(1, str(library_candidate))
         self.dashboard.decide(1, "keep")
         self.dashboard.decide(2, "keep")
         old_qa = (self.final / "package_qa.json").read_bytes()

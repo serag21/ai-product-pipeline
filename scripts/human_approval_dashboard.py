@@ -56,6 +56,7 @@ class Dashboard:
         self.final_dir = self.run_dir / "final_deliverables"
         self.human_path = self.run_dir / "dashboard_state.json"
         self.status_path = self.run_dir / "dashboard_status.json"
+        self.library_path = self.run_dir / "candidate_library.json"
         self.lock = threading.RLock()
         self.proc: subprocess.Popen | None = None
         self.run_dir.mkdir(parents=True, exist_ok=True)
@@ -85,7 +86,7 @@ class Dashboard:
         if not path:
             return None
         candidate = Path(path).resolve()
-        roots = [self.run_dir / "candidates", self.product_root / "pages", self.final_dir,
+        roots = [self.run_dir / "candidates", self.run_dir / "candidate_library", self.product_root / "pages", self.final_dir,
                  self.product_root / "qa", *self.run_dir.glob("final_deliverables_human_approved_*")]
         if not contained(candidate, roots) or not candidate.is_file():
             return None
@@ -141,7 +142,28 @@ class Dashboard:
                 "run_id": self.run_id, "listing": manifest.get("listing", {})},
             "pages": pages, "approved_pages": approved_pages, "total_pages": len(pages), "qa_passed": qa_passed,
             "qa": qa, "completion": completion, "human": human, "status": status,
-            "package_files": self.package_files(current_package), "published": False}
+            "package_files": self.package_files(current_package), "published": False,
+            "candidate_library": self.candidate_library(),
+            "candidate_archive": [{"page": p["page"], "label": p["label"], "candidate_file": a.get("file"),
+                "attempt": a.get("attempt"), "review": a.get("review", {}), "qa": a.get("qa", {}),
+                "image": self.asset_url(a.get("file"))}
+                for p in pages for a in state.get("candidates", {}).get(str(p["page"]), {}).get("attempts", [])
+                if a.get("file") != p.get("selected_file")]}
+
+    def candidate_library(self) -> dict[str, Any]:
+        library = self.load_json(self.library_path, {"status": "not_started", "items": []})
+        items = [dict(item) for item in library.get("items", []) if not str(item.get("id", "")).startswith("approved-p")]
+        state = self.load_json(self.state_path, {"candidates": {}})
+        for page, entry in self.human().get("pages", {}).items():
+            if entry.get("status") != "approved":
+                continue
+            path = entry.get("candidate_file")
+            candidate = next((x for x in state.get("candidates", {}).get(str(page), {}).get("attempts", []) if x.get("file") == path), {})
+            items.append({"id": f"approved-p{page}", "category": "approved", "title": f"Approved page {int(page):02d}",
+                "file": path, "status": "human approved · locked", "rank": 1000, "surface": True,
+                "qa": candidate.get("qa", {}), "review": candidate.get("review", {})})
+        items = [{**item, "image": self.asset_url(item.get("file"))} for item in items]
+        return {**library, "items": items}
 
     def package_files(self, package_dir: Path | None = None) -> list[dict[str, Any]]:
         package_dir = package_dir or self.final_dir
@@ -150,6 +172,45 @@ class Dashboard:
                  *sorted((package_dir / "listing_images").glob("*.jpg")),
                  package_dir / "etsy_listing_draft.md", package_dir / "package_qa.json"]
         return [{"name": p.name, "url": self.asset_url(p)} for p in paths if p.is_file()]
+
+    def save_note(self, page: int, note: str) -> dict[str, Any]:
+        with self.lock:
+            human = self.human()
+            entry = human.setdefault("pages", {}).setdefault(str(page), {"status": "needs_review"})
+            entry["note"] = note[:2000]
+            entry["note_updated_at"] = utc_now()
+            self.save_human(human)
+            return {"ok": True, "page": page, "saved_at": entry["note_updated_at"],
+                    "status": entry.get("status", "needs_review")}
+
+    def replace_from_library(self, page: int, candidate_file: str) -> dict[str, Any]:
+        with self.lock:
+            library = self.load_json(self.library_path, {"items": []})
+            candidate = next((x for x in library.get("items", []) if x.get("file") == candidate_file), None)
+            if not candidate or candidate.get("review", {}).get("decision") != "accept" or not candidate.get("qa", {}).get("pass"):
+                raise ValueError("Choose a library candidate that passed image QA and visual review")
+            source = Path(candidate_file).resolve()
+            if not contained(source, [self.run_dir / "candidate_library"]) or not source.is_file():
+                raise ValueError("Candidate image is missing or outside the candidate library")
+            state = self.load_json(self.state_path, {"candidates": {}})
+            record = state.setdefault("candidates", {}).setdefault(str(page), {"page": page, "attempts": []})
+            if not any(a.get("file") == candidate_file for a in record.get("attempts", [])):
+                attempt = max((int(a.get("attempt", 0)) for a in record.get("attempts", [])), default=0) + 1
+                record.setdefault("attempts", []).append({"attempt": attempt, "file": candidate_file, "seed": candidate.get("seed"),
+                    "qa": candidate["qa"], "review": candidate["review"], "review_policy_version": REVIEW_POLICY_VERSION,
+                    "source": "candidate_library", "created_at": candidate.get("updated_at", utc_now())})
+            record["best_candidate"] = candidate_file
+            record["status"] = "accepted_by_vision"
+            self.save_json_atomic(self.state_path, state)
+            human = self.human(); entry = human.setdefault("pages", {}).setdefault(str(page), {})
+            entry.update({"status": "needs_review", "candidate_file": candidate_file, "candidate_source": "candidate_library", "updated_at": utc_now()})
+            human["product_approval"] = None; self.save_human(human)
+            return {"ok": True, "page": page, "status": "needs_review", "candidate_file": candidate_file}
+
+    def save_json_atomic(self, path: Path, data: Any) -> None:
+        temp = path.with_suffix(path.suffix + ".tmp")
+        temp.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        os.replace(temp, path)
 
     def decide(self, page: int, action: str, note: str = "", candidate_file: str | None = None) -> dict[str, Any]:
         with self.lock:
@@ -204,7 +265,7 @@ class Dashboard:
             generation = []
             for page in data["pages"]:
                 source = Path(page["selected_file"]).resolve()
-                if not contained(source, [self.run_dir / "candidates", self.product_root / "pages"]) or not source.is_file():
+                if not contained(source, [self.run_dir / "candidates", self.run_dir / "candidate_library", self.product_root / "pages"]) or not source.is_file():
                     raise ValueError("Selected page image is missing or outside the product run")
                 destination = assembly / "pages" / f"page_{page['page']:03d}.png"
                 shutil.copy2(source, destination)
@@ -238,24 +299,37 @@ class Dashboard:
             if not pages:
                 raise ValueError("Mark one or more pages Reject / Regenerate first")
             state = self.load_json(self.state_path, {})
-            for page in pages:
-                rec = state.get("candidates", {}).get(str(page))
-                if not rec:
-                    raise ValueError(f"No candidate history for page {page}")
-                max_attempts = int(self.load_json(self.product_root / "factory_config.json", {}).get("generation", {}).get("max_attempts", 3))
-                if len(rec.get("attempts", [])) >= max_attempts:
-                    raise ValueError(f"Page {page} reached the configured attempt limit ({max_attempts}); raise the factory limit before retrying")
-                rec["status"] = "pending"
-            tmp = self.state_path.with_suffix(".dashboard.tmp")
-            tmp.write_text(json.dumps(state, indent=2), encoding="utf-8")
-            os.replace(tmp, self.state_path)
             config = self.load_json(self.product_root / "factory_config.json", {})
             vision = config.get("vision", {})
             endpoint, model = vision.get("endpoint"), vision.get("model")
             if not endpoint or not model:
                 raise ValueError("Configure the local vision endpoint and model in factory_config.json first")
+            try:
+                sys.path.insert(0, str(ROOT / "scripts"))
+                from local_services import DEFAULT_COMFY, ensure_comfy, ensure_ollama
+                ensure_comfy(config.get("comfy", {}).get("server", "http://127.0.0.1:8188"), config.get("comfy", {}).get("install", str(DEFAULT_COMFY)))
+                ensure_ollama(endpoint, model)
+            except Exception as exc:
+                raise ValueError(f"Generation preflight failed; saved decisions are unchanged: {exc}") from exc
+            max_cycle = int(config.get("generation", {}).get("dashboard_cycle_attempts", 3))
+            cumulative_ceiling = int(config.get("generation", {}).get("cumulative_safety_ceiling", 60))
+            limits = {}
+            for page in pages:
+                rec = state.get("candidates", {}).get(str(page))
+                if not rec:
+                    raise ValueError(f"No candidate history for page {page}")
+                if len(rec.get("attempts", [])) >= cumulative_ceiling:
+                    raise ValueError(f"Page {page} reached cumulative safety ceiling ({cumulative_ceiling})")
+                limits[page] = min(cumulative_ceiling, len(rec.get("attempts", [])) + max_cycle)
+            for page in pages:
+                rec = state["candidates"][str(page)]
+                rec["status"] = "pending"
+            tmp = self.state_path.with_suffix(".dashboard.tmp")
+            tmp.write_text(json.dumps(state, indent=2), encoding="utf-8")
+            os.replace(tmp, self.state_path)
             command = [sys.executable, str(ROOT / "scripts" / "product_review_worker.py"), "--product", str(self.product_root), "--run-id", self.run_id,
-                "--pages", *map(str, pages), "--max-attempts", str(config.get("generation", {}).get("max_attempts", 3)),
+                "--pages", *map(str, pages), "--max-attempts", str(min(14, int(config.get("generation", {}).get("max_attempts", 14)))),
+                "--cycle-attempts", str(max_cycle), "--cumulative-safety-ceiling", str(cumulative_ceiling),
                 "--accept-score", str(config.get("generation", {}).get("accept_score", 80)), "--vision-endpoint", endpoint,
                 "--vision-model", model, "--vision-max-tokens", str(vision.get("max_tokens", 2048))]
             if vision.get("unload_endpoint"):
@@ -300,7 +374,8 @@ class Dashboard:
                 if rec.get("status") == "accepted_by_vision":
                     entry["status"] = "needs_review"
                     entry["candidate_file"] = rec.get("best_candidate")
-                    entry["note"] = "New candidate generated; human review required."
+                    if not entry.get("note"):
+                        entry["note"] = "New candidate generated; human review required."
                 else:
                     entry["status"] = "rejected"
             human["product_approval"] = None
@@ -320,6 +395,19 @@ let state;async function api(url,body){let r=await fetch(url,{method:body?'POST'
 HTML = HTML.replace("</style>", ".listingimages{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.listingimages img{width:160px;height:160px;object-fit:contain;background:#f7f6f2;border-radius:6px}.copyPreview{background:#f7f6f2;padding:12px;border-radius:8px;margin-top:14px;white-space:pre-wrap}\n</style>")
 HTML = HTML.replace('<div class="filelinks" id="files"></div>', '<div class="filelinks" id="files"></div><div class="listingimages" id="listingImages"></div><div class="copyPreview" id="copyPreview"></div>')
 HTML = HTML.replace("document.getElementById('files').innerHTML=state.package_files.map(f=>`<a href=\"${f.url}\" target=\"_blank\">${esc(f.name)}</a>`).join('');", "document.getElementById('files').innerHTML=state.package_files.map(f=>`<a href=\"${f.url}\" target=\"_blank\">${esc(f.name)}</a>`).join('');document.getElementById('listingImages').innerHTML=state.package_files.filter(f=>f.name.startsWith('listing_')).map(f=>`<a href=\"${f.url}\" target=\"_blank\"><img src=\"${f.url}\" alt=\"${esc(f.name)}\"></a>`).join('');let l=state.product.listing||{};document.getElementById('copyPreview').innerHTML=`<b>${esc(l.title||'Listing title')}</b>\\n${esc(l.tagline||'')}\\n\\n${esc(l.description||'')}\\n\\n<b>Tags:</b> ${esc((l.tags||[]).join(', '))}`;")
+HTML = HTML.replace('<button class="tab" data-tab="alternatives">Rejected alternatives</button>', '<button class="tab" data-tab="alternatives">Complete page archive</button><button class="tab" data-tab="library">Candidate library</button>')
+HTML = HTML.replace('<section id="package" class="section">', '<section id="library" class="section"><div class="panel"><h2>Production progress</h2><p id="libraryStatus"></p><div id="libraryGroups"></div></div></section><section id="package" class="section">')
+HTML = HTML.replace("function render(){document.getElementById('summary')", "let noteDrafts={};document.addEventListener('input',e=>{if(e.target.matches('textarea[id^=note]'))noteDrafts[e.target.id]=e.target.value});function render(){let active=document.activeElement,focused=active&&active.matches('textarea[id^=note]')?active.id:null,caret=focused?active.selectionStart:null;document.querySelectorAll('textarea[id^=note]').forEach(t=>noteDrafts[t.id]=t.value);document.getElementById('summary')")
+HTML = HTML.replace("document.getElementById('grid').innerHTML=state.pages.map(card).join('');", "let grid=document.getElementById('grid'),oldNotes=new Map([...grid.querySelectorAll('textarea[id^=note]')].map(t=>[t.id,t]));grid.innerHTML=state.pages.map(card).join('');grid.querySelectorAll('textarea[id^=note]').forEach(t=>{let old=oldNotes.get(t.id);if(old){if(!Object.prototype.hasOwnProperty.call(noteDrafts,t.id))old.value=t.value;t.replaceWith(old)}else if(Object.prototype.hasOwnProperty.call(noteDrafts,t.id))t.value=noteDrafts[t.id]});if(focused){let f=document.getElementById(focused);if(f){f.focus();if(caret!==null)f.setSelectionRange(caret,caret)}}")
+HTML = HTML.replace("document.getElementById('qa').textContent=state.qa_passed?", "renderLibrary();document.getElementById('qa').textContent=state.qa_passed?")
+LIBRARY_JS = r"""document.getElementById('grid').addEventListener('click',async e=>{let b=e.target.closest('[data-save-note]');if(!b)return;let page=+b.dataset.saveNote;try{await api('/api/note',{page,note:document.getElementById('note'+page).value});noteDrafts['note'+page]=document.getElementById('note'+page).value;b.textContent='Saved';setTimeout(()=>b.textContent='Save note',1600)}catch(err){showErr(err)}});function renderLibrary(){let lib=state.candidate_library||{items:[]},items=lib.items||[];document.getElementById('libraryStatus').textContent=`${lib.generated||0} generated · ${lib.completed||0}/${lib.planned||0} planned reviews complete · ${lib.status||'not started'}${lib.error?' · '+lib.error:''}`;let defs=[['Approved',x=>x.category==='approved'],['Replacement Options',x=>x.category==='replacement'],['New Scene Concepts',x=>x.category==='new_scene']];document.getElementById('libraryGroups').innerHTML=defs.map(([name,fn])=>{let rows=items.filter(x=>fn(x)&&x.surface!==false).sort((a,b)=>(b.rank||0)-(a.rank||0));return `<h3>${name} (${rows.length})</h3><div class="grid">${rows.map(x=>`<article class="card"><img src="${x.image||''}" data-zoom="${x.image||''}" alt="${esc(x.title)}"><div class="content"><h3>${esc(x.title||x.id)}</h3><div class="meta">${esc(x.status||'candidate')} · QA ${esc(x.qa?.pass?'pass':'check')} · Qwen ${esc(x.review?.score??'—')} · diversity ${esc(x.diversity_score??'—')}</div><p>${esc(x.review?.summary||x.note||'Queued')}</p><p class="meta">${esc((x.review?.defects||[]).join('; '))}</p></div></article>`).join('')}</div>`}).join('')+(items.some(x=>x.surface===false)?`<details><summary>Complete candidate archive (${items.filter(x=>x.surface===false).length})</summary><div class="grid">${items.filter(x=>x.surface===false).map(x=>`<article class="card"><img src="${x.image||''}" data-zoom="${x.image||''}" alt="${esc(x.title)}"><div class="content"><h3>${esc(x.title||x.id)}</h3><p>${esc(x.review?.summary||x.status||'')}</p></div></article>`).join('')}</div></details>`:'')} `};"""
+LIBRARY_JS = LIBRARY_JS.replace('<p class="meta">${esc((x.review?.defects||[]).join(\'; \'))}</p></div></article>`', '<p class="meta">${esc((x.review?.defects||[]).join(\'; \'))}</p>${x.review?.decision===\'accept\'&&x.qa?.pass?`<div class="actions"><select data-library-target="${esc(x.file)}">${state.pages.map(p=>`<option value="${p.page}">Replace page ${p.page}</option>`).join(\'\')}</select><button data-library-replace="${esc(x.file)}">Use candidate</button></div>`:\'\'}</div></article>`')
+LIBRARY_JS = LIBRARY_JS.replace("function renderLibrary()", "document.getElementById('libraryGroups').addEventListener('click',async e=>{let b=e.target.closest('[data-library-replace]');if(!b)return;let file=b.dataset.libraryReplace,sel=document.querySelector(`[data-library-target=\"${CSS.escape(file)}\"]`);try{await api('/api/library_replace',{page:+sel.value,candidate_file:file});await refresh()}catch(err){showErr(err)}});function renderLibrary()")
+LIBRARY_JS = LIBRARY_JS.removesuffix(" `};") + ";"
+HTML = HTML.replace("document.getElementById('rebuild').onclick=async()=>", LIBRARY_JS + "document.getElementById('rebuild').onclick=async()=>")
+HTML = HTML.replace("refresh().catch(showErr);setInterval(()=>refresh().catch(()=>{}),5000);", "refresh().catch(showErr);setInterval(()=>refresh().catch(()=>{}),5000);")
+HTML = HTML.replace('<textarea id="note${p.page}" placeholder="Optional note / change request">${esc(p.human_note)}</textarea><div class="actions"><button data-action="keep"', '<textarea id="note${p.page}" placeholder="Optional note / change request; saved critique informs the next generation">${esc(p.human_note)}</textarea><div class="actions"><button class="secondary" data-save-note="${p.page}">Save note</button><span class="meta">Keep = approve this version · Reject / Regenerate = queue a new design · Needs changes = pause until you add instructions</span></div><div class="actions"><button data-action="keep"')
+HTML = HTML.replace("document.getElementById('alts').innerHTML=groups||'<div class=\"panel\">No rejected alternatives recorded.</div>';", "document.getElementById('alts').innerHTML=groups||'<div class=\"panel\">No rejected alternatives recorded.</div>';let archive=state.candidate_archive||[];document.getElementById('alts').innerHTML=archive.length?`<div class=\"grid\">${archive.map(a=>`<article class=\"card\"><img src=\"${a.image||''}\" data-zoom=\"${a.image||''}\" alt=\"Archived candidate\"><div class=\"content\"><h3>Page ${a.page} · ${esc(a.label)} · Attempt ${a.attempt}</h3><div class=\"meta\">${esc(a.review.decision||'unreviewed')} · ${esc(a.review.score??'—')} · ${esc(a.qa.pass?'QA pass':'QA check')}</div><p>${esc(a.review.summary||'')}</p><p>${esc((a.review.defects||[]).join('; '))}</p></div></article>`).join('')}</div>`:'<div class=\"panel\">No archived candidates.</div>'; ")
 
 
 def make_handler(dashboard: Dashboard):
@@ -348,7 +436,7 @@ def make_handler(dashboard: Dashboard):
                     token = parsed.path.rsplit("/", 1)[1]
                     raw = base64.urlsafe_b64decode(token + "=" * (-len(token) % 4)).decode()
                     path = Path(raw).resolve()
-                    roots = [dashboard.run_dir / "candidates", dashboard.product_root / "pages", dashboard.final_dir,
+                    roots = [dashboard.run_dir / "candidates", dashboard.run_dir / "candidate_library", dashboard.product_root / "pages", dashboard.final_dir,
                              dashboard.product_root / "qa", *dashboard.run_dir.glob("final_deliverables_human_approved_*")]
                     if not contained(path, roots) or not path.is_file():
                         raise ValueError("not allowed")
@@ -367,6 +455,8 @@ def make_handler(dashboard: Dashboard):
                 body = json.loads(self.rfile.read(length) or b"{}")
                 route = urllib.parse.urlparse(self.path).path
                 if route == "/api/decision": result = dashboard.decide(int(body["page"]), body["action"], str(body.get("note", "")), body.get("candidate_file"))
+                elif route == "/api/note": result = dashboard.save_note(int(body["page"]), str(body.get("note", "")))
+                elif route == "/api/library_replace": result = dashboard.replace_from_library(int(body["page"]), str(body["candidate_file"]))
                 elif route == "/api/approve": result = dashboard.approve()
                 elif route == "/api/rebuild": result = dashboard.rebuild_package()
                 elif route == "/api/regenerate": result = dashboard.regenerate()

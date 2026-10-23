@@ -9,7 +9,13 @@
   },
   "generation": {
     "max_attempts": 3,
-    "accept_score": 80
+    "accept_score": 80,
+    "dashboard_cycle_attempts": 3,
+    "cumulative_safety_ceiling": 60
+  },
+  "comfy": {
+    "server": "http://127.0.0.1:8188",
+    "install": "D:\\ComfyUI_NEW\\ComfyUI"
   },
   "supervisor": {
     "poll_seconds": 20,
