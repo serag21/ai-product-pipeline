@@ -87,6 +87,10 @@ def dhash(path:Path)->int:
         for x in range(8): out=(out<<1)|(p[y*9+x]>p[y*9+x+1])
     return out
 
+def hash_value(value:Any)->int:
+    """Read legacy hexadecimal hashes and current integer perceptual hashes."""
+    return int(value,16) if isinstance(value,str) else int(value or 0)
+
 def gpu_snapshot() -> tuple[int,int] | None:
     try:
         result=subprocess.run(["nvidia-smi","--query-gpu=memory.free,utilization.gpu","--format=csv,noheader,nounits"],capture_output=True,text=True,timeout=10,check=True)
@@ -216,7 +220,7 @@ def run(args):
         selected=[]; used=set()
         for row in ranked:
             if not row.get("file") or not row.get("qa",{}).get("pass"): continue
-            score=int((row.get("review") or {}).get("score",0)); dist=min(((int(row.get("hash",0))^int(x.get("hash",0))).bit_count() for x in selected),default=64)
+            score=int((row.get("review") or {}).get("score",0)); dist=min(((hash_value(row.get("hash"))^hash_value(x.get("hash"))).bit_count() for x in selected),default=64)
             row["diversity_score"]=dist; row["rank"]=round(score+min(10,dist/4)+(8 if (row.get("review") or {}).get("decision")=="accept" else 0),2)
             if dist<5 and selected: row["surface"]=False
             elif (row.get("review") or {}).get("decision")=="accept": row["surface"]=True; selected.append(row)
