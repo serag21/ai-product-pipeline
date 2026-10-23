@@ -216,13 +216,19 @@ def main():
     except (OSError,BlockingIOError):
         print("Expanded production batch is already running; leaving its saved state untouched.",flush=True); return 0
     cfg=json.loads((resolve_product_root(args.product)/"factory_config.json").read_text(encoding="utf-8")); vc=cfg["vision"]
-    for restart in range(3):
+    server=cfg.get("comfy",{}).get("server","http://127.0.0.1:8188")
+    install=cfg.get("comfy",{}).get("install",str(DEFAULT_COMFY))
+    for restart in range(5):
         try: return run(args)
         except Exception as exc:
-            print(f"Recoverable batch failure {restart+1}/3: {exc}",file=sys.stderr,flush=True)
-            if restart==2: return 1
+            print(f"Recoverable batch failure {restart+1}/5: {exc}",file=sys.stderr,flush=True)
+            if restart==4: return 1
             time.sleep(15)
-            ensure_comfy(cfg.get("comfy",{}).get("server","http://127.0.0.1:8188"),cfg.get("comfy",{}).get("install",str(DEFAULT_COMFY)))
+            ensure_comfy(server,install)
+            try:
+                ComfyUIClient(server).free_memory(timeout=120)
+            except Exception as cleanup_exc:
+                print(f"ComfyUI memory cleanup during recovery did not complete: {cleanup_exc}",file=sys.stderr,flush=True)
             ensure_ollama(vc["endpoint"],vc["model"])
     return 1
 if __name__=="__main__":
