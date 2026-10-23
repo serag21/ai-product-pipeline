@@ -2,6 +2,7 @@
 """Bounded, resumable FLUX.2 + Qwen production run for the Little Haunts library."""
 from __future__ import annotations
 import argparse, json, os, sys, time, subprocess
+import requests
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -94,7 +95,7 @@ def gpu_snapshot() -> tuple[int,int] | None:
     except Exception:
         return None
 
-def wait_gpu_headroom(status_path:Path, timeout:int=4*60*60) -> None:
+def wait_gpu_headroom(status_path:Path, timeout:int=4*60*60, client:ComfyUIClient|None=None) -> None:
     """Wait for existing foreground GPU work; do not compete with it or risk a VRAM overcommit."""
     deadline=time.monotonic()+timeout; good=0; last=None
     while time.monotonic()<deadline:
@@ -105,6 +106,16 @@ def wait_gpu_headroom(status_path:Path, timeout:int=4*60*60) -> None:
             free,util=sample; last=(free,util)
             good=good+1 if free>=22*1024**3 and util<45 else 0
         if good>=3: return
+        if client is not None and last and last[0]<22*1024**3:
+            # ComfyUI can retain FLUX weights between jobs. Unload them only
+            # after confirming its queue is empty; never interrupt foreground work.
+            try:
+                response=requests.get(f"{client.server_url}/queue",timeout=5)
+                response.raise_for_status(); queue=response.json()
+                if not queue.get("queue_running") and not queue.get("queue_pending"):
+                    client.free_memory(timeout=15)
+            except Exception as exc:
+                print(f"Idle ComfyUI memory cleanup deferred: {exc}",flush=True)
         atomic(status_path,{"status":"waiting_for_safe_gpu_headroom","message":"A foreground GPU workload is active. The batch is waiting for at least 22 GiB free VRAM and low utilization before loading FLUX or Qwen.","gpu_free_mib":round(last[0]/1024**2) if last else None,"gpu_utilization_percent":last[1] if last else None,"updated_at":datetime.now(timezone.utc).isoformat()})
         print(f"Waiting for safe GPU headroom: {round(last[0]/1024**2)} MiB free, {last[1]}% load",flush=True)
         time.sleep(20)
@@ -154,7 +165,7 @@ def run(args):
         seed=900000+plan["seed_offset"]+attempt*7919
         row.update({"status":"generating","generation_count":attempt,"updated_at":datetime.now(timezone.utc).isoformat()}); existing.update({"items":approved+list(records.values()),"generated":generated,"active":plan["id"]}); atomic(db,existing)
         atomic(dashboard_status_path,{"status":"candidate_library_running","message":f"Generating {plan['title']}","generated":generated,"planned":len(allplans),"updated_at":datetime.now(timezone.utc).isoformat()})
-        reviewer.unload(); wait_gpu_headroom(dashboard_status_path); client.health()
+        reviewer.unload(); wait_gpu_headroom(dashboard_status_path,client=client); client.health()
         result=generate_one(client,item,product,workflow,dest,item["page"],attempt,args.run_id.replace("-","_"),prompt,seed,args.timeout)
         generated+=1; qa=result["qa"]
         review_error=None
