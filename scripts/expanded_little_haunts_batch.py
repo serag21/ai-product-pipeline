@@ -121,6 +121,7 @@ def run(args):
         if entry.get("status")!="approved": continue
         file=entry.get("candidate_file"); cand=next((c for c in prior_state.get("candidates",{}).get(str(page),{}).get("attempts",[]) if c.get("file")==file),{})
         approved.append({"id":f"approved-p{page}","category":"approved","title":f"Approved page {int(page):02d}","file":file,"status":"human approved · locked","rank":1000,"surface":True,"qa":cand.get("qa",{}),"review":cand.get("review",{})})
+    existing.pop("error",None)
     existing.update({"status":"running","planned":len(allplans),"generated":sum(x.get("file") is not None for x in records.values()),"completed":sum(x.get("review") is not None for x in records.values()),"budget":max_total,"started_at":existing.get("started_at",datetime.now(timezone.utc).isoformat()),"items":approved+list(records.values())}); atomic(db,existing)
     atomic(dashboard_status_path,{"status":"candidate_library_running","message":"Generating and visually reviewing the bounded replacement and new-scene collection.","generated":existing["generated"],"planned":len(allplans),"updated_at":datetime.now(timezone.utc).isoformat()})
     cfg=json.loads((product_root/"factory_config.json").read_text(encoding="utf-8")); vc=cfg["vision"]
@@ -172,7 +173,9 @@ def run(args):
         # At most one defect-directed second look for up to nine weakest scenes.
         retried_successfully={r.get("retry_of") for r in records.values() if r.get("retry_of") and r.get("review",{}).get("decision")=="accept"}
         candidates=[r for r in records.values() if r.get("id") not in retried_successfully and r.get("retry_of") not in retried_successfully and r.get("review",{}).get("decision")=="retry" and r.get("generation_count",0)<2]
-        candidates.sort(key=lambda r:(r.get("review",{}).get("score",0),r["id"]))
+        # Restore the human-rejected page options first, then spend remaining
+        # retries on weak new-scene concepts, including visual QA overrides.
+        candidates.sort(key=lambda r:(r.get("category")!="replacement",r.get("review",{}).get("score",0),r["id"]))
         for row in candidates[:max_retries]:
             if generated>=max_total: break
             one(row,True)

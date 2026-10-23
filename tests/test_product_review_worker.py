@@ -281,6 +281,21 @@ class LocalWorkerTests(unittest.TestCase):
         self.assertEqual(checked["decision"], "retry")
         self.assertFalse(checked["checks"]["no_large_solid_black_regions"])
 
+    def test_pixel_gate_rejects_widespread_gray_shading(self):
+        image_path = self.product / "gray-fur.png"
+        image = Image.new("RGB", (1536, 1984), "white")
+        from PIL import ImageDraw
+        ImageDraw.Draw(image).rectangle((400, 400, 1100, 900), fill=(145, 145, 145))
+        image.save(image_path)
+        checked = local_worker.enforce_image_checks(local_worker.validate_review({
+            "decision": "accept", "score": 95, "summary": "Looks good.", "defects": [], "retry_prompt": "",
+            "checks": {"no_large_solid_black_regions": True, "coloring_areas_open": True,
+                "line_art_clean": True, "scene_readable_and_consistent": True},
+        }), image_path)
+        self.assertEqual(checked["decision"], "retry")
+        self.assertFalse(checked["checks"]["coloring_areas_open"])
+        self.assertGreaterEqual(checked["gray_fill_ratio"], 0.075)
+
     def test_retry_limit_is_bounded_at_fourteen(self):
         self.assertEqual(self.args("--max-attempts", "14").max_attempts, 14)
         with self.assertRaises(SystemExit):

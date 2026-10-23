@@ -298,17 +298,39 @@ def find_large_solid_black_region(image_path: Path) -> dict[str, Any] | None:
 
 def enforce_image_checks(review: dict[str, Any], image_path: Path) -> dict[str, Any]:
     region = find_large_solid_black_region(image_path)
-    if not region:
+    from PIL import Image
+    with Image.open(image_path) as image:
+        luminance = image.convert("L")
+        histogram = luminance.histogram()
+        total = max(1, luminance.width * luminance.height)
+        # Line art can have antialiased edges, but broad gray rendering and cast
+        # shadows fill areas that should stay white for a printable coloring page.
+        gray_fill_ratio = sum(histogram[56:221]) / total
+    gray_fill = gray_fill_ratio >= 0.075
+    if not region and not gray_fill:
         return review
     result = dict(review)
-    result["checks"] = {**result.get("checks", {}), "no_large_solid_black_regions": False}
+    checks = dict(result.get("checks", {}))
+    if region:
+        checks["no_large_solid_black_regions"] = False
+    if gray_fill:
+        checks["coloring_areas_open"] = False
+    result["checks"] = checks
     result["decision"] = "retry"
-    defect = ("Automated pixel check found a broad near-solid-black region that removes coloring space "
-              f"(area {region['area_ratio']:.1%}, fill {region['fill_ratio']:.0%}); redraw it as white paper inside clean outlines.")
+    defects = []
+    if region:
+        defects.append("Automated pixel check found a broad near-solid-black region that removes coloring space "
+                       f"(area {region['area_ratio']:.1%}, fill {region['fill_ratio']:.0%}); redraw it as white paper inside clean outlines.")
+    if gray_fill:
+        defects.append(f"Automated pixel check found widespread gray fill ({gray_fill_ratio:.1%} of the page); remove gray fur/clothing/prop fills and cast shadows, leaving those surfaces white inside clean black outlines.")
+    defect = " ".join(defects)
     result["defects"] = list(result.get("defects", [])) + [defect]
     result["summary"] = defect + " " + result.get("summary", "")
-    result["retry_prompt"] = (result.get("retry_prompt", "") + " Keep every broad surface, doorway, sky panel, and prop interior white and colorable; do not fill regions with solid black.").strip()
-    result["pixel_check"] = region
+    result["retry_prompt"] = (result.get("retry_prompt", "") + " Keep every broad surface white and colorable inside crisp black outlines. Do not use gray fills, grayscale fur or clothing, cast shadows, gradients, crosshatching, or solid black fill.").strip()
+    if region:
+        result["pixel_check"] = region
+    if gray_fill:
+        result["gray_fill_ratio"] = round(gray_fill_ratio, 5)
     return result
 
 
