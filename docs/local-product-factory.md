@@ -1,5 +1,11 @@
 # Local art review and retry
 
+## Current Halloween book selection and delivery
+
+Run `run_human_approval_dashboard.ps1` and open `http://127.0.0.1:8765/`. Its three steps are artwork selection, product finalization, and optional Etsy listing preparation. Candidate choices, page notes, and human approvals are saved in `review_runs/factory-main/book_selection.json`; this file does not replace the original factory decisions. Any number of pages can be selected, and each selection change creates a new package version instead of overwriting an earlier delivery. A package can be mechanically QA-passed while some art still awaits your approval.
+
+Etsy authorization requires an Etsy Seller App, its keystring and shared secret, and an exact registered HTTPS callback URI. The dashboard implements Etsy's PKCE code exchange, obtains the shop and seller taxonomy, creates a digital draft, uploads its files and listing images, and activates the listing only after separate typed confirmations. Credentials and tokens are protected by Windows DPAPI. No Etsy write occurs while connecting or previewing.
+
 ## Persistent full-product factory
 
 The one-page-batch launcher remains useful for experiments. For a full unattended Little Haunts run, start the supervisor once:
@@ -8,9 +14,9 @@ The one-page-batch launcher remains useful for experiments. For a full unattende
 .\start_product_factory.ps1 -InstallAtLogon
 ```
 
-It creates a per-user Windows logon task and starts a persistent supervisor for the 15-page manifest. It first waits for a real multimodal vision provider, reviews the existing page candidates, retries only weak pages through the repository's FLUX.2 ComfyUI API workflow, then creates final deliverables after every page meets the configured vision threshold. It records progress/ETA in `products/little-haunts-club-spooky-neighbors-15/factory_status.json` and logs in `factory.log`. Use `.\start_product_factory.ps1 -Foreground` to run visibly while debugging, `.\cancel_product_factory.ps1` to cancel, and `.\retry_product_factory.ps1` after fixing a `needs_attention` condition.
+It creates a per-user Windows logon task and starts a persistent supervisor for the 17-page Halloween manifest. It first waits for a real multimodal vision provider, reviews the existing page candidates, retries only weak pages through the repository's FLUX.2 ComfyUI API workflow, then creates final deliverables after every page meets the configured vision threshold. It records progress/ETA in `products/little-haunts-club-spooky-neighbors-17/factory_status.json` and logs in `factory.log`. Use `.\start_product_factory.ps1 -Foreground` to run visibly while debugging, `.\cancel_product_factory.ps1` to cancel, and `.\retry_product_factory.ps1` after fixing a `needs_attention` condition.
 
-The supervisor starts in `waiting_for_configuration` until `products/little-haunts-club-spooky-neighbors-15/factory_config.json` exists. Copy `factory_config.example.json` there and set a provider endpoint and model. The default example targets Ollama at `http://127.0.0.1:11434/v1` with `qwen3-vl:30b`. On Windows install Ollama and download the model:
+The supervisor starts in `waiting_for_configuration` until `products/little-haunts-club-spooky-neighbors-17/factory_config.json` exists. Copy `factory_config.example.json` there and set a provider endpoint and model. The default example targets Ollama at `http://127.0.0.1:11434/v1` with `qwen3-vl:30b`. On Windows install Ollama and download the model:
 
 ```powershell
 winget install --id Ollama.Ollama --exact
@@ -34,7 +40,7 @@ $secure = Read-Host 'OpenAI API key' -AsSecureString
 $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
 try { $key = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr); [Environment]::SetEnvironmentVariable('OPENAI_API_KEY', $key, 'User') }
 finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr); Remove-Variable key -ErrorAction SilentlyContinue }
-Copy-Item .\factory_config.example.json .\products\little-haunts-club-spooky-neighbors-15\factory_config.json
+Copy-Item .\factory_config.example.json .\products\little-haunts-club-spooky-neighbors-17\factory_config.json
 # Edit factory_config.json: endpoint=https://api.openai.com/v1, model=<vision-capable model>, api_key_env=OPENAI_API_KEY
 ```
 

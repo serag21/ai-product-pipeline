@@ -20,7 +20,11 @@ The Windows-local factory can resume vision review, regenerate only rejected pag
 .\start_product_factory.ps1 -InstallAtLogon
 ```
 
-On first run it waits for a multimodal vision provider configuration in `products/little-haunts-club-spooky-neighbors-15/factory_config.json`. Copy `factory_config.example.json` there, select a vision model supported by an OpenAI-compatible `/chat/completions` API, and keep any API key in the user environment rather than the config file. The service detects the saved configuration and continues. See [docs/local-product-factory.md](docs/local-product-factory.md) for configuration, status, cancellation, and recovery commands. The final package is written under `products/little-haunts-club-spooky-neighbors-15/review_runs/factory-main/final_deliverables/`; the factory never uploads or publishes it.
+On first run it waits for a multimodal vision provider configuration in `products/little-haunts-club-spooky-neighbors-17/factory_config.json`. Copy `factory_config.example.json` there, select a vision model supported by an OpenAI-compatible `/chat/completions` API, and keep any API key in the user environment rather than the config file. The service detects the saved configuration and continues. See [docs/local-product-factory.md](docs/local-product-factory.md) for configuration, status, cancellation, and recovery commands. The current Halloween book has a separate persistent selection record and versioned packages under `products/little-haunts-club-spooky-neighbors-17/review_runs/factory-main/`; the dashboard never uploads or publishes without explicit user actions.
+
+### Halloween 2026 product dashboard
+
+Run `run_human_approval_dashboard.ps1` and open `http://127.0.0.1:8765/`. The dashboard has three steps: choose and approve artwork, review the automatically rebuilt package and QA, then optionally connect Etsy. It supports adding or removing pages, so packaging follows the current book length. Human approvals and the existing candidate archive are stored separately from the original factory decisions. Etsy uses its Open API v3 digital listing endpoints; the dashboard stores app credentials and tokens with Windows DPAPI and requires distinct typed confirmations to upload a draft and publish it.
 
 The generator is now product-manifest driven. Each product lives under:
 

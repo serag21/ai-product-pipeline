@@ -335,7 +335,7 @@ def run_supervisor(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--product", default="products/little-haunts-club-spooky-neighbors-15")
+    parser.add_argument("--product", default="products/little-haunts-club-spooky-neighbors-17")
     parser.add_argument("--run-id", default="factory-main")
     parser.add_argument("--poll-seconds", type=int, default=20)
     args = parser.parse_args()

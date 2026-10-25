@@ -237,7 +237,7 @@ def run(args):
     print(f"DONE: {generated} images; library at {db}",flush=True)
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__); p.add_argument("--product",default="products/little-haunts-club-spooky-neighbors-15"); p.add_argument("--run-id",default="factory-main"); p.add_argument("--timeout",type=int,default=1800); args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__); p.add_argument("--product",default="products/little-haunts-club-spooky-neighbors-17"); p.add_argument("--run-id",default="factory-main"); p.add_argument("--timeout",type=int,default=1800); args=p.parse_args()
     run_dir=resolve_product_root(args.product)/"review_runs"/args.run_id; run_dir.mkdir(parents=True,exist_ok=True)
     batch_log=(run_dir/"expanded_batch.log").open("a",encoding="utf-8",buffering=1)
     sys.stdout=batch_log; sys.stderr=batch_log

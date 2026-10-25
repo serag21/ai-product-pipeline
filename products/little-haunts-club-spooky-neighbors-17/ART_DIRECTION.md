@@ -7,14 +7,14 @@ This is an original collection, not a reproduction of competitor pages. Competit
 Sources consulted:
 - Black Forest Labs, [FLUX.2 Prompting Guide](https://docs.bfl.ai/guides/prompting_guide_flux2): lead with subject and action, then critical style, then context; wording order matters; describe intended output affirmatively.
 - Penguin Random House, [Spooky Cutie](https://www.penguinrandomhouse.com/books/824611/spooky-cutie-by-coco-wyo/): current ages 7+ listing positions a varied spooky cast and large bold designs.
-- Etsy, [Printable Halloween Creatures](https://www.etsy.com/listing/1305339872/printable-halloween-coloring-pages): mixed Halloween character types can be the offer, instead of 15 near-identical ghost-and-cat scenes.
+- Etsy, [Printable Halloween Creatures](https://www.etsy.com/listing/1305339872/printable-halloween-coloring-pages): mixed Halloween character types can be the offer, instead of a repetitive ghost-and-cat collection.
 - Etsy, [Haunted Home Moments](https://www.etsy.com/listing/4337130396/haunted-home-moments-coloring-book-cozy) and [Spooky Comfy](https://www.etsy.com/listing/4396516924/spooky-comfy-cozy-creepy-coloring-book): current sample imagery illustrates varied archetypes, cozy environments, and prop-led storytelling.
 
 The final compositions and character descriptions are original. We do not copy a competitor's page layout, characters, or specific drawings.
 
 ## Why v2 is not the release candidate
 
-The uploaded v2 15-page sheet shows cleaner outlines than earlier tests, but the pack has not yet earned launch approval:
+The current 17-page candidate book shows cleaner outlines than earlier tests, but the pack has not yet earned launch approval:
 - The same ghost-and-cat pairing appears too often.
 - Floating black bats are repeated as background filler across many pages.
 - Some nighttime windows and the television frame generate large filled-black regions, which remove useful coloring area.

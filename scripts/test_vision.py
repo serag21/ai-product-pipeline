@@ -19,7 +19,7 @@ from product_review_worker import OpenAICompatibleReviewer, criteria_for, load_p
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--product", default="products/little-haunts-club-spooky-neighbors-15")
+    parser.add_argument("--product", default="products/little-haunts-club-spooky-neighbors-17")
     parser.add_argument("--page", type=int, default=1)
     parser.add_argument("--endpoint", default="http://127.0.0.1:11434/v1")
     parser.add_argument("--model", default="qwen3-vl:30b")

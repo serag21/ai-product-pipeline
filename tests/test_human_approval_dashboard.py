@@ -128,7 +128,9 @@ class DashboardTests(unittest.TestCase):
             pid = 123
             def poll(self): return None
 
-        with patch("scripts.human_approval_dashboard.subprocess.Popen", return_value=FakeProcess()) as popen, \
+        with patch("scripts.human_approval_dashboard.ensure_comfy", return_value={"status": "reused"}), \
+             patch("scripts.human_approval_dashboard.ensure_ollama", return_value={"status": "reused"}), \
+             patch("scripts.human_approval_dashboard.subprocess.Popen", return_value=FakeProcess()) as popen, \
              patch("scripts.human_approval_dashboard.threading.Thread") as thread:
             result = self.dashboard.regenerate()
         command = popen.call_args.args[0]
@@ -152,8 +154,8 @@ class DashboardTests(unittest.TestCase):
             pid = 124
             def poll(self): return None
 
-        with patch("scripts.local_services.ensure_comfy", return_value={"status": "reused"}), \
-             patch("scripts.local_services.ensure_ollama", return_value={"status": "reused"}), \
+        with patch("scripts.human_approval_dashboard.ensure_comfy", return_value={"status": "reused"}), \
+             patch("scripts.human_approval_dashboard.ensure_ollama", return_value={"status": "reused"}), \
              patch("scripts.human_approval_dashboard.subprocess.Popen", return_value=FakeProcess()) as popen, \
              patch("scripts.human_approval_dashboard.threading.Thread"):
             self.dashboard.regenerate()

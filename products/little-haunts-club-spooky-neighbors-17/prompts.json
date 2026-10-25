@@ -1,10 +1,10 @@
 {
-  "product_id": "little-haunts-club-spooky-neighbors-15",
-  "file_prefix": "Little-Haunts-Club",
-  "title": "Little Haunts Club: A Very Odd Halloween — 15 Printable Coloring Pages",
+  "product_id": "little-haunts-club-spooky-neighbors-17",
+  "file_prefix": "Little-Haunts-Club-17",
+  "title": "Little Haunts Club: A Very Odd Halloween — 17 Printable Coloring Pages",
   "brand": "LITTLE HAUNTS CLUB",
   "subtitle": "A VERY ODD HALLOWEEN",
-  "purpose": "A carefully art-directed first seasonal Etsy validation product with 15 distinct spooky-cute character archetypes and individually planned scenes. Each page has a readable mini-story, grounded props, open coloring regions, and a deliberate reason for each supporting detail.",
+  "purpose": "A curated 17-page Halloween coloring book with cozy storybook scenes, clear physical layouts, generous colorable areas, and a diverse spooky-neighbor cast.",
   "audience": "older children, teens, and adults who enjoy cozy spooky illustration",
   "prompt_format": "text",
   "generation": {
@@ -52,9 +52,9 @@
     }
   ],
   "listing": {
-    "title": "Cute Spooky Halloween Coloring Pages for Kids, Teens & Adults — 15 Original Printable PDF + PNG",
+    "title": "Cute Spooky Halloween Coloring Pages — 17 Original Printable PDF + PNG",
     "tagline": "A little strange, a little cozy, and full of Halloween charm",
-    "description": "Meet the Little Haunts Club: a curious cast of friendly spooky neighbors, from a ghostly tailor and patchwork monster to a masked crow apothecary, cozy skeleton reader, tiny witch, vampire baker, and more. Each page tells a small, funny story with pumpkins, flowers, picture frames, cottage details, and other purposeful accents. Original black-outline illustrations with open white areas for your own colors.",
+    "description": "Meet 17 friendly spooky neighbors in the Little Haunts Club: a ghostly tailor, patchwork monster, plague-doctor crow, skeleton reader and astronomer, tiny witch, zombie chef, owl postmistress, and more. Each original scene has a clear little story, grounded props, crisp black outlines, and generous white areas to color. Instant digital download with US Letter and A4 PDFs plus individual high-resolution PNG pages.",
     "tags": [
       "cute spooky coloring",
       "Halloween coloring",
@@ -74,20 +74,20 @@
       1,
       2,
       3,
-      4,
       7,
-      13
+      16,
+      17
     ],
     "gallery_page_numbers": [
+      2,
+      3,
       5,
-      6,
+      7,
       8,
-      9,
-      10,
-      11,
-      12,
-      14,
-      15
+      13,
+      16,
+      17,
+      10
     ],
     "price_test": "Launch at $2.99 for the initial seasonal validation test. If listing views, favorites, and conversion are healthy, test $3.49; expand the pack or create a companion product before raising the price substantially."
   },
@@ -166,15 +166,15 @@
     },
     {
       "page": 7,
-      "variant_id": "VMB07",
-      "family": "art-directed-spooky-neighbors-v1",
-      "label": "07 · Vampire's Midnight Bakery",
-      "character_archetype": "Friendly young vampire baker",
-      "scene_title": "Vampire's Midnight Bakery",
-      "design_rationale": "Combines a recognizable vampire silhouette and light humor with a bakery layout that makes physical sense. The cookie shapes add Halloween identity without filling the page with bats.",
-      "qa_focus": "Vampire baker has no cape; head hair, shoes, apron, and bat cookies remain white coloring regions with only tiny facial accents black. Hard reject any black clothing or hair fill, black bat cookies, colored areas, or black window/sky. Preserve clear readable bakery, open oven, tray and three outlined cookies.",
+      "variant_id": "OWPM07",
+      "family": "art-directed-spooky-neighbors-v2",
+      "label": "07 · Owl Postmistress Sorts Moon Mail",
+      "character_archetype": "Tiny witch postmistress and round owl",
+      "scene_title": "Owl Postmistress Sorts Moon Mail",
+      "design_rationale": "Uses a warm post-office activity with clear envelope sorting and a distinct owl companion, selected from the strongest accepted candidate because every vampire-baker option failed the broad-black-fill coloring gate.",
+      "qa_focus": "Check clear envelope sorting action, supported cubby shelf and counter, attached satchel, readable witch and owl anatomy, crisp outlines, and open white areas with no broad black fill.",
       "prompt_format": "text",
-      "prompt": "Printable monochrome coloring-book line art in a portrait page. A friendly young vampire baker with short white hair, a plain white apron over simple clothes, and no cape stands beside an open counter oven holding a tray of three cute bat-shaped cookies. Keep the vampire's hair, face, shirt, apron, trousers, and shoes pure white open coloring regions inside clean black outlines; only tiny pupils and mouth details are black. Draw the bat cookies as white shapes with outlines and tiny eyes, never black-filled. Show the counter oven with open white door and racks, a mixing bowl, rolling pin, one shelf and a few small pumpkins. Plain white wall, no window, moon, stars, sky, cape, dark panel, or framed picture. All large surfaces must be colorable white. Crisp consistent clean contours, clear simple scene, no shading, gray, hatching, color, black fill, shadows, gradients, or text."
+      "prompt": "A tiny friendly witch postmistress and her round owl sort blank envelopes at a cozy village post counter. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. The owl steadies a basket of envelopes while the witch reaches toward a cubby shelf; a satchel hangs from a wall peg and small parcels rest on the floor. Make every character, envelope, counter, basket, satchel, shelf, and parcel white inside clean black outlines. Keep broad colorable surfaces open, props physically supported, faces warm and readable, with only tiny facial accents black. No shading, grayscale fills, crosshatching, color, gradients, or text."
     },
     {
       "page": 8,
@@ -271,6 +271,30 @@
       "qa_focus": "Check one bat with two wings and two feet, wing panels stay open white, satchel attaches to body, mailbox is mounted to its post, porch light is attached to frame, and letter remains separate from feet and satchel.",
       "prompt_format": "text",
       "prompt": "A friendly little bat courier with a tiny satchel lands beside a rounded mailbox mounted on a sturdy post outside a cozy haunted cottage, holding one sealed letter in its feet. Draw an original cute-spooky storybook coloring page in crisp black ink on pure white paper. Use smooth, confident bold outer contours and a smaller number of purposeful inner lines; large enclosed surfaces stay white and open for hand coloring. Characters have rounded friendly proportions, expressive simple faces, and clear silhouettes. Build the scene around one obvious focal action, with medium-large background details that enrich the story without clutter. Use a portrait composition inside a simple rounded-rectangle frame with a generous white margin. Keep props physically grounded and connected: furniture rests on the floor, shelves have clear supports, frames hang on walls, and objects sit on visible surfaces. Reserve solid black for eyes, noses, and a few tiny accents; keep major clothing, wings, fur, bones, and props as white coloring regions. Scene details: The bat's wings spread wide with three broad outlined membrane panels inside each wing, leaving the panels white for coloring. The cottage has a rounded door and a framed square window; a porch light is attached to the door frame, and a pumpkin lantern sits on the front step. Two large flowers grow at the mailbox base, while a crescent moon and two outlined stars sit in the open sky. The single letter has a blank envelope face."
+    },
+    {
+      "page": 16,
+      "variant_id": "SKYA16",
+      "family": "art-directed-spooky-neighbors-v2",
+      "label": "16 · Skeleton Astronomer Maps the Sky",
+      "character_archetype": "Childlike skeleton astronomer",
+      "scene_title": "Skeleton Astronomer Maps the Sky",
+      "design_rationale": "Adds a quiet observatory activity and a distinct seated layout, using the exact selected Layout 2 candidate from the existing reviewed library.",
+      "qa_focus": "Check one coherent skeleton body, telescope on three sturdy legs, supported chart/stool, attached lantern, open outlined sky details, and generous coloring areas.",
+      "prompt_format": "text",
+      "prompt": "A childlike skeleton astronomer charts stars from a cozy rooftop observatory. The skeleton sits beside a sturdy telescope on a three-legged stand, an open star chart rests on a supported stool, and a domed roof and hanging lantern frame the scene. Make a charming original storybook coloring page in crisp black ink on pure white paper, portrait layout with a rounded border and generous white margin. Keep bones, telescope, clothes, stool, chart, roof, and lantern as broad white colorable areas with clean contours. Use only small black facial accents, no filled sky, shading, gray, or text."
+    },
+    {
+      "page": 17,
+      "variant_id": "ZCHC17",
+      "family": "art-directed-spooky-neighbors-v2",
+      "label": "17 · Zombie Chef Stirs Harvest Soup",
+      "character_archetype": "Cheerful little zombie chef",
+      "scene_title": "Zombie Chef Stirs Harvest Soup",
+      "design_rationale": "Adds a kitchen mini-story with a distinct three-quarter layout and broad apron panels, using the exact selected Layout 1 candidate from the existing reviewed library.",
+      "qa_focus": "Check ladle connects naturally to the hand, pot rests securely on brick hearth, bread rests on sideboard, apron panels stay open and colorable, and linework remains clean.",
+      "prompt_format": "text",
+      "prompt": "A cheerful little zombie chef stirs a wide soup pot on a safe cottage hearth. Show a three-quarter kitchen scene: the pot rests on a brick hearth, the ladle is held clearly, a bread loaf sits on a sideboard, and the apron has broad blank panels. Create a cute-spooky storybook coloring page in crisp black ink on pure white paper, portrait page with rounded frame and generous margin. Keep the chef, pot, hearth, ladle, bread, apron, and furniture as open white coloring regions with clean black contours; no broad black fill, grayscale, shading, or text."
     }
   ]
 }

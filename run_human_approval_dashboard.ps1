@@ -1,5 +1,5 @@
 param(
-    [string]$Product = "products/little-haunts-club-spooky-neighbors-15",
+    [string]$Product = "products/little-haunts-club-spooky-neighbors-17",
     [string]$RunId = "factory-main",
     [int]$Port = 8765
 )

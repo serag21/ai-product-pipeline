@@ -568,6 +568,13 @@ def run(args: argparse.Namespace, client: ComfyUIClient | None = None,
                 if dashboard_state_path.is_file():
                     human_state = json.loads(dashboard_state_path.read_text(encoding="utf-8"))
                     human_note = str(human_state.get("pages", {}).get(key, {}).get("note", "")).strip()
+                    # The book dashboard owns a separate selection record so legacy approvals
+                    # remain immutable; its current art-direction note takes precedence here.
+                    book_selection_path = run_dir / "book_selection.json"
+                    if book_selection_path.is_file():
+                        book_selection = json.loads(book_selection_path.read_text(encoding="utf-8"))
+                        book_page = next((p for p in book_selection.get("pages", []) if str(p.get("page")) == key), {})
+                        human_note = str(book_page.get("note", human_note)).strip()
                     if human_note:
                         prompt += (f"\n\nHuman art-direction instruction for this rejected page: {human_note}. "
                                    "Treat this as a hard constraint; fix the named defect and change the layout meaningfully.")

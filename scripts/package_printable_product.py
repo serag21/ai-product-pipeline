@@ -54,6 +54,11 @@ def load_font(size: int, bold: bool = False):
     return ImageFont.load_default()
 
 
+def image_dimensions(path: Path) -> list[int]:
+    with Image.open(path) as image:
+        return list(image.size)
+
+
 def load_manifest(product_root: Path) -> dict:
     path = product_root / "prompts.json"
     if not path.is_file():
@@ -531,6 +536,19 @@ def main() -> int:
         "status": "PACKAGE_BUILT_REVIEW_REQUIRED",
     }
     (final_root / "package_qa.json").write_text(json.dumps(qa, indent=2), encoding="utf-8")
+    metadata = {
+        "product_id": manifest["product_id"], "product_title": manifest.get("title"), "page_count": expected,
+        "digital_download": True, "etsy_listing": {"title": listing_title, "description": description,
+            "tags": [str(tag) for tag in tags], "type": "download"},
+        "page_order": [{"page": int(item["page"]), "label": page_labels[int(item["page"])]} for item in page_specs],
+        "delivery_files": [{"name": path.name, "bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+            for path in upload_files],
+        "listing_images": [{"name": path.name, "bytes": path.stat().st_size,
+            "dimensions": image_dimensions(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for path in previews],
+        "human_approval_required": True, "human_approved": False,
+        "status": "PACKAGE_BUILT_REVIEW_REQUIRED",
+    }
+    (final_root / "etsy_listing_metadata.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"Product: {manifest['product_id']}")
     print(f"Prepared pages: {len(output_pages)}")

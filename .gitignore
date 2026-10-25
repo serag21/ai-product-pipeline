@@ -6,6 +6,7 @@ __pycache__/
 
 # Local configuration
 .env
+*.dpapi
 
 # Generated products
 products/*/pages/
