@@ -14,6 +14,7 @@ import sys
 import threading
 import time
 import urllib.parse
+import urllib.request
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -24,6 +25,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from product_review_worker import REVIEW_POLICY_VERSION
 from etsy_publisher import EtsyPublisher
 from local_services import DEFAULT_COMFY, ensure_comfy, ensure_ollama
+from distribution_assets import refresh_social_listing_link
 
 
 def utc_now() -> str:
@@ -61,6 +63,7 @@ class Dashboard:
         self.status_path = self.run_dir / "dashboard_status.json"
         self.library_path = self.run_dir / "candidate_library.json"
         self.book_path = self.run_dir / "book_selection.json"
+        self.distribution_state_path = self.run_dir / "distribution_state.json"
         self.etsy_publisher = EtsyPublisher(self.run_dir)
         self.lock = threading.RLock()
         self.proc: subprocess.Popen | None = None
@@ -185,7 +188,8 @@ class Dashboard:
             "package_approved": bool(selection.get("product_approval")), "product_approval": selection.get("product_approval"),
             "status": self.load_json(self.status_path, {"status": "idle"}), "package_files": self.package_files(current_package),
             "package_directory": str(current_package), "published": False, "bulk_checked_pages": bulk_checked,
-            "candidate_library": library, "candidate_archive": [], "etsy": self.etsy_status()}
+            "candidate_library": library, "candidate_archive": [], "etsy": self.etsy_status(),
+            "channels": self.channel_statuses(selection, current_package, len(pages), sum(p["human_approved"] for p in pages))}
 
     def book_selection(self) -> dict[str, Any]:
         return self.load_json(self.book_path, {"schema_version": 1, "revision": 0, "pages": [], "removed_pages": [], "history": []})
@@ -196,8 +200,49 @@ class Dashboard:
             selection["revision"] = int(selection.get("revision", 0)) + 1
         selection["updated_at"] = utc_now()
         selection.setdefault("history", []).append({"at": selection["updated_at"], "event": event, **detail})
+        previous_approval = selection.get("product_approval")
+        if previous_approval:
+            selection.setdefault("product_approval_history", []).append({**previous_approval,
+                "superseded_at": selection["updated_at"], "superseded_by": event})
         selection["product_approval"] = None
         self.save_json_atomic(self.book_path, selection)
+
+    def book_restore_release_selection(self) -> dict[str, Any]:
+        """Restore archived launch picks in their original order without approving them."""
+        with self.lock:
+            selection = self.book_selection()
+            current = selection.get("pages", [])
+            if len(current) == 17:
+                return {"ok": True, "restored": 0, "page_count": 17, "message": "The 17-page release selection is already in place."}
+            restored = []
+            for archived in selection.get("removed_pages", []):
+                if archived.get("candidate_id") not in {"replacement-p2-1", "replacement-p3-2",
+                        "replacement-p5-2-retry-02", "new-01-1", "replacement-p8-1"}:
+                    continue
+                if any(item.get("file") == archived.get("file") for item in current):
+                    continue
+                path = Path(archived.get("file", "")).resolve()
+                if not path.is_file() or not contained(path, [self.run_dir / "candidate_library", self.run_dir / "candidates"]):
+                    raise ValueError(f"Archived release artwork is missing or outside the local library: {archived.get('candidate_id')}")
+                item = dict(archived)
+                item.pop("removed_at", None)
+                item["restored_at"] = utc_now()
+                item["approval_status"] = "needs_review"
+                item["human_approved"] = False
+                item["locked"] = False
+                restored.append(item)
+            if len(current) + len(restored) != 17:
+                raise ValueError(f"Cannot restore the 17-page launch selection from the preserved archive ({len(current)} current + {len(restored)} available)")
+            selection["pages"] = sorted([*current, *restored], key=lambda item: (int(item.get("original_slot") or 99), int(item.get("page", 0))))
+            for page, item in enumerate(selection["pages"], 1):
+                item["page"] = page
+            selection.setdefault("history", []).append({"at": utc_now(), "event": "restored_release_selection_from_archive",
+                "restored_candidate_ids": [item.get("candidate_id") for item in restored],
+                "note": "Restored the five archived Halloween slot alternatives as pending review; no human approval was added."})
+            self.save_book(selection, "restored_17_page_release_selection", restored=len(restored))
+            result = self.rebuild_book_package()
+            return {"ok": True, "restored": len(restored), "page_count": 17,
+                    "approved_pages": sum(bool(item.get("human_approved")) for item in selection["pages"]), **result}
 
     def book_candidate(self, candidate_file: str) -> dict[str, Any]:
         library = self.load_json(self.library_path, {"items": []})
@@ -214,17 +259,22 @@ class Dashboard:
     def book_keep(self, page: int) -> dict[str, Any]:
         with self.lock:
             selection = self.book_selection()
+            had_all_approved = all(bool(item.get("human_approved")) for item in selection.get("pages", []))
             if not 1 <= page <= len(selection.get("pages", [])):
                 raise ValueError("Unknown book page")
             record = selection["pages"][page - 1]
             record.update({"approval_status": "approved", "human_approved": True, "locked": True, "approved_at": utc_now()})
             self.save_book(selection, "human_approved_page", bump_revision=False, page=page, candidate_id=record.get("candidate_id"))
             self.update_package_metadata(selection)
-            return {"ok": True, "page": page, "human_approved": True}
+            rebuilt = None
+            if not had_all_approved and all(bool(item.get("human_approved")) for item in selection.get("pages", [])):
+                rebuilt = self.rebuild_book_package()
+            return {"ok": True, "page": page, "human_approved": True, "final_package_rebuilt": bool(rebuilt), "package": rebuilt}
 
     def book_bulk_keep(self, pages: list[int]) -> dict[str, Any]:
         with self.lock:
             selection = self.book_selection()
+            had_all_approved = all(bool(item.get("human_approved")) for item in selection.get("pages", []))
             normalized = sorted(set(int(p) for p in pages))
             if not normalized or any(not 1 <= p <= len(selection.get("pages", [])) for p in normalized):
                 raise ValueError("Select one or more current book pages to approve")
@@ -234,7 +284,10 @@ class Dashboard:
             selection["bulk_checked_pages"] = []
             self.save_book(selection, "bulk_human_approved_pages", bump_revision=False, pages=normalized)
             self.update_package_metadata(selection)
-            return {"ok": True, "pages": normalized}
+            rebuilt = None
+            if not had_all_approved and all(bool(item.get("human_approved")) for item in selection.get("pages", [])):
+                rebuilt = self.rebuild_book_package()
+            return {"ok": True, "pages": normalized, "final_package_rebuilt": bool(rebuilt), "package": rebuilt}
 
     def book_replace(self, page: int, candidate_file: str) -> dict[str, Any]:
         with self.lock:
@@ -362,7 +415,8 @@ class Dashboard:
                 "variant_id": record.get("variant_id"), "file": str(destination), "qa": record.get("qa", {"pass": True})})
         (assembly / "qa").mkdir()
         (assembly / "qa" / "generation_manifest.json").write_text(json.dumps({"summary": {"requested": len(generation), "passed": len(generation), "failed": 0}, "pages": generation}, indent=2), encoding="utf-8")
-        result = subprocess.run([sys.executable, str(ROOT / "scripts" / "package_printable_product.py"), "--product", str(assembly), "--output", str(output)],
+        result = subprocess.run([sys.executable, str(ROOT / "scripts" / "package_printable_product.py"), "--product", str(assembly), "--output", str(output),
+                "--approval-state", str(self.book_path)],
             cwd=ROOT, capture_output=True, text=True, timeout=900)
         if result.returncode:
             self.set_status("package_error", error=(result.stderr or result.stdout)[-4000:])
@@ -390,6 +444,9 @@ class Dashboard:
             selection = self.book_selection()
             selection["product_approval"] = {"approved_at": utc_now(), "revision": selection.get("revision"),
                 "package_qa": selection.get("package_qa"), "published": False}
+            selection.setdefault("history", []).append({"at": selection["product_approval"]["approved_at"],
+                "event": "human_approved_product_package", "revision": selection.get("revision"),
+                "package_qa": selection.get("package_qa"), "published": False})
             self.save_json_atomic(self.book_path, selection)
             self.update_package_metadata(selection)
             return {"ok": True, "approved_at": selection["product_approval"]["approved_at"], "published": False}
@@ -411,6 +468,21 @@ class Dashboard:
         metadata["human_approved"] = bool(selection.get("product_approval"))
         metadata["status"] = "HUMAN_APPROVED" if metadata["human_approved"] else "REVIEW_REQUIRED"
         self.save_json_atomic(path, metadata)
+        kdp_meta = package / "kdp_paperback" / "kdp_metadata.json"
+        kdp_qa_path = package / "kdp_paperback" / "kdp_qa.json"
+        if kdp_meta.is_file():
+            kdp = self.load_json(kdp_meta, {})
+            kdp["artwork_approval"] = {"approved_pages": approved, "total_pages": len(pages),
+                "status": "approved" if approved == len(pages) else "review required"}
+            kdp["product_approval"] = selection.get("product_approval")
+            self.save_json_atomic(kdp_meta, kdp)
+        if kdp_qa_path.is_file():
+            kdp_qa = self.load_json(kdp_qa_path, {})
+            kdp_qa["approved_pages"] = approved
+            kdp_qa["total_illustrations"] = len(pages)
+            kdp_qa["status"] = "PASS_AWAITING_KDP_PREVIEWER" if approved == len(pages) else "PASS_WITH_REVIEW_GATES"
+            kdp_qa["product_approval"] = bool(selection.get("product_approval"))
+            self.save_json_atomic(kdp_qa_path, kdp_qa)
 
     def etsy_status(self) -> dict[str, Any]:
         try:
@@ -453,10 +525,140 @@ class Dashboard:
         if str(body.get("confirm", "")) != "PUBLISH LISTING":
             raise ValueError("Type PUBLISH LISTING to confirm publication on Etsy")
         draft = self.etsy_publisher.status().get("draft") or {}
-        if not draft:
+        if not draft or not draft.get("complete"):
             raise ValueError("Create and upload the Etsy draft before publishing")
         result = self.etsy_publisher.publish(str(draft["shop_id"]), str(draft["listing_id"]))
+        state = self.load_json(self.distribution_state_path, {"schema_version": 1, "channels": {}})
+        state.setdefault("channels", {})["etsy"] = {"status": "Published", "public_url": result.get("url"),
+            "public_url_verified": True, "verified_at": utc_now(), "account_connected": True,
+            "next_action": "Confirm the listing title, price, files, and seller disclosures remain correct in Etsy."}
+        self.save_json_atomic(self.distribution_state_path, state)
+        self.refresh_product_promotion_link(str(result.get("url", "")))
         return {"ok": True, "listing": result, "status": self.etsy_status()}
+
+    def etsy_reconcile_creation(self) -> dict[str, Any]:
+        return self.etsy_publisher.reconcile_creation_intent()
+
+    def channel_statuses(self, selection: dict[str, Any], package: Path, total: int, approved: int) -> list[dict[str, Any]]:
+        stored = self.load_json(self.distribution_state_path, {"channels": {}}).get("channels", {})
+        etsy = self.etsy_status()
+        all_approved = total > 0 and approved == total
+        has_etsy = bool((package / "etsy_listing_metadata.json").is_file())
+        has_kdp = bool((package / "kdp_paperback" / "Little-Haunts-Club-Halloween-Interior-8.5x11.pdf").is_file())
+        has_social = bool((package / "social_promotion" / "social_captions.md").is_file())
+        definitions = [
+            ("etsy", "Etsy digital", "Use the Etsy Open API after developer-app approval and seller OAuth, or upload manually. Proposed price: $4.99 USD.", "https://www.etsy.com/your/shops/me/tools/listings/create"),
+            ("kdp", "Amazon KDP paperback", "Print-ready review files are separate from Etsy digital downloads. KDP Print Previewer and manual Bookshelf upload are required.", "https://kdp.amazon.com/en_US/bookshelf"),
+            ("payhip", "Payhip digital", "No supported product-creation API. The package and listing copy are ready for manual upload.", "https://payhip.com/products/new"),
+            ("pinterest", "Pinterest", "Four 2:3 pin images and destination descriptions are prepared; add the verified shop URL before posting.", "https://www.pinterest.com/pin-creation-tool/"),
+            ("instagram", "Instagram", "Portrait promotional stills and a caption are prepared; account connection and posting remain manual.", "https://www.instagram.com/"),
+            ("tiktok", "TikTok", "Portrait promotional stills and a caption are prepared; account connection and posting remain manual.", "https://www.tiktok.com/upload"),
+            ("youtube_shorts", "YouTube Shorts", "Portrait promotional stills and Shorts copy are prepared; account connection and posting remain manual.", "https://studio.youtube.com/"),
+        ]
+        result = []
+        for key, name, details, link in definitions:
+            item = stored.get(key, {})
+            status = str(item.get("status", ""))
+            url = item.get("public_url")
+            verified = bool(item.get("public_url_verified") and url)
+            if verified:
+                status = "Published"
+            elif key == "etsy" and etsy.get("draft"):
+                status = "Draft"
+            elif key == "etsy" and (not etsy.get("authorized") or not all_approved):
+                status = "Needs action"
+            elif key == "kdp" and (not has_kdp or not all_approved):
+                status = "Needs action"
+            elif key in {"pinterest", "instagram", "tiktok", "youtube_shorts"} and (not has_social or not all_approved):
+                status = "Needs action"
+            elif key == "payhip" and not status:
+                status = "Not configured"
+            elif not status:
+                status = "Ready"
+            next_action = item.get("next_action")
+            if key == "etsy" and not verified:
+                next_action = "Register/approve the Seller App, connect the shop with its HTTPS callback, approve the five pending pages, then review a draft."
+            elif key == "kdp" and not verified:
+                next_action = "Approve the five pending pages, then open the manuscript and cover in KDP Print Previewer; disclose AI-generated images and text."
+            elif key == "payhip" and not verified:
+                next_action = "Create or sign in to Payhip, then upload the four Etsy-sized digital files and copy the prepared listing text."
+            elif key in {"pinterest", "instagram", "tiktok", "youtube_shorts"} and not verified:
+                next_action = "After artwork approval, manually post the prepared creative and replace the listing URL placeholder with a verified public shop link."
+            result.append({"key": key, "name": name, "status": status, "details": details,
+                "next_action": next_action, "link": link, "public_url": url if verified else None,
+                "public_url_verified": verified, "account_connected": bool(item.get("account_connected")),
+                "assets_ready": all_approved and ({"etsy": has_etsy, "kdp": has_kdp, "payhip": has_etsy,
+                    "pinterest": has_social, "instagram": has_social, "tiktok": has_social,
+                    "youtube_shorts": has_social}.get(key, False))})
+        return result
+
+    def verify_distribution_url(self, body: dict[str, Any]) -> dict[str, Any]:
+        key = str(body.get("channel", ""))
+        url = str(body.get("url", "")).strip()
+        allowed = {"etsy": ("etsy.com",), "kdp": ("amazon.com", "amazon.ca", "amazon.co.uk", "amazon.de", "amazon.com.au"),
+            "payhip": ("payhip.com",), "pinterest": ("pinterest.com",), "instagram": ("instagram.com",),
+            "tiktok": ("tiktok.com",), "youtube_shorts": ("youtube.com", "youtu.be")}
+        if key not in allowed:
+            raise ValueError("Choose one of the listed product channels")
+        parsed = urllib.parse.urlparse(url)
+        host = (parsed.hostname or "").lower()
+        if parsed.scheme != "https" or not host or not any(host == domain or host.endswith("." + domain) for domain in allowed[key]):
+            raise ValueError("Enter the public HTTPS product or post URL for the selected platform")
+        request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 LittleHauntsPublicListingCheck/1.0"})
+        try:
+            with urllib.request.urlopen(request, timeout=20) as response:
+                final = urllib.parse.urlparse(response.geturl())
+                final_host = (final.hostname or "").lower()
+                final_allowed = any(final_host == domain or final_host.endswith("." + domain) for domain in allowed[key])
+                body_text = response.read(2_000_000).decode("utf-8", errors="ignore").casefold()
+                verified = response.status == 200 and final_allowed and self.valid_distribution_url_path(key, final)
+                if key in {"etsy", "kdp", "payhip"}:
+                    verified = verified and ("little haunts" in body_text or "very odd halloween" in body_text)
+                if not verified:
+                    raise ValueError("The page did not return a verifiable public product page; status was left unchanged")
+        except Exception as exc:
+            raise ValueError(f"Public URL verification failed: {exc}") from exc
+        data = self.load_json(self.distribution_state_path, {"schema_version": 1, "channels": {}})
+        item = data.setdefault("channels", {}).setdefault(key, {})
+        item.update({"status": "Published", "public_url": url, "public_url_verified": True,
+            "verified_at": utc_now(), "verification_http_status": 200})
+        self.save_json_atomic(self.distribution_state_path, data)
+        if key in {"etsy", "payhip"}:
+            self.refresh_product_promotion_link(url)
+        return {"ok": True, "channel": key, "status": "Published", "public_url": url, "verified": True}
+
+    @staticmethod
+    def valid_distribution_url_path(key: str, parsed: urllib.parse.ParseResult) -> bool:
+        path = parsed.path.rstrip("/")
+        if key == "etsy":
+            return bool(re.match(r"^/listing/\d+(?:/|$)", path))
+        if key == "kdp":
+            return bool(re.search(r"/(?:dp|gp/product)/[A-Za-z0-9]{10}(?:/|$)", path, re.IGNORECASE))
+        if key == "payhip":
+            return bool(re.match(r"^/(?:b|products)/[A-Za-z0-9_-]+(?:/|$)", path) and path.lower() != "/products/new")
+        if key == "pinterest":
+            return bool(re.match(r"^/pin/\d+(?:/|$)", path))
+        if key == "instagram":
+            return bool(re.match(r"^/(?:p|reel|reels)/[A-Za-z0-9_-]+(?:/|$)", path, re.IGNORECASE))
+        if key == "tiktok":
+            return bool(re.match(r"^/@[^/]+/video/\d+(?:/|$)", path, re.IGNORECASE))
+        if key == "youtube_shorts":
+            return (bool(re.match(r"^/(?:shorts|live)/[A-Za-z0-9_-]+(?:/|$)", path, re.IGNORECASE)) or
+                    (path == "/watch" and bool(urllib.parse.parse_qs(parsed.query).get("v"))) or
+                    (parsed.hostname or "").lower() == "youtu.be" and bool(path.strip("/")))
+        return False
+
+    def refresh_product_promotion_link(self, url: str) -> None:
+        if not url:
+            return
+        selection = self.book_selection()
+        package = Path(selection.get("current_package", "")).resolve()
+        if not package.is_dir() or not contained(package, [self.run_dir]):
+            return
+        try:
+            refresh_social_listing_link(package, url)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            self.set_status("promotion_link_update_warning", message=f"The verified listing is saved, but promotion copy needs a package rebuild: {exc}")
 
     def book_regenerate(self, page: int) -> dict[str, Any]:
         if self.proc and self.proc.poll() is None:
@@ -506,8 +708,13 @@ class Dashboard:
                  *sorted((package_dir / "etsy_uploads").glob("*.zip")),
                  *sorted((package_dir / "listing_images").glob("*.jpg")),
                  package_dir / "preview_original_pages.jpg", package_dir / "preview_print_ready_pages.jpg",
-                 package_dir / "READ_ME_FIRST.txt", package_dir / "etsy_listing_draft.md", package_dir / "etsy_listing_metadata.json", package_dir / "package_qa.json"]
-        return [{"name": p.name, "url": self.asset_url(p)} for p in paths if p.is_file()]
+                 package_dir / "READ_ME_FIRST.txt", package_dir / "etsy_listing_draft.md", package_dir / "etsy_listing_metadata.json", package_dir / "package_qa.json",
+                 package_dir / "distribution_qa.json"]
+        paths.extend(sorted((package_dir / "kdp_paperback").glob("*")))
+        paths.extend(sorted((package_dir / "social_promotion").glob("*")))
+        paths.extend(sorted((package_dir / "social_promotion" / "pinterest").glob("*.jpg")))
+        paths.extend(sorted((package_dir / "social_promotion" / "shorts_stills").glob("*.jpg")))
+        return [{"name": p.name, "path": p.relative_to(package_dir).as_posix(), "url": self.asset_url(p)} for p in paths if p.is_file()]
 
     def save_note(self, page: int, note: str) -> dict[str, Any]:
         with self.lock:
@@ -801,6 +1008,100 @@ function renderEtsy(){let e=state.etsy||{};document.getElementById('etsyStatus')
 async function refresh(){let el=document.activeElement,focus=el&&el.matches('textarea[id^=note]')?el.id:null,caret=focus?el.selectionStart:null;state=await api('/api/state');render();if(focus){let input=document.getElementById(focus);if(input){input.focus();input.setSelectionRange(caret,caret)}}}document.querySelectorAll('.stepbtn').forEach(b=>b.onclick=()=>setStep(b.dataset.step));document.addEventListener('input',e=>{if(e.target.matches('textarea[id^=note]'))noteDrafts[e.target.id]=e.target.value});document.addEventListener('click',async e=>{let t=e.target,zoom=t.closest('[data-zoom]');if(zoom&&zoom.dataset.zoom){let d=document.getElementById('zoom');d.querySelector('img').src=zoom.dataset.zoom;d.showModal();return}try{if(t.matches('[data-keep]')){await api('/api/book/keep',{page:+t.dataset.keep});say(`Page ${t.dataset.keep} marked Keep. This is your human approval.`);await refresh()}else if(t.matches('[data-save-note]')){let p=+t.dataset.saveNote,n=document.getElementById('note'+p).value;await api('/api/book/note',{page:p,note:n});noteDrafts['note'+p]=n;t.textContent='Saved';say(`Note for page ${p} saved. Your text is still here.`);setTimeout(()=>t.textContent='Save note',1400)}else if(t.matches('[data-remove]')){await api('/api/book/remove',{page:+t.dataset.remove});await refresh();say('Page removed from the current book. Its image and decision history remain archived.')}else if(t.matches('[data-replace-page]')){let p=+t.dataset.replacePage,file=document.querySelector(`[data-page-candidate="${p}"]`).value;await api('/api/book/replace',{page:p,candidate_file:file});await refresh();say(`Page ${p} replaced. The new selection needs your approval.`)}else if(t.matches('[data-use-candidate]')){let id=t.dataset.useCandidate,x=state.candidate_library.items.find(y=>y.id===id),page=+document.getElementById('replaceTarget').value;await api('/api/book/replace',{page,candidate_file:x.file});await refresh();say(`Page ${page} replaced with ${x.title}; the new art needs your approval.`)}else if(t.matches('[data-add-candidate]')){let x=state.candidate_library.items.find(y=>y.id===t.dataset.addCandidate);await api('/api/book/add',{candidate_file:x.file});await refresh();say(`${x.title} added as a new page. Review it before product approval.`)}else if(t.matches('[data-regenerate]')){let p=+t.dataset.regenerate;if(!confirm(`Regenerate page ${p} using its saved note? This starts one local image generation and review.`))return;await api('/api/book/regenerate',{page:p});await refresh()} }catch(err){showErr(err)}});document.addEventListener('change',async e=>{if(e.target.matches('[data-check-page]')){let pages=[...document.querySelectorAll('[data-check-page]:checked')].map(x=>+x.dataset.checkPage);try{await api('/api/book/check',{pages});state.bulk_checked_pages=pages;document.getElementById('approvalSummary').textContent=`${state.total_pages} pages · ${state.approved_pages} approved · ${pages.length} selected for bulk approval`}catch(err){showErr(err)}}});document.getElementById('bulkKeep').onclick=async()=>{let pages=[...document.querySelectorAll('[data-check-page]:checked')].map(x=>+x.dataset.checkPage);if(!pages.length)return say('Check the pages you want to approve together.',true);await api('/api/book/bulk_keep',{pages});await refresh();say(`${pages.length} selected pages marked Keep. This records your human approvals.`)};document.getElementById('approveProduct').onclick=async()=>{if(!confirm(`Approve this ${state.total_pages}-page product package? This records your approval but does not send it to Etsy.`))return;try{await api('/api/book/approve',{});await refresh();say('Product approved locally. Etsy has not been contacted.')}catch(e){showErr(e)}};document.getElementById('etsyConnect').onclick=async()=>{try{let r=await api('/api/etsy/connect',{api_key:document.getElementById('etsyKey').value,shared_secret:document.getElementById('etsySecret').value,redirect_uri:document.getElementById('etsyRedirect').value});document.getElementById('etsyState').value=r.state;window.open(r.authorize_url,'_blank','noopener');say('Etsy authorization opened. After approval, copy the callback code here and submit its returned state.')}catch(e){showErr(e)}};document.getElementById('etsyFinish').onclick=async()=>{try{await api('/api/etsy/finish',{code:document.getElementById('etsyCode').value,state:document.getElementById('etsyState').value});await refresh();say('Etsy authorization saved securely.')}catch(e){showErr(e)}};document.getElementById('etsyLoad').onclick=async()=>{try{let [shopData,taxData]=await Promise.all([api('/api/etsy/shops'),api('/api/etsy/taxonomies')]),shops=shopData.results||[],tax=taxData.results||[];document.getElementById('etsyShop').innerHTML='<option value="">Choose your shop</option>'+shops.map(x=>`<option value="${x.shop_id}">${esc(x.shop_name)} · ${x.shop_id}</option>`).join('');let flat=[];function walk(nodes,path=[]){for(let n of nodes||[]){let p=[...path,n.name];if(!(n.children||[]).length)flat.push({id:n.id,name:p.join(' › ')});else walk(n.children,p)}}walk(tax);document.getElementById('etsyTaxonomy').innerHTML='<option value="">Choose a listing category</option>'+flat.map(x=>`<option value="${x.id}">${esc(x.name)} · ${x.id}</option>`).join('');say(`${shops.length} Etsy shop(s) and ${flat.length} listing categories loaded.`)}catch(e){showErr(e)}};document.getElementById('createDraft').onclick=async()=>{try{let shop=document.getElementById('etsyShop').value,tax=document.getElementById('etsyTaxonomy').value,price=document.getElementById('etsyPrice').value;if(!shop||!tax||!price)throw Error('Choose your Etsy shop and listing category, then enter the shop-currency price.');let r=await api('/api/etsy/draft',{shop_id:shop,taxonomy_id:tax,price,confirm:document.getElementById('draftConfirm').value});await refresh();say(`Etsy draft ${r.draft.listing_id} created and package files uploaded. It remains unpublished.`)}catch(e){showErr(e)}};document.getElementById('publishListing').onclick=async()=>{if(!confirm('Publish this listing on Etsy now? This is the final external publication action.'))return;try{let r=await api('/api/etsy/publish',{confirm:document.getElementById('publishConfirm').value});await refresh();say('Etsy listing is published.')}catch(e){showErr(e)}};document.getElementById('zoom').onclick=()=>document.getElementById('zoom').close();refresh().catch(showErr);setInterval(()=>refresh().catch(()=>{}),5000);
 </script></body></html>'''
 
+# The channel cards are rendered from persistent local status. They expose the
+# one-click manual handoff and copy controls even when a seller API is unavailable.
+BOOK_HTML = BOOK_HTML.replace(
+    '<section id="publish" class="section">',
+    '<section id="publish" class="section"><div class="panel"><h2>Channel launch checklist</h2><p class="helper">Ready means the local package is ready for that channel. Published appears only after a public URL passes a live check. Account connection and public listing status are shown separately.</p><div id="channelCards" class="grid"></div><details><summary>Future production schedule — currently disabled</summary><p>A Windows task is set for every 14 days with StartWhenAvailable, no-overlap and restart guards. It will not run until Etsy, KDP and Payhip have verified public Halloween listing URLs, you choose a future product folder, and you explicitly enable it.</p></details></div>'
+)
+BOOK_HTML = BOOK_HTML.replace('3 · Publish</button>', '3 · Distribute</button>')
+BOOK_HTML = BOOK_HTML.replace('id="etsyPrice" type="number" min="0.01" step="0.01" placeholder="Enter price"', 'id="etsyPrice" type="number" min="0.01" step="0.01" value="4.99" placeholder="4.99"')
+BOOK_HTML = BOOK_HTML.replace('Price in your shop currency <input id="etsyPrice"', 'Price in your shop currency (proposed $4.99 USD) <input id="etsyPrice"')
+BOOK_HTML = BOOK_HTML.replace('Create a Seller App in Etsy Developer Portal', 'Create or request Etsy API access in the <a href="https://www.etsy.com/developers/register" target="_blank" rel="noopener">Etsy Developer Portal</a> and register an exact HTTPS callback URL')
+BOOK_HTML = BOOK_HTML.replace('pinterest_pin|vertical_promo|social_captions|promo_short', 'pinterest_pin|vertical_promo|social_captions|shorts_promo')
+BOOK_HTML = BOOK_HTML.replace(r"state.package_files.filter(f=>/\.pdf$|\.zip$/i.test(f.name))", r"state.package_files.filter(f=>/\.pdf$|\.zip$/i.test(f.name)&&f.path?.startsWith('etsy_uploads/'))")
+BOOK_HTML = BOOK_HTML.replace("files.filter(f=>/kdp_paperback/i.test(f.name)||/KDP|kdp/i.test(f.name))", "files.filter(f=>f.path?.startsWith('kdp_paperback/'))")
+BOOK_HTML = BOOK_HTML.replace("files.filter(f=>/pinterest_pin|vertical_promo|social_captions|shorts_promo/i.test(f.name))", "files.filter(f=>f.path?.startsWith('social_promotion/'))")
+BOOK_HTML = BOOK_HTML.replace(
+    '<div class="actions"><button id="etsyConnect">Save securely and connect</button></div>',
+    '<div class="actions"><button id="etsyConnect">Save securely and connect</button></div>'
+)  # Keep exact current OAuth form; credentials are entered only in this local dashboard.
+BOOK_HTML = BOOK_HTML.replace(
+    '<div class="panel"><h3>Listing preview</h3>',
+    '<div class="panel"><h3>Manual Etsy fallback</h3><p>Use this if developer-app approval or OAuth is not yet available. This opens Etsy\'s own draft-creation flow and leaves publication under your control.</p><p><a href="https://www.etsy.com/your/shops/me/tools/listings/create" target="_blank" rel="noopener">Open Etsy listing creation</a></p><div class="actions"><button class="secondary" data-copy-field="title">Copy title</button><button class="secondary" data-copy-field="description">Copy description</button><button class="secondary" data-copy-field="tags">Copy tags</button></div><ul><li>Choose a digital download and the closest current printable/coloring category.</li><li>Set the proposed price to $4.99 USD in your shop currency.</li><li>Upload the two PDFs and two PNG ZIPs; each file must be at most 20 MB (up to five files).</li><li>Add the four prepared square listing images and review the full-resolution pages.</li><li>Keep the AI-generated artwork disclosure and confirm seller disclosures/category before saving a draft.</li></ul><p class="helper">Current Etsy fee reference: $0.20 listing fee plus 6.5% transaction fee, plus payment processing that depends on seller country and possible taxes/other charges. Etsy shows shop-specific amounts.</p></div><div class="panel"><h3>Listing preview</h3>'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    'Payhip’s public API manages coupons and license keys, not product creation or file upload. The ready manual path is your Payhip dashboard.',
+    'Payhip’s public API manages coupons and license keys, not product creation or file upload. The Free Forever plan currently takes 5% per sale, plus Stripe/PayPal processing fees. The ready manual path is your Payhip dashboard.'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    '<div class="panel"><h3>Final publication</h3>',
+    '<div class="panel"><h3>KDP paperback (separate from Etsy downloads)</h3><p>The local package contains a 36-page 8.5 x 11 in manuscript, one cover wrap, metadata, and a review checklist. KDP has no supported public book-file upload API; use Bookshelf and its Print Previewer manually. AI-generated images and text must be disclosed in KDP title setup.</p><div id="kdpFiles"></div><p><a href="https://kdp.amazon.com/en_US/bookshelf" target="_blank" rel="noopener">Open KDP Bookshelf</a> · <a href="https://kdp.amazon.com/cover-templates?language=en_US" target="_blank" rel="noopener">KDP cover calculator</a> · <a href="https://kdp.amazon.com/en_US/royalty-calculator" target="_blank" rel="noopener">Print-cost calculator</a></p><div class="actions"><button class="secondary" data-copy-field="kdp-description">Copy paperback description</button><button class="secondary" data-copy-field="kdp-keywords">Copy KDP keyword suggestions</button></div></div><div class="panel"><h3>Payhip digital storefront</h3><p>Payhip’s public API manages coupons and license keys, not product creation or file upload. The ready manual path is your Payhip dashboard.</p><p><a href="https://payhip.com/products/new" target="_blank" rel="noopener">Open Payhip product creation</a></p><div class="actions"><button class="secondary" data-copy-field="description">Copy product description</button><button class="secondary" data-copy-field="tags">Copy keyword/tag list</button></div></div><div class="panel"><h3>Promotion kit</h3><p>Four Pinterest pins (1000 × 1500), portrait stills, captions, and an existing-artwork short video if FFmpeg is available. Add a verified listing URL before posting.</p><div id="socialFiles"></div><div class="actions"><button class="secondary" data-copy-field="instagram">Copy Instagram caption</button><button class="secondary" data-copy-field="tiktok">Copy TikTok caption</button><button class="secondary" data-copy-field="youtube">Copy Shorts title and description</button></div></div><div class="panel"><h3>Final publication</h3>'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "renderEtsy()}",
+    "renderEtsy();renderChannels()}"
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "async function refresh(){",
+    r'''function renderChannels(){let cards=state.channels||[];document.getElementById('channelCards').innerHTML=cards.map(c=>{let url=c.public_url?`<p><a href="${esc(c.public_url)}" target="_blank" rel="noopener">Open confirmed public page</a></p>`:`<div class="actions"><input id="publicUrl-${esc(c.key)}" placeholder="Public URL after you publish"><button class="secondary" data-verify-url="${esc(c.key)}">Verify public URL</button></div>`;return `<article class="card"><div class="content"><span class="badge ${c.status==='Published'?'approved':c.status==='Ready'?'approved':'pending'}">${esc(c.status)}</span><h3>${esc(c.name)}</h3><p class="meta">${esc(c.details)}</p><p>${esc(c.next_action||'')}</p><p>Local assets: ${c.assets_ready?'ready':'blocked on artwork approval'} · Account connected: ${c.account_connected?'yes':'no'}</p>${url}<p><a href="${esc(c.link)}" target="_blank" rel="noopener">Open ${esc(c.name)} workflow</a></p></div></article>`}).join('');let files=state.package_files||[];document.getElementById('kdpFiles').innerHTML=files.filter(f=>/kdp_paperback/i.test(f.name)||/KDP|kdp/i.test(f.name)).map(f=>`<p><a href="${f.url}" target="_blank">${esc(f.name)}</a></p>`).join('')||'<p>Paperback files will be rebuilt after all artwork is selected.</p>';document.getElementById('socialFiles').innerHTML=files.filter(f=>/pinterest_pin|vertical_promo|social_captions|promo_short/i.test(f.name)).map(f=>`<p><a href="${f.url}" target="_blank">${esc(f.name)}</a></p>`).join('')||'<p>Promotion files will be rebuilt after all artwork is selected.</p>'}
+async function refresh(){'''
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "document.addEventListener('click',async e=>{let t=e.target,zoom=t.closest('[data-zoom]');",
+    "document.addEventListener('click',async e=>{let t=e.target,copy=t.closest('[data-copy-field]');if(copy){try{let l=state.product.listing||{},k=copy.dataset.copyField,v=({title:l.title||state.product.title,description:l.description||'',tags:(l.tags||[]).join(', '),'kdp-description':'Little Haunts Club: A Very Odd Halloween. Meet 17 friendly spooky neighbors in 17 original storybook coloring scenes. Each illustration is printed on one side with a blank reverse for a comfortable coloring experience.', 'kdp-keywords':'cute spooky halloween coloring; cozy halloween coloring book; friendly monster coloring pages; skeleton and ghost coloring; single sided coloring book; storybook halloween activity; whimsical spooky coloring book',instagram:'Meet the Little Haunts Club: 17 friendly spooky neighbors, one cozy Halloween coloring page at a time. Printable US Letter and A4 PDFs plus individual PNGs. The shop link will be added after launch.',tiktok:'A VERY ODD HALLOWEEN 🎃 Meet the ghost tailor, skeleton astronomer, zombie chef, and their cozy-spooky neighbors. 17 printable coloring scenes. Shop link added after launch.',youtube:'17 Cozy-Spooky Halloween Coloring Pages | Little Haunts Club\\nA quick look inside Little Haunts Club: A Very Odd Halloween. 17 original storybook coloring scenes, supplied as printable PDFs and individual PNGs. Public shop link will be added after launch.'})[k]||'';await navigator.clipboard.writeText(v);say('Copied. The live listing URL is added only after verification.')}catch(err){showErr(err)}return}let verify=t.closest('[data-verify-url]');if(verify){try{let input=document.getElementById('publicUrl-'+verify.dataset.verifyUrl),r=await api('/api/distribution/verify',{channel:verify.dataset.verifyUrl,url:input.value});await refresh();say(`${r.channel} public URL verified.`)}catch(err){showErr(err)}return}if(t.matches('#restoreReleaseSelection')){try{if(!confirm('Restore the five archived Halloween slot choices as pending review? This does not approve them.'))return;let r=await api('/api/book/restore_release_selection',{});await refresh();say(`Restored ${r.restored} pending pages. The release selection now has ${r.page_count} pages.`)}catch(err){showErr(err)}return}if(t.matches('#etsyReconcile')){try{let r=await api('/api/etsy/reconcile',{});await refresh();say(r.message, !r.matched)}catch(err){showErr(err)}return}let zoom=t.closest('[data-zoom]');"
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "function renderEtsy(){let e=state.etsy||{};",
+    "function renderEtsy(){let e=state.etsy||{};"
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "let ready=state.package_approved&&state.qa_passed&&state.approved_pages===state.total_pages&&e.authorized;",
+    "document.getElementById('etsyStatus').textContent+=e.creation_uncertain?' · Draft creation outcome is uncertain; reconcile before any retry.':'';document.getElementById('publishDetails').textContent=e.publication_pending_verification?'Etsy accepted the request but its public listing URL could not be verified. Status remains Needs action.':(e.public_url?'Verified public listing: '+e.public_url:'Publishing remains a separate final owner action.');let ready=state.package_approved&&state.qa_passed&&state.approved_pages===state.total_pages&&e.authorized;"
+)
+BOOK_HTML = BOOK_HTML.replace(
+    '<p id="draftDetails"></p>',
+    '<p id="draftDetails"></p><button id="etsyReconcile" class="secondary">Reconcile uncertain Etsy draft</button>'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    '<div class="toolbar"><b id="approvalSummary"></b>',
+    '<div class="toolbar"><b id="approvalSummary"></b><button id="restoreReleaseSelection" class="secondary" hidden>Restore 17-page Halloween selection</button>'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "document.getElementById('approvalSummary').textContent=`${state.total_pages} pages · ${state.approved_pages} approved · ${state.total_pages-state.approved_pages} still need review`;",
+    "document.getElementById('approvalSummary').textContent=`${state.total_pages} pages · ${state.approved_pages} approved · ${state.total_pages-state.approved_pages} still need review`;document.getElementById('restoreReleaseSelection').hidden=state.total_pages===17;"
+)
+BOOK_HTML = BOOK_HTML.replace('placeholder="Enter price"', 'value="4.99" placeholder="$4.99 proposed"')
+BOOK_HTML = BOOK_HTML.replace('Price in your shop currency', 'Proposed $4.99 USD · confirm amount in your Etsy shop currency')
+BOOK_HTML = BOOK_HTML.replace(
+    'Create a Seller App in Etsy Developer Portal',
+    'Create a Seller App in the <a href="https://www.etsy.com/developers/your-apps" target="_blank" rel="noopener">Etsy Developer Portal</a>'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    '<div id="socialFiles"></div>',
+    '<div id="socialFiles"></div><div class="actions"><button class="secondary" data-copy-field="pinterest-link">Copy verified Pin destination link</button></div>'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    '/pinterest_pin|vertical_promo|social_captions|promo_short/i',
+    '/pinterest_pin|vertical_promo|social_captions|shorts_promo|promo_short/i'
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "let l=state.product.listing||{},k=copy.dataset.copyField,v=({'title':l.title||state.product.title",
+    "let l=state.product.listing||{},k=copy.dataset.copyField,shop=((state.channels||[]).find(c=>['etsy','payhip'].includes(c.key)&&c.public_url)||{}).public_url||'',v=({'pinterest-link':shop||'{PUBLIC_LISTING_URL_AFTER_LAUNCH}','title':l.title||state.product.title"
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "instagram:'Meet the Little Haunts Club: 17 friendly spooky neighbors, one cozy Halloween coloring page at a time. Printable US Letter and A4 PDFs plus individual PNGs. The shop link will be added after launch.'",
+    "instagram:'Meet the Little Haunts Club: 17 friendly spooky neighbors, one cozy Halloween coloring page at a time. Printable US Letter and A4 PDFs plus individual PNGs. '+(shop?'Shop: '+shop:'The shop link will be added after launch.')"
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "tiktok:'A VERY ODD HALLOWEEN 🎃 Meet the ghost tailor, skeleton astronomer, zombie chef, and their cozy-spooky neighbors. 17 printable coloring scenes. Shop link added after launch.'",
+    "tiktok:'A VERY ODD HALLOWEEN 🎃 Meet the ghost tailor, skeleton astronomer, zombie chef, and their cozy-spooky neighbors. 17 printable coloring scenes. '+(shop?'Shop: '+shop:'Shop link added after launch.')"
+)
+BOOK_HTML = BOOK_HTML.replace(
+    "youtube:'17 Cozy-Spooky Halloween Coloring Pages | Little Haunts Club\\nA quick look inside Little Haunts Club: A Very Odd Halloween. 17 original storybook coloring scenes, supplied as printable PDFs and individual PNGs. Public shop link will be added after launch.'",
+    "youtube:'17 Cozy-Spooky Halloween Coloring Pages | Little Haunts Club\\nA quick look inside Little Haunts Club: A Very Odd Halloween. 17 original storybook coloring scenes, supplied as printable PDFs and individual PNGs. '+(shop?'Shop: '+shop:'Public shop link will be added after launch.')"
+)
+
 
 def make_handler(dashboard: Dashboard):
     class Handler(BaseHTTPRequestHandler):
@@ -842,6 +1143,9 @@ def make_handler(dashboard: Dashboard):
             elif parsed.path == "/api/etsy/taxonomies":
                 try: self.send_json({"results": dashboard.etsy_taxonomies()})
                 except Exception as exc: self.send_json({"error": str(exc)}, 400)
+            elif parsed.path == "/api/distribution":
+                try: self.send_json({"channels": dashboard.book_data().get("channels", [])})
+                except Exception as exc: self.send_json({"error": str(exc)}, 500)
             else:
                 self.send_error(404)
 
@@ -868,6 +1172,9 @@ def make_handler(dashboard: Dashboard):
                 elif route == "/api/etsy/finish": result = dashboard.etsy_finish_auth(body)
                 elif route == "/api/etsy/draft": result = dashboard.etsy_create_draft(body)
                 elif route == "/api/etsy/publish": result = dashboard.etsy_publish(body)
+                elif route == "/api/etsy/reconcile": result = dashboard.etsy_reconcile_creation()
+                elif route == "/api/distribution/verify": result = dashboard.verify_distribution_url(body)
+                elif route == "/api/book/restore_release_selection": result = dashboard.book_restore_release_selection()
                 elif route == "/api/approve": result = dashboard.approve()
                 elif route == "/api/rebuild": result = dashboard.rebuild_package()
                 elif route == "/api/regenerate": result = dashboard.regenerate()

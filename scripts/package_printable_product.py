@@ -23,6 +23,7 @@ from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 import pymupdf as fitz
+from distribution_assets import build_distribution_assets
 
 ROOT = Path(__file__).resolve().parents[1]
 ETSY_LIMIT = 20 * 1024 * 1024
@@ -297,7 +298,7 @@ def make_listing_images(final_pages: list[Path], preview_dir: Path, manifest: di
         draw.text((540, y + 160), detail, font=load_font(32), fill=MUTED)
         y += 385
     draw_center(draw, (width // 2, 2075), "Print at home or at a local print shop", load_font(38, True))
-    draw_center(draw, (width // 2, 2160), "AI-assisted artwork; see listing description for disclosure.", load_font(25), MUTED)
+    draw_center(draw, (width // 2, 2160), "AI-generated artwork; see listing description for disclosure.", load_font(25), MUTED)
     path = preview_dir / "listing_03_included.jpg"
     img.save(path, "JPEG", quality=89, optimize=True, subsampling=0)
     made.append(path)
@@ -331,6 +332,7 @@ def main() -> int:
     parser.add_argument("--threshold", type=int, default=150)
     parser.add_argument("--etsy-limit-mb", type=int, default=20)
     parser.add_argument("--output", help="Optional isolated package output directory (defaults to product/final)")
+    parser.add_argument("--approval-state", help="Optional current book_selection.json so launch assets retain approval status")
     args = parser.parse_args()
     if not 1 <= args.threshold <= 254:
         raise SystemExit("--threshold must be between 1 and 254.")
@@ -412,7 +414,7 @@ def main() -> int:
         "4. Printer margins vary; use your printer's fit-to-page option if needed.\n\n"
         "DIGITAL PRODUCT\n"
         "This is an instant digital download. No physical product will be shipped.\n"
-        "Artwork was created with AI-assisted image generation based on original scene prompts, "
+        "Artwork was generated with AI tools from original scene prompts, "
         "then selected and prepared for this printable collection.\n\n"
         "PERSONAL USE\n"
         "You may print copies for your own personal coloring use. Do not resell, redistribute, "
@@ -453,8 +455,8 @@ def main() -> int:
         "This is a digital product; no physical book or printed pages will be shipped. Colors and print "
         "appearance can vary by screen, printer, and paper. For personal coloring use.\n\n"
         "AI DISCLOSURE\n"
-        "The illustrations were created with AI-assisted image generation using original scene prompts, "
-        "then curated and prepared into this printable collection.\n"
+        "The illustrations were generated with AI tools from original Little Haunts Club scene concepts, "
+        "then human-curated and prepared for print.\n"
     )
     tags = listing.get("tags", [
         "printable coloring", "coloring pages", "instant download",
@@ -470,8 +472,16 @@ def main() -> int:
         "price_test",
         "Start with a competitive launch price and adjust based on views, clicks, favorites, and purchases."
     ))
+    if manifest.get("product_id") == "little-haunts-club-spooky-neighbors-17":
+        price_text = "Proposed Etsy launch price: $4.99 USD. The seller's shop currency, taxes, payment-processing fees, and final listing details must be confirmed in Etsy."
+    approval_state = json.loads(Path(args.approval_state).read_text(encoding="utf-8")) if args.approval_state else None
+    if approval_state:
+        approved = sum(bool(item.get("human_approved")) for item in approval_state.get("pages", []))
+        review_gate = f"REVIEW DRAFT — {approved}/{expected} pages have recorded human approval. Do not upload until every page and the exact listing are approved.\n\n"
+    else:
+        review_gate = "REVIEW DRAFT — page approvals must be confirmed in the local dashboard before upload.\n\n"
     listing_draft = (
-        f"# Etsy Listing Draft\n\n## Title\n{listing_title}\n\n"
+        f"# Etsy Listing Draft\n\n{review_gate}## Title\n{listing_title}\n\n"
         f"## Description\n{description}\n\n## Suggested tags\n"
         + "\n".join(f"- {tag}" for tag in tags)
         + f"\n\n## Price test\n{price_text}\n\n## Before publishing\n"
@@ -550,6 +560,16 @@ def main() -> int:
     }
     (final_root / "etsy_listing_metadata.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    if manifest.get("product_id") == "little-haunts-club-spooky-neighbors-17":
+        distribution = build_distribution_assets(output_pages, page_specs, manifest, final_root, approval_state)
+        metadata["distribution_assets"] = {
+            "kdp": distribution.get("kdp", {}).get("status"),
+            "social": distribution.get("social", {}).get("status"),
+            "published": False,
+        }
+        metadata["proposed_price"] = {"currency": "USD", "amount": 4.99, "status": "proposed"}
+        (final_root / "etsy_listing_metadata.json").write_text(json.dumps(metadata, indent=2, ensure_ascii=False), encoding="utf-8")
+
     print(f"Product: {manifest['product_id']}")
     print(f"Prepared pages: {len(output_pages)}")
     print(f"US Letter PDF: {letter_pdf} ({letter_pdf.stat().st_size / 1024 / 1024:.2f} MB)")
@@ -560,6 +580,9 @@ def main() -> int:
     print(f"Listing images: {listing_root}")
     print(f"Listing draft: {final_root / 'etsy_listing_draft.md'}")
     print(f"QA report: {final_root / 'package_qa.json'}")
+    if manifest.get("product_id") == "little-haunts-club-spooky-neighbors-17":
+        print(f"KDP review draft: {final_root / 'kdp_paperback'}")
+        print(f"Promotion files: {final_root / 'social_promotion'}")
     print("Package built; page art still requires visual review before listing.")
     return 0
 

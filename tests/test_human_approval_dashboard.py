@@ -78,6 +78,58 @@ class DashboardTests(unittest.TestCase):
         self.assertEqual(saved["note"], "Keep the character; simplify the shelf.")
         self.assertIn("saved_at", result)
 
+    def test_restore_release_selection_keeps_pending_pages_unapproved_and_archives_prior_package_approval(self):
+        library = self.run / "candidate_library"
+        library.mkdir(exist_ok=True)
+        current = []
+        slots = [1, 4, 6, 9, 10, 11, 12, 13, 14, 15, None, None]
+        for index, slot in enumerate(slots, 1):
+            path = library / f"approved_{index:02d}.png"
+            Image.new("RGB", (20, 20), "white").save(path)
+            current.append({"page": index, "original_slot": slot, "candidate_id": f"approved-{index}",
+                "file": str(path), "human_approved": True, "approval_status": "approved", "locked": True})
+        archived_ids = ["replacement-p2-1", "replacement-p3-2", "replacement-p5-2-retry-02", "new-01-1", "replacement-p8-1"]
+        archived = []
+        for index, candidate_id in enumerate(archived_ids, 1):
+            path = library / f"{candidate_id}.png"
+            Image.new("RGB", (20, 20), "white").save(path)
+            slot = [2, 3, 5, 7, 8][index - 1]
+            archived.append({"page": slot, "original_slot": slot, "candidate_id": candidate_id, "file": str(path),
+                "human_approved": False, "approval_status": "needs_review"})
+        selection = {"revision": 6, "pages": current, "removed_pages": archived,
+            "product_approval": {"approved_at": "earlier", "revision": 5}, "history": []}
+        self.dashboard.book_path.write_text(json.dumps(selection), encoding="utf-8")
+
+        with patch.object(self.dashboard, "rebuild_book_package", return_value={"qa_passed": True, "page_count": 17}):
+            result = self.dashboard.book_restore_release_selection()
+
+        saved = self.dashboard.book_selection()
+        self.assertEqual(result["page_count"], 17)
+        self.assertEqual(result["approved_pages"], 12)
+        self.assertEqual(len(saved["pages"]), 17)
+        self.assertIsNone(saved["product_approval"])
+        self.assertEqual(saved["product_approval_history"][0]["revision"], 5)
+        pending = [item for item in saved["pages"] if item["candidate_id"] in archived_ids]
+        self.assertEqual({item["candidate_id"] for item in pending}, set(archived_ids))
+        self.assertTrue(all(not item["human_approved"] and not item["locked"] for item in pending))
+
+    def test_distribution_url_checks_require_product_or_post_paths_not_account_homepages(self):
+        from urllib.parse import urlparse
+
+        valid = {
+            "etsy": "https://www.etsy.com/listing/123456789/little-haunts",
+            "kdp": "https://www.amazon.com/dp/B012345678",
+            "payhip": "https://payhip.com/b/abc123",
+            "pinterest": "https://www.pinterest.com/pin/123456789/",
+            "instagram": "https://www.instagram.com/reel/ABC123/",
+            "tiktok": "https://www.tiktok.com/@littlehaunts/video/123456789",
+            "youtube_shorts": "https://www.youtube.com/shorts/abc123",
+        }
+        for key, url in valid.items():
+            with self.subTest(channel=key):
+                self.assertTrue(Dashboard.valid_distribution_url_path(key, urlparse(url)))
+                self.assertFalse(Dashboard.valid_distribution_url_path(key, urlparse(url.split(".com")[0] + ".com/")))
+
     def test_reviewed_library_candidate_can_be_selected_for_any_slot(self):
         library = self.run / "candidate_library"
         library.mkdir()

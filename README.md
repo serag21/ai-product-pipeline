@@ -24,7 +24,7 @@ On first run it waits for a multimodal vision provider configuration in `product
 
 ### Halloween 2026 product dashboard
 
-Run `run_human_approval_dashboard.ps1` and open `http://127.0.0.1:8765/`. The dashboard has three steps: choose and approve artwork, review the automatically rebuilt package and QA, then optionally connect Etsy. It supports adding or removing pages, so packaging follows the current book length. Human approvals and the existing candidate archive are stored separately from the original factory decisions. Etsy uses its Open API v3 digital listing endpoints; the dashboard stores app credentials and tokens with Windows DPAPI and requires distinct typed confirmations to upload a draft and publish it.
+Run `scripts/start_halloween_dashboard.ps1` to launch the current 17-page Halloween dashboard. It preserves an unrelated service already using port 8765 and selects the next available localhost port; this computer currently serves Little Haunts Club at `http://127.0.0.1:8766/`. The three-step workflow is choose and approve artwork, review the automatically rebuilt package and QA, then prepare distribution. Five restored page selections still need your approval; the nine original approved illustrations and both requested extra pages remain intact. Etsy's digital draft flow is implemented and mock-tested, but account authorization and live Etsy calls are still required. No channel is published automatically. See [the Halloween distribution handoff](docs/halloween-2026-distribution.md) for the exact per-channel status, prepared files, marketplace requirements, and remaining launch actions.
 
 The generator is now product-manifest driven. Each product lives under:
 

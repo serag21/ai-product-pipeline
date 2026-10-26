@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "enabled": false,
+  "interval_days": 14,
+  "task_name": "Little Haunts Club Future Production (Biweekly)",
+  "product": null,
+  "run_id": null,
+  "missed_run_policy": "start_when_available",
+  "overlap_policy": "ignore_new_and_use_product_mutex",
+  "restart_count": 3,
+  "restart_interval_minutes": 5,
+  "execution_limit_hours": 24,
+  "resume_from_saved_state": true,
+  "required_initial_channels": ["etsy", "kdp", "payhip"],
+  "activation_gate": "After all three Halloween product channels have verified public URLs and the owner explicitly enables scheduling."
+}

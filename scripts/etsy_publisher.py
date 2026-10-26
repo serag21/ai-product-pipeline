@@ -13,6 +13,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
+import hashlib
 from pathlib import Path
 from typing import Any
 
@@ -92,10 +93,14 @@ class EtsyPublisher:
     def status(self) -> dict[str, Any]:
         secrets_data = self._read_secret(self.secret_file)
         status = self._plain_status()
+        verified = bool(status.get("public_url_verified") and status.get("public_url"))
         return {"configured": bool(secrets_data.get("api_key") and secrets_data.get("shared_secret")),
             "authorized": bool(secrets_data.get("access_token") and float(secrets_data.get("expires_at", 0)) > time.time()),
             "scope": secrets_data.get("scope", ""), "draft": status.get("draft"),
-            "published": bool(status.get("published")), "last_error": status.get("last_error")}
+            "creation_uncertain": bool(status.get("creation_intent", {}).get("uncertain")),
+            "published": verified, "public_url": status.get("public_url") if verified else None,
+            "publication_pending_verification": bool(status.get("publication_pending_verification")),
+            "last_error": status.get("last_error")}
 
     def begin_auth(self, api_key: str, shared_secret: str, redirect_uri: str) -> dict[str, str]:
         api_key, shared_secret, redirect_uri = api_key.strip(), shared_secret.strip(), redirect_uri.strip()
@@ -169,12 +174,15 @@ class EtsyPublisher:
             chunks.append((f"--{boundary}\r\nContent-Disposition: form-data; name=\"{file_field}\"; filename=\"{fname}\"\r\nContent-Type: application/octet-stream\r\n\r\n").encode())
             chunks.append(file.read_bytes()); chunks.append(f"\r\n--{boundary}--\r\n".encode())
             body = b"".join(chunks); headers["Content-Type"] = f"multipart/form-data; boundary={boundary}"
-        elif data is not None:
+        elif data is not None and method != "GET":
             body = urllib.parse.urlencode(data, doseq=True).encode()
             headers["Content-Type"] = "application/x-www-form-urlencoded"
         else:
             body = None
-        request = urllib.request.Request(API_ROOT + path, data=body, headers=headers, method=method)
+        url = API_ROOT + path
+        if method == "GET" and data:
+            url += "?" + urllib.parse.urlencode(data, doseq=True)
+        request = urllib.request.Request(url, data=body, headers=headers, method=method)
         try:
             with urllib.request.urlopen(request, timeout=90) as response:
                 raw = response.read()
@@ -193,8 +201,13 @@ class EtsyPublisher:
             raise ValueError("A digital draft requires product files (up to five) and listing images")
         if any(not x.is_file() for x in [*upload_files, *images]):
             raise ValueError("A package upload file is missing; rebuild the current product package")
-        body = {"quantity": "999", "title": title[:140], "description": description, "price": f"{float(price):.2f}",
-            "who_made": "i_did", "when_made": "2020_2026", "taxonomy_id": taxonomy_id, "type": "download",
+        if len(title) > 140 or len(tags) > 13 or any(len(str(tag)) > 20 for tag in tags):
+            raise ValueError("Etsy listing title or tags exceed the current limits (140 title characters; 13 tags of 20 characters each)")
+        if any(path.stat().st_size > 20 * 1024 * 1024 for path in upload_files):
+            raise ValueError("Etsy digital files must each be 20 MB or smaller")
+        body = {"quantity": "999", "title": title, "description": description, "price": f"{float(price):.2f}",
+            "who_made": "i_did", "when_made": "2020_2026", "is_supply": "false",
+            "taxonomy_id": taxonomy_id, "type": "download",
             "tags": ",".join(tags[:13])}
         status = self._plain_status()
         draft = status.get("draft") or {}
@@ -202,14 +215,32 @@ class EtsyPublisher:
             raise ValueError("A complete Etsy draft already exists. Review it in Etsy; remove it there before creating another draft.")
         if draft and (str(draft.get("shop_id")) != shop_id or draft.get("title") != title):
             raise ValueError("An incomplete Etsy draft is saved. Resume that draft with its original shop and title before starting another.")
+        intent = status.get("creation_intent") or {}
+        if intent.get("uncertain"):
+            raise ValueError("Etsy draft creation has an uncertain outcome. Reconcile the saved creation intent against your Etsy drafts before retrying; a second create request could make a duplicate.")
         if not draft:
-            created = self._api("POST", f"/shops/{shop_id}/listings", data=body)
+            fingerprint = hashlib.sha256(json.dumps({"shop_id": shop_id, "body": body,
+                "files": [(p.name, p.stat().st_size, hashlib.sha256(p.read_bytes()).hexdigest()) for p in upload_files]}, sort_keys=True).encode()).hexdigest()
+            # Etsy's createDraftListing endpoint has no idempotency-key parameter.
+            # Persist intent before the network request and stop safely if its
+            # outcome is ambiguous, so a retry cannot silently create a duplicate.
+            status["creation_intent"] = {"shop_id": shop_id, "title": title,
+                "fingerprint": fingerprint, "started_at": time.time(), "uncertain": True}
+            self._save_status(status)
+            try:
+                created = self._api("POST", f"/shops/{shop_id}/listings", data=body)
+            except Exception as exc:
+                status["last_error"] = f"Draft creation outcome is uncertain; reconcile in Etsy before any retry. {exc}"
+                self._save_status(status)
+                raise RuntimeError(status["last_error"]) from exc
             listing_id = str(created.get("listing_id", ""))
             if not listing_id:
-                raise RuntimeError(f"Etsy created a response without a listing ID: {created}")
+                status["last_error"] = f"Etsy returned no listing ID. Reconcile the draft manually before retrying: {created}"
+                self._save_status(status)
+                raise RuntimeError(status["last_error"])
             draft = {"shop_id": shop_id, "listing_id": listing_id, "title": title, "price": f"{float(price):.2f}",
                 "created_at": time.time(), "uploaded_files": [], "uploaded_images": [], "complete": False}
-            status["draft"] = draft; status["published"] = False; self._save_status(status)
+            status["draft"] = draft; status["published"] = False; status.pop("creation_intent", None); self._save_status(status)
         listing_id = str(draft["listing_id"])
         try:
             for image in images:
@@ -232,10 +263,61 @@ class EtsyPublisher:
         status = self._plain_status(); draft = status.get("draft") or {}
         if str(draft.get("shop_id")) != str(shop_id) or str(draft.get("listing_id")) != str(listing_id):
             raise ValueError("This listing ID does not match the saved Etsy draft")
-        result = self._api("PATCH", f"/shops/{shop_id}/listings/{listing_id}", data={"state": "active"})
-        status["published"] = True; status["published_at"] = time.time(); status["published_response"] = result
+        self._api("PATCH", f"/shops/{shop_id}/listings/{listing_id}", data={"state": "active"})
+        listing = self._api("GET", f"/listings/{listing_id}")
+        public_url = str(listing.get("url", ""))
+        try:
+            if str(listing.get("state", "")).lower() != "active" or not self._verify_public_etsy_url(public_url, listing_id):
+                raise RuntimeError("Etsy accepted the publish request, but the public listing could not be verified. The dashboard will keep this in pending verification.")
+        except Exception as exc:
+            status["published"] = False
+            status["publication_pending_verification"] = True
+            status["publication_verification_error"] = str(exc)
+            status["published_response"] = {"listing_id": listing_id, "state": listing.get("state")}
+            self._save_status(status)
+            raise RuntimeError(str(exc)) from exc
+        status["published"] = True; status["public_url_verified"] = True
+        status["public_url"] = public_url; status["published_at"] = time.time()
+        status["publication_pending_verification"] = False; status["published_response"] = listing
         self._save_status(status)
-        return result
+        return listing
+
+    @staticmethod
+    def _verify_public_etsy_url(url: str, listing_id: str) -> bool:
+        parsed = urllib.parse.urlparse(url)
+        host = (parsed.hostname or "").lower()
+        if parsed.scheme != "https" or not (host == "etsy.com" or host.endswith(".etsy.com")):
+            return False
+        segments = parsed.path.strip("/").split("/")
+        if len(segments) < 2 or segments[0] != "listing" or segments[1] != listing_id:
+            return False
+        request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 LittleHauntsLaunchCheck/1.0"})
+        with urllib.request.urlopen(request, timeout=20) as response:
+            if response.status != 200:
+                return False
+            body = response.read(2_000_000).decode("utf-8", errors="ignore").casefold()
+        return listing_id in body and ("little haunts" in body or "very odd halloween" in body)
+
+    def reconcile_creation_intent(self) -> dict[str, Any]:
+        status = self._plain_status()
+        intent = status.get("creation_intent") or {}
+        if not intent.get("uncertain"):
+            return {"matched": False, "message": "No uncertain creation intent is saved."}
+        shop_id = str(intent.get("shop_id", ""))
+        data = self._api("GET", f"/shops/{shop_id}/listings", data={"state": "draft", "limit": "100"})
+        matches = [x for x in data.get("results", []) if str(x.get("title", "")).strip() == str(intent.get("title", "")).strip()]
+        if len(matches) != 1:
+            return {"matched": False, "match_count": len(matches),
+                    "message": "Could not identify exactly one matching Etsy draft. Review your Etsy drafts manually; the dashboard will not retry listing creation."}
+        found = matches[0]
+        draft = {"shop_id": shop_id, "listing_id": str(found.get("listing_id")), "title": found.get("title"),
+            "price": str(found.get("price", "")), "created_at": found.get("creation_timestamp", time.time()),
+            "uploaded_files": [], "uploaded_images": [], "complete": False, "reconciled": True}
+        status["draft"] = draft
+        status.pop("creation_intent", None)
+        status.pop("last_error", None)
+        self._save_status(status)
+        return {"matched": True, "draft": draft, "message": "One matching Etsy draft was found and linked. Resume its missing media/file uploads safely."}
 
     def shops(self) -> list[dict[str, Any]]:
         data = self._read_secret(self.secret_file)
