@@ -1,7 +1,7 @@
 param(
     [string]$Product = "products/little-haunts-club-spooky-neighbors-17",
     [string]$RunId = "factory-main",
-    [int]$Port = 8765
+    [int]$Port = 8766
 )
 
 $ErrorActionPreference = "Stop"
