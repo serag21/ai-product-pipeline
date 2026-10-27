@@ -2,7 +2,7 @@
 
 ## Current Halloween book selection and delivery
 
-Run `run_human_approval_dashboard.ps1` and open `http://127.0.0.1:8765/`. Its three steps are artwork selection, product finalization, and optional Etsy listing preparation. Candidate choices, page notes, and human approvals are saved in `review_runs/factory-main/book_selection.json`; this file does not replace the original factory decisions. Any number of pages can be selected, and each selection change creates a new package version instead of overwriting an earlier delivery. A package can be mechanically QA-passed while some art still awaits your approval.
+Run `run_human_approval_dashboard.ps1` and open `http://127.0.0.1:8766/`. Its three steps are artwork selection, product finalization, and optional Etsy listing preparation. Candidate choices, page notes, and human approvals are saved in `review_runs/factory-main/book_selection.json`; this file does not replace the original factory decisions. Any number of pages can be selected, and each selection change creates a new package version instead of overwriting an earlier delivery. A package can be mechanically QA-passed while some art still awaits your approval.
 
 Etsy authorization requires an Etsy Seller App, its keystring and shared secret, and an exact registered HTTPS callback URI. The dashboard implements Etsy's PKCE code exchange, obtains the shop and seller taxonomy, creates a digital draft, uploads its files and listing images, and activates the listing only after separate typed confirmations. Credentials and tokens are protected by Windows DPAPI. No Etsy write occurs while connecting or previewing.
 
